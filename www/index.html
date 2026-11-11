@@ -37,7 +37,7 @@
       html{ -webkit-text-size-adjust:100%; }
       body{ margin:0; background:var(--bg); color:var(--ink);
         font-family:"Be Vietnam Pro", system-ui, sans-serif; font-size:16px; line-height:1.55; }
-      .wrap{ max-width:880px; margin:0 auto; padding:0 16px 24px; }
+      .wrap{ max-width:880px; margin:0 auto; padding:0 16px 28px; }
       h1,h2,h3,.serif{ font-family:"Noto Serif", Georgia, serif; }
       button{ font:inherit; cursor:pointer; }
       :focus-visible{ outline:3px solid var(--gold); outline-offset:2px; border-radius:6px; }
@@ -45,6 +45,8 @@
       /* ---------- top strip ---------- */
       .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
         padding:10px 0 8px; }
+      .iconbtn{ flex:none; width:2.5rem; height:2.5rem; min-height:2.5rem; padding:0; display:grid; place-items:center;
+        border:1px solid var(--line); background:var(--surface); color:var(--ink2); border-radius:50%; }
       .brand{ font-family:"Noto Serif",serif; font-weight:900; font-size:1.28rem; letter-spacing:.01em; }
       .brand small{ display:block; font-family:"Be Vietnam Pro",sans-serif; font-weight:600; font-size:.72rem;
         color:var(--ink2); letter-spacing:.08em; text-transform:uppercase; }
@@ -53,10 +55,11 @@
         padding:6px 14px; border-radius:999px; min-height:2.25rem; }
       .seg button[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); }
 
+      /* ---------- verse of the day ---------- */
       /* ---------- tabs ---------- */
-      .tabs{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0 0 12px; }
+      .tabs{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0 0 14px; }
       .tabs button{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
-        border-radius:10px; padding:10px; font-weight:800; font-size:1rem; min-height:2.6rem; }
+        border-radius:10px; padding:10px; font-weight:800; font-size:1rem; min-height:2.75rem; }
       .tabs button[aria-selected="true"]{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
 
       /* ---------- lookup ---------- */
@@ -67,14 +70,14 @@
         font-weight:800; padding:10px 18px; }
       .hint{ color:var(--ink2); font-size:.85rem; margin:0 0 14px; }
       .hint code{ background:var(--surface2); border:1px solid var(--line); border-radius:5px; padding:0 5px; font-size:.82em; }
-      .testament{ display:flex; gap:8px; margin:10px 0 8px; }
+      .testament{ display:flex; gap:8px; margin:14px 0 10px; }
       .testament button{ flex:1; border:1px solid var(--line); background:transparent; color:var(--ink2);
         border-radius:999px; font-weight:700; padding:8px; }
       .testament button[aria-pressed="true"]{ background:var(--gold-soft); color:var(--ink); border-color:var(--gold); }
       .bookgrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; }
       .book{ text-align:left; border:1px solid var(--line); background:var(--surface); border-radius:10px;
-        padding:9px 10px; color:var(--ink); }
-      .book b{ display:block; font-family:"Noto Serif",serif; font-size:.92rem; line-height:1.3; overflow-wrap:anywhere; }
+        padding:11px 12px; color:var(--ink); }
+      .book b{ display:block; font-family:"Noto Serif",serif; font-size:.98rem; line-height:1.3; overflow-wrap:anywhere; }
       .book span{ font-size:.78rem; color:var(--ink2); }
       .book .badge{ display:inline-block; margin-top:5px; font-size:.68rem; font-weight:800; letter-spacing:.05em;
         background:var(--gold-soft); color:var(--gold); border-radius:999px; padding:2px 8px; text-transform:uppercase; }
@@ -111,20 +114,19 @@
       .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
       /* ---------- quiz ---------- */
-      .road{ position:relative; margin:6px 0 0; padding-left:26px; }
+      .road{ position:relative; margin:2px 0 0; padding-left:26px; }
       .road::before{ content:""; position:absolute; left:9px; top:14px; bottom:14px; width:2px; background:var(--line); }
       .stage{ position:relative; margin-bottom:10px; }
-      .stage::before{ content:""; position:absolute; left:-23px; top:20px; width:14px; height:14px; border-radius:50%;
+      .stage::before{ content:""; position:absolute; left:-23px; top:50%; margin-top:-7px; width:14px; height:14px; border-radius:50%;
         background:var(--bg); border:3px solid var(--gold); }
-      .stagecard{ border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:12px 14px; box-shadow:var(--shadow); }
-      .stagecard .k{ font-size:.7rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
-      .stagecard h3{ margin:2px 0 6px; font-size:1.12rem; }
-      .stagecard .meta{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+      .stagecard{ display:flex; align-items:center; gap:10px; border:1px solid var(--line); background:var(--surface);
+        border-radius:12px; padding:11px 14px; box-shadow:var(--shadow); }
+      .stagecard h3{ margin:0; font-size:1.05rem; flex:1; line-height:1.3; }
       .pill{ font-size:.78rem; font-weight:700; background:var(--surface2); border:1px solid var(--line);
         border-radius:999px; padding:3px 10px; color:var(--ink2); }
       .pill.best{ background:var(--gold-soft); color:var(--ink); border-color:var(--gold); }
-      .startbtn{ margin-left:auto; border:0; border-radius:10px; background:var(--accent); color:var(--accent-ink);
-        font-weight:800; padding:10px 20px; }
+      .startbtn{ flex:none; border:0; border-radius:10px; background:var(--accent); color:var(--accent-ink);
+        font-weight:800; padding:9px 18px; }
       .quizbar{ display:flex; align-items:center; gap:12px; margin-bottom:12px; }
       .quizbar .prog{ flex:1; height:10px; border-radius:99px; background:var(--surface2); border:1px solid var(--line); overflow:hidden; }
       .quizbar .prog i{ display:block; height:100%; background:var(--gold); transition:width .3s; }
@@ -167,6 +169,10 @@
       .review .ritem{ border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:8px; background:var(--surface); }
       .review .ritem b{ display:block; margin-bottom:3px; }
       .review .ritem .yours{ color:var(--bad); } .review .ritem .corr{ color:var(--good); font-weight:700; }
+      .setlabel{ font-weight:800; font-size:.95rem; margin:18px 0 8px; }
+      .setlabel:first-of-type{ margin-top:10px; }
+      .abouttext{ color:var(--ink2); font-size:.86rem; margin:0; line-height:1.6; }
+      .abouttext a{ color:var(--accent); }
       .hidden{ display:none !important; }
 
       /* ---------- first-visit language chooser ---------- */
@@ -191,13 +197,6 @@
       .langopt-d{ display:block; margin-top:6px; font-size:.92rem; }
       .langopt-d.alt{ color:var(--ink2); font-style:italic; font-size:.88rem; margin-top:2px; }
       .chooser-note{ color:var(--ink2); font-size:.85rem; margin:18px 0 0; line-height:1.6; }
-      .settingsbtn{ display:inline-flex; align-items:center; justify-content:center; width:2.25rem; height:2.25rem;
-        padding:0; border-radius:50%; min-width:0; }
-      .settingsbtn svg{ width:19px; height:19px; }
-      .setsect{ margin-top:18px; padding-top:14px; border-top:1px solid var(--line); }
-      .setsect:first-of-type{ margin-top:14px; }
-      .about{ color:var(--ink2); font-size:.85rem; line-height:1.6; }
-      .about a{ color:var(--accent); }
       @media (max-width:560px){
         .bookgrid{ grid-template-columns:repeat(auto-fill,minmax(108px,1fr)); }
         .qcard{ padding:16px; }
@@ -230,13 +229,13 @@
       <div class="topbar">
         <div class="brand"><span data-i="brand">Kinh Thánh Song Ngữ</span>
           <small data-i="brandsub">Việt 1925 · Anh KJV</small></div>
-        <button type="button" class="ghostbtn settingsbtn" id="settingsBtn" aria-label="Settings">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg>
+        <button type="button" class="iconbtn" id="settingsBtn" aria-label="Settings · Cài đặt" title="Settings · Cài đặt">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg>
         </button>
       </div>
 
       <nav class="tabs" role="tablist">
-        <button type="button" role="tab" id="tab-lookup" aria-selected="true" data-tab="lookup">
+        <button type="button" role="tab" id="tab-lookup" aria-selected="false" data-tab="lookup">
           <span data-i="tabLookup">Tra cứu</span>
         </button>
         <button type="button" role="tab" id="tab-quiz" aria-selected="false" data-tab="quiz">
@@ -245,7 +244,7 @@
       </nav>
 
       <!-- ============ LOOKUP ============ -->
-      <main id="view-lookup">
+      <main id="view-lookup" class="hidden">
         <form class="searchrow" id="searchForm">
           <input id="searchInput" type="search" autocomplete="off"
             placeholder="Giăng 3:16 · Sáng 1:1 · hoặc từ khóa: sự sáng…" />
@@ -269,23 +268,17 @@
           <div class="road" id="roadmap"></div>
           <div class="stage" style="margin-left:0">
             <div class="stagecard">
-              <div class="k" data-i="mixedK">Chặng đặc biệt</div>
               <h3 data-i="mixedT">Thi tổng hợp</h3>
-              <div class="meta">
-                <span class="pill" id="mixedCount"></span>
-                <span class="pill best hidden" id="best-mixed"></span>
-                <button type="button" class="startbtn" data-start="mixed" data-i="start">Vào thi</button>
-              </div>
+              <span class="pill"><span id="mixedCount">30</span> <span data-i="questions">câu</span></span>
+              <span class="pill best hidden" id="best-mixed"></span>
+              <button type="button" class="startbtn" data-start="mixed" data-i="start">Vào thi</button>
             </div>
           </div>
           <div class="stage hidden" id="wrongStage" style="margin-left:0">
             <div class="stagecard">
-              <div class="k" data-i="wrongK">Ôn tập</div>
               <h3 data-i="wrongT">Ôn câu sai</h3>
-              <div class="meta">
-                <span class="pill" id="wrongCount"></span>
-                <button type="button" class="startbtn" data-start="wrong" data-i="review">Ôn ngay</button>
-              </div>
+              <span class="pill" id="wrongCount"></span>
+              <button type="button" class="startbtn" data-start="wrong" data-i="review">Ôn ngay</button>
             </div>
           </div>
         </div>
@@ -306,31 +299,25 @@
       <main id="view-settings" class="hidden">
         <div class="panel">
           <h2 data-i="settings">Settings</h2>
-          <p class="chapsub" data-i="langLabel">Language</p>
+          <p class="setlabel" data-i="langLabel">Language</p>
           <div class="seg" role="group" aria-label="Ngôn ngữ / Language">
             <button type="button" data-lang="vi" aria-pressed="false">Việt</button>
             <button type="button" data-lang="en" aria-pressed="true">English</button>
             <button type="button" data-lang="both" aria-pressed="false">Việt + EN</button>
           </div>
-          <div class="setsect">
-            <p class="chapsub" data-i="qlenLabel">Số câu mỗi bài</p>
-            <div class="seg" role="group" aria-label="Số câu mỗi bài / Questions per quiz">
-              <button type="button" data-qlen="10" aria-pressed="false">10</button>
-              <button type="button" data-qlen="20" aria-pressed="false">20</button>
-              <button type="button" data-qlen="30" aria-pressed="true">30</button>
-              <button type="button" data-qlen="50" aria-pressed="false">50</button>
-            </div>
+          <p class="setlabel" data-i="perQuizLabel">Questions per attempt</p>
+          <div class="seg" role="group" aria-label="Số câu mỗi lượt / Questions per attempt">
+            <button type="button" data-perq="10" aria-pressed="false">10</button>
+            <button type="button" data-perq="20" aria-pressed="false">20</button>
+            <button type="button" data-perq="30" aria-pressed="true">30</button>
           </div>
-          <div class="setsect">
-            <p class="chapsub" data-i="aboutTitle">Giới thiệu</p>
-            <div class="about" id="aboutText"></div>
-          </div>
+          <p class="setlabel" data-i="aboutLabel">About</p>
+          <p class="abouttext" id="aboutText"></p>
           <div class="nextrow" style="justify-content:flex-start">
             <button type="button" class="ghostbtn" id="settingsBack" data-i="back">← Back</button>
           </div>
         </div>
       </main>
-
     </div>
     <div class="toast" id="toast" role="status"></div>
 
@@ -345,13 +332,13 @@ const I = {
   vi: {
     brand:"Kinh Thánh Song Ngữ", brandsub:"Việt 1925 · Anh KJV",
     settings:"Cài đặt", langLabel:"Ngôn ngữ", back:"← Quay lại",
-    qlenLabel:"Số câu mỗi bài", aboutTitle:"Giới thiệu",
+    perQuizLabel:"Số câu mỗi lượt thi", aboutLabel:"Giới thiệu",
     settingsNote:"Lựa chọn ngôn ngữ được nhớ trên thiết bị này, lần mở sau app vào thẳng ngôn ngữ đã chọn. Đổi ở đây áp dụng ngay cho toàn bộ giao diện, tên sách, câu hỏi và giải thích.",
     tabLookup:"Tra cứu", tabLookupSub:"66 sách · tìm theo câu, từ khóa",
     tabQuiz:"Trắc nghiệm", tabQuizSub:"Lộ trình 4 chặng · ngân hàng 1.101 câu · mỗi lượt 30 câu",
     searchBtn:"Tìm", ot:"Cựu Ước", nt:"Tân Ước", fav:"Yêu thích",
     searchHint:'Gõ địa chỉ kiểu <code>Giăng 3:16</code>, <code>John 1:1</code> (không dấu cũng được) hoặc gõ từ khóa để tìm trong các chương mẫu.',
-    votd:"Câu gốc hôm nay", chapters:"chương", sampleBadge:"Có bản mẫu",
+    chapters:"chương", sampleBadge:"Có bản mẫu",
     noSample:"Bản mẫu hiện có văn bản đầy đủ cho Sáng Thế Ký, Thi Thiên, Ma-thi-ơ và Phúc Âm Giăng. Sách này sẽ có trong bản đầy đủ.",
     readChapter:"Đọc chương", chapter:"Chương",
     prev:"← Chương trước", next:"Chương sau →",
@@ -376,13 +363,13 @@ const I = {
   en: {
     brand:"Bilingual Bible", brandsub:"Vietnamese 1925 · English KJV",
     settings:"Settings", langLabel:"Language", back:"← Back",
-    qlenLabel:"Questions per quiz", aboutTitle:"About",
+    perQuizLabel:"Questions per attempt", aboutLabel:"About",
     settingsNote:"Your language choice is remembered on this device, so the app opens in it next time. Changing it here applies at once to the whole interface, book names, questions and explanations.",
     tabLookup:"Look up", tabLookupSub:"66 books · search by reference or keyword",
     tabQuiz:"Quiz", tabQuizSub:"4-stage roadmap · 1,101-question bank · 30 per attempt",
     searchBtn:"Search", ot:"Old Testament", nt:"New Testament", fav:"Favorites",
     searchHint:'Type a reference like <code>John 3:16</code> or <code>Giăng 3:16</code> (diacritics optional), or a keyword to search the sample chapters.',
-    votd:"Verse of the day", chapters:"chapters", sampleBadge:"Sample included",
+    chapters:"chapters", sampleBadge:"Sample included",
     noSample:"This sample includes full text for Genesis, Psalms, Matthew and John. This book arrives in the full version.",
     readChapter:"Read chapter", chapter:"Chapter",
     prev:"← Previous", next:"Next →",
@@ -428,7 +415,6 @@ function ui(){
 }
 const bothName = (vi,en)=> lang==="en" ? en : lang==="both" ? vi+" / "+en : vi;
 const versionLine = ()=> lang==="en" ? "King James Version" : lang==="both" ? "Kinh Thánh Tiếng Việt 1925 + King James Version" : "Kinh Thánh Tiếng Việt 1925";
-const versionShort = ()=> lang==="en" ? "KJV" : lang==="both" ? "Kinh Thánh 1925 + KJV" : "Kinh Thánh 1925";
 const strip = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
 
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show");
@@ -437,14 +423,13 @@ function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("sh
 /* ================= LANGUAGE ================= */
 function applyLang(){
   $$("[data-lang]").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.lang===lang)));
-  $$("[data-qlen]").forEach(b=>b.setAttribute("aria-pressed", String(parseInt(b.dataset.qlen,10)===EXAM_LEN)));
   const d = ui();
   document.documentElement.lang = lang==="en" ? "en" : "vi";
   document.title = !langChosen ? "Bible Quiz · Trắc nghiệm Kinh Thánh" : lang==="both" ? "Trắc nghiệm Kinh Thánh · Bible Quiz" : d.docTitle;
   $$("[data-i]").forEach(el=>{ const k=el.dataset.i; if(d[k]!==undefined) el.innerHTML=d[k]; });
   const si=$("#searchInput"); if(si) si.placeholder = d.searchPh;
-  const sb=$("#settingsBtn"); if(sb) sb.setAttribute("aria-label", d.settings);
   const ab=$("#aboutText"); if(ab) ab.innerHTML = d.foot;
+  $$("[data-perq]").forEach(b=>b.setAttribute("aria-pressed", String(+b.dataset.perq===examLen)));
   renderBooks(); renderReader(); renderFavs(); renderRoadmap();
   if(lastSearch && $("#searchResults").innerHTML.trim()) runSearch(lastSearch);
   if(quiz && !$("#quizRun").classList.contains("hidden")) showQuestion(false);
@@ -456,8 +441,19 @@ function pickLang(v){
   saveLang(); applyLang();
 }
 $$("[data-lang]").forEach(b=>b.addEventListener("click",()=>pickLang(b.dataset.lang)));
-$$("[data-qlen]").forEach(b=>b.addEventListener("click",()=>{ EXAM_LEN=parseInt(b.dataset.qlen,10); saveQlen(); applyLang(); }));
 $$("[data-choose]").forEach(b=>b.addEventListener("click",()=>{ pickLang(b.dataset.choose); window.scrollTo({top:0}); }));
+$$("[data-perq]").forEach(b=>b.addEventListener("click",()=>{
+  examLen=+b.dataset.perq;
+  try{ localStorage.setItem(PERQ_KEY, String(examLen)); }catch(e){}
+  $$("[data-perq]").forEach(x=>x.setAttribute("aria-pressed", String(x===b)));
+  renderRoadmap();
+}));
+
+/* ================= VIEWS / TABS =================
+   Nothing is open on load: tapping a tab reveals its content,
+   tapping the open tab again folds it away. */
+let activeTab = null;
+function paintTabs(){ $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected", String(x.dataset.tab===activeTab))); }
 $("#settingsBtn").addEventListener("click",()=>{
   $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected","false"));
   $("#view-lookup").classList.add("hidden"); $("#view-quiz").classList.add("hidden");
@@ -465,26 +461,27 @@ $("#settingsBtn").addEventListener("click",()=>{
   window.scrollTo({top:0, behavior:"smooth"});
 });
 $("#settingsBack").addEventListener("click",()=>{
-  $("#view-settings").classList.add("hidden"); $("#view-lookup").classList.remove("hidden");
-  $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected", String(x.dataset.tab==="lookup")));
+  $("#view-settings").classList.add("hidden");
+  if(activeTab==="lookup") $("#view-lookup").classList.remove("hidden");
+  if(activeTab==="quiz") $("#view-quiz").classList.remove("hidden");
+  paintTabs();
   window.scrollTo({top:0, behavior:"smooth"});
 });
-
-/* ================= TABS ================= */
 $$("[data-tab]").forEach(b=>b.addEventListener("click",()=>{
-  $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected", String(x===b)));
-  $("#view-lookup").classList.toggle("hidden", b.dataset.tab!=="lookup");
-  $("#view-quiz").classList.toggle("hidden", b.dataset.tab!=="quiz");
+  const t=b.dataset.tab;
+  const wasOpen = activeTab===t && !$("#view-"+t).classList.contains("hidden");
+  activeTab = wasOpen ? null : t;
+  $("#view-lookup").classList.toggle("hidden", activeTab!=="lookup");
+  $("#view-quiz").classList.toggle("hidden", activeTab!=="quiz");
   $("#view-settings").classList.add("hidden");
+  paintTabs();
   window.scrollTo({top:0, behavior:"smooth"});
 }));
 
-/* ================= VERSE OF THE DAY ================= */
-const VOTD = [[42,3,16],[18,23,1],[0,1,1],[42,1,1],[42,1,14],[39,5,14],[18,1,1],[0,2,7],[18,23,4],[39,5,3]];
+/* ================= LOOKUP ================= */
 function bookName(b){ return lang==="en" ? b.en : b.vi; }
 function refLabel(bi,ch,v){ const b=BOOKS[bi]; const one=nm=>nm+" "+ch+(v?":"+v:"");
   return lang==="both" ? one(b.vi)+" · "+one(b.en) : one(bookName(b)); }
-/* ================= LOOKUP ================= */
 $$("[data-test]").forEach(b=>b.addEventListener("click",()=>{
   curTest=b.dataset.test;
   $$("[data-test]").forEach(x=>x.setAttribute("aria-pressed", String(x===b)));
@@ -1189,29 +1186,23 @@ function renderRoadmap(){
   const d=ui();
   $("#roadmap").innerHTML = SETS.map(s=>`
     <div class="stage"><div class="stagecard">
-      <div class="k">${d.stage} ${s.stage}</div>
       <h3>${bothName(s.viT,s.enT)}</h3>
-      <div class="meta">
-        <span class="pill">${d.bank}: ${BANKS[s.id].length} ${d.questions}</span>
-        ${best[s.id]!==undefined?`<span class="pill best">${d.best}: ${best[s.id]}/${EXAM_LEN}</span>`:""}
-        <button type="button" class="startbtn" data-start="${s.id}">${d.start}</button>
-      </div>
+      ${best[s.id]!==undefined?`<span class="pill best">${d.best}: ${best[s.id]}/${examLen}</span>`:""}
+      <button type="button" class="startbtn" data-start="${s.id}">${d.start}</button>
     </div></div>`).join("");
   $("#wrongStage").classList.toggle("hidden", !wrongPool.length);
   $("#wrongCount").textContent = wrongPool.length + " " + d.questions;
-  const mc=$("#mixedCount"); if(mc) mc.textContent = EXAM_LEN + " " + d.questions;
+  const mc=$("#mixedCount"); if(mc) mc.textContent = examLen;
   const bm=$("#best-mixed");
-  if(best.mixed!==undefined){ bm.classList.remove("hidden"); bm.textContent = ui().best+": "+best.mixed+"/"+EXAM_LEN; }
+  if(best.mixed!==undefined){ bm.classList.remove("hidden"); bm.textContent = ui().best+": "+best.mixed+"/"+examLen; }
   else bm.classList.add("hidden");
   $$("#quizHome [data-start]").forEach(b=>b.addEventListener("click",()=>startQuiz(b.dataset.start)));
 }
 
 let quiz=null, timerId=null;
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-const QLEN_KEY = "kt-qlen";
-function loadSavedQlen(){ try{ const v=parseInt(localStorage.getItem(QLEN_KEY),10); return [10,20,30,50].includes(v)?v:null; }catch(e){ return null; } }
-function saveQlen(){ try{ localStorage.setItem(QLEN_KEY, String(EXAM_LEN)); }catch(e){} }
-let EXAM_LEN = loadSavedQlen() || 30;
+const PERQ_KEY = "kt-perquiz";
+let examLen = (()=>{ try{ const v=+localStorage.getItem(PERQ_KEY); return (v===10||v===20||v===30) ? v : 30; }catch(e){ return 30; } })();
 const seenBySet = {};   // questions already served per set in this session, so attempts do not repeat until the bank is used up
 function sampleQuestions(pool, setId, n){
   if(!pool || !pool.length) return [];
@@ -1226,9 +1217,9 @@ function sampleQuestions(pool, setId, n){
 }
 function startQuiz(setId){
   let qs;
-  if(setId==="mixed") qs = sampleQuestions([].concat(BANKS.gen, BANKS.ot, BANKS.nt, BANKS.books), "mixed", EXAM_LEN);
+  if(setId==="mixed") qs = sampleQuestions([].concat(BANKS.gen, BANKS.ot, BANKS.nt, BANKS.books), "mixed", examLen);
   else if(setId==="wrong") qs = shuffle(wrongPool);
-  else qs = sampleQuestions(BANKS[setId], setId, EXAM_LEN);
+  else qs = sampleQuestions(BANKS[setId], setId, examLen);
   quiz = { setId, qs: qs.map(q=>{
       const order = shuffle([0,1,2,3]);
       return { q, order, correctPos: order.indexOf(q.a) };
@@ -1313,14 +1304,14 @@ function fillExplain(){
   ex.innerHTML = `
     <p class="verdict ${ok?"ok":"no"}">${timedOut? d.timeUp+" " : ""}${ok? d.correct : d.wrong}</p>
     ${ok?"":`<p>${d.yourAnswer}<b>${chosenTxt}</b><br>${d.rightAnswer}<b>${rightTxt}</b></p>`}
-    <p>${en? q.e_en : q.e_vi}</p>
-    ${lang==="both"?`<p class="ealt">${q.e_en}</p>`:""}
     <div class="refrow"><span class="refchip">${refLabel(q.ref[0],q.ref[1],q.ref[2])}</span>
       <button type="button" class="ghostbtn" id="viewVerseBtn">${d.viewVerse}</button></div>`;
   $("#viewVerseBtn").addEventListener("click",()=>{
     const [bi,ch,v]=q.ref, b=BOOKS[bi];
+    activeTab="lookup";
     $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected", String(x.dataset.tab==="lookup")));
     $("#view-lookup").classList.remove("hidden"); $("#view-quiz").classList.add("hidden");
+    $("#view-settings").classList.add("hidden");
     curTest=b.ot?"ot":"nt";
     $$("[data-test]").forEach(x=>x.setAttribute("aria-pressed", String(x.dataset.test===curTest)));
     curBook=bi; curChapter=ch; renderBooks(); renderReader(); renderFavs();
