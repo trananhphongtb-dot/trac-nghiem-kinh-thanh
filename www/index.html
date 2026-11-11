@@ -37,14 +37,14 @@
       html{ -webkit-text-size-adjust:100%; }
       body{ margin:0; background:var(--bg); color:var(--ink);
         font-family:"Be Vietnam Pro", system-ui, sans-serif; font-size:16px; line-height:1.55; }
-      .wrap{ max-width:880px; margin:0 auto; padding:0 16px 64px; }
+      .wrap{ max-width:880px; margin:0 auto; padding:0 16px 24px; }
       h1,h2,h3,.serif{ font-family:"Noto Serif", Georgia, serif; }
       button{ font:inherit; cursor:pointer; }
       :focus-visible{ outline:3px solid var(--gold); outline-offset:2px; border-radius:6px; }
 
       /* ---------- top strip ---------- */
       .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
-        padding:14px 0 10px; }
+        padding:10px 0 8px; }
       .brand{ font-family:"Noto Serif",serif; font-weight:900; font-size:1.28rem; letter-spacing:.01em; }
       .brand small{ display:block; font-family:"Be Vietnam Pro",sans-serif; font-weight:600; font-size:.72rem;
         color:var(--ink2); letter-spacing:.08em; text-transform:uppercase; }
@@ -55,19 +55,18 @@
 
       /* ---------- verse of the day ---------- */
       .votd{ border:1px solid var(--line); border-left:6px solid var(--gold); background:var(--surface);
-        border-radius:10px; padding:16px 18px; box-shadow:var(--shadow); margin:6px 0 18px; }
-      .votd .k{ font-size:.72rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
-      .votd blockquote{ margin:8px 0 4px; font-family:"Noto Serif",serif; font-size:1.22rem; line-height:1.5; font-weight:500; }
-      .votd .ref{ color:var(--ink2); font-weight:600; font-size:.9rem; }
-      .votd .alt{ margin-top:8px; padding-top:8px; border-top:1px dashed var(--line);
-        font-family:"Noto Serif",serif; font-style:italic; color:var(--ink2); font-size:1rem; }
+        border-radius:10px; padding:10px 14px; box-shadow:var(--shadow); margin:4px 0 12px; }
+      .votd .k{ font-size:.68rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
+      .votd blockquote{ margin:5px 0 3px; font-family:"Noto Serif",serif; font-size:1.05rem; line-height:1.45; font-weight:500; }
+      .votd .ref{ color:var(--ink2); font-weight:600; font-size:.82rem; }
+      .votd .alt{ margin-top:5px; padding-top:5px; border-top:1px dashed var(--line);
+        font-family:"Noto Serif",serif; font-style:italic; color:var(--ink2); font-size:.9rem; }
 
       /* ---------- tabs ---------- */
-      .tabs{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0 0 18px; }
+      .tabs{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0 0 12px; }
       .tabs button{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
-        border-radius:10px; padding:12px; font-weight:800; font-size:1rem; min-height:3rem; }
+        border-radius:10px; padding:10px; font-weight:800; font-size:1rem; min-height:2.6rem; }
       .tabs button[aria-selected="true"]{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
-      .tabs button .sub{ display:block; font-weight:500; font-size:.76rem; opacity:.75; margin-top:2px; }
 
       /* ---------- lookup ---------- */
       .searchrow{ display:flex; gap:8px; margin-bottom:8px; }
@@ -77,14 +76,14 @@
         font-weight:800; padding:10px 18px; }
       .hint{ color:var(--ink2); font-size:.85rem; margin:0 0 14px; }
       .hint code{ background:var(--surface2); border:1px solid var(--line); border-radius:5px; padding:0 5px; font-size:.82em; }
-      .testament{ display:flex; gap:8px; margin:14px 0 10px; }
+      .testament{ display:flex; gap:8px; margin:10px 0 8px; }
       .testament button{ flex:1; border:1px solid var(--line); background:transparent; color:var(--ink2);
         border-radius:999px; font-weight:700; padding:8px; }
       .testament button[aria-pressed="true"]{ background:var(--gold-soft); color:var(--ink); border-color:var(--gold); }
       .bookgrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; }
       .book{ text-align:left; border:1px solid var(--line); background:var(--surface); border-radius:10px;
-        padding:11px 12px; color:var(--ink); }
-      .book b{ display:block; font-family:"Noto Serif",serif; font-size:.98rem; line-height:1.3; overflow-wrap:anywhere; }
+        padding:9px 10px; color:var(--ink); }
+      .book b{ display:block; font-family:"Noto Serif",serif; font-size:.92rem; line-height:1.3; overflow-wrap:anywhere; }
       .book span{ font-size:.78rem; color:var(--ink2); }
       .book .badge{ display:inline-block; margin-top:5px; font-size:.68rem; font-weight:800; letter-spacing:.05em;
         background:var(--gold-soft); color:var(--gold); border-radius:999px; padding:2px 8px; text-transform:uppercase; }
@@ -123,13 +122,12 @@
       /* ---------- quiz ---------- */
       .road{ position:relative; margin:6px 0 0; padding-left:26px; }
       .road::before{ content:""; position:absolute; left:9px; top:14px; bottom:14px; width:2px; background:var(--line); }
-      .stage{ position:relative; margin-bottom:14px; }
+      .stage{ position:relative; margin-bottom:10px; }
       .stage::before{ content:""; position:absolute; left:-23px; top:20px; width:14px; height:14px; border-radius:50%;
         background:var(--bg); border:3px solid var(--gold); }
-      .stagecard{ border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:16px 18px; box-shadow:var(--shadow); }
+      .stagecard{ border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:12px 14px; box-shadow:var(--shadow); }
       .stagecard .k{ font-size:.7rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
-      .stagecard h3{ margin:4px 0 4px; font-size:1.25rem; }
-      .stagecard p{ margin:0 0 10px; color:var(--ink2); font-size:.92rem; }
+      .stagecard h3{ margin:2px 0 6px; font-size:1.12rem; }
       .stagecard .meta{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
       .pill{ font-size:.78rem; font-weight:700; background:var(--surface2); border:1px solid var(--line);
         border-radius:999px; padding:3px 10px; color:var(--ink2); }
@@ -178,8 +176,6 @@
       .review .ritem{ border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:8px; background:var(--surface); }
       .review .ritem b{ display:block; margin-bottom:3px; }
       .review .ritem .yours{ color:var(--bad); } .review .ritem .corr{ color:var(--good); font-weight:700; }
-      footer{ margin-top:34px; color:var(--ink2); font-size:.84rem; border-top:1px solid var(--line); padding-top:14px; }
-      footer a{ color:var(--accent); }
       .hidden{ display:none !important; }
 
       /* ---------- first-visit language chooser ---------- */
@@ -204,7 +200,13 @@
       .langopt-d{ display:block; margin-top:6px; font-size:.92rem; }
       .langopt-d.alt{ color:var(--ink2); font-style:italic; font-size:.88rem; margin-top:2px; }
       .chooser-note{ color:var(--ink2); font-size:.85rem; margin:18px 0 0; line-height:1.6; }
-      .settingsbtn{ display:inline-flex; align-items:center; gap:8px; }
+      .settingsbtn{ display:inline-flex; align-items:center; justify-content:center; width:2.25rem; height:2.25rem;
+        padding:0; border-radius:50%; min-width:0; }
+      .settingsbtn svg{ width:19px; height:19px; }
+      .setsect{ margin-top:18px; padding-top:14px; border-top:1px solid var(--line); }
+      .setsect:first-of-type{ margin-top:14px; }
+      .about{ color:var(--ink2); font-size:.85rem; line-height:1.6; }
+      .about a{ color:var(--accent); }
       @media (max-width:560px){
         .bookgrid{ grid-template-columns:repeat(auto-fill,minmax(108px,1fr)); }
         .votd blockquote{ font-size:1.1rem; }
@@ -238,9 +240,8 @@
       <div class="topbar">
         <div class="brand"><span data-i="brand">Kinh Thánh Song Ngữ</span>
           <small data-i="brandsub">Việt 1925 · Anh KJV</small></div>
-        <button type="button" class="ghostbtn settingsbtn" id="settingsBtn">
+        <button type="button" class="ghostbtn settingsbtn" id="settingsBtn" aria-label="Settings">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg>
-          <span data-i="settings">Settings</span>
         </button>
       </div>
 
@@ -248,10 +249,10 @@
 
       <nav class="tabs" role="tablist">
         <button type="button" role="tab" id="tab-lookup" aria-selected="true" data-tab="lookup">
-          <span data-i="tabLookup">Tra cứu</span><span class="sub" data-i="tabLookupSub">66 sách · tìm theo câu, từ khóa</span>
+          <span data-i="tabLookup">Tra cứu</span>
         </button>
         <button type="button" role="tab" id="tab-quiz" aria-selected="false" data-tab="quiz">
-          <span data-i="tabQuiz">Trắc nghiệm</span><span class="sub" data-i="tabQuizSub">Lộ trình 3 chặng · 50 câu</span>
+          <span data-i="tabQuiz">Trắc nghiệm</span>
         </button>
       </nav>
 
@@ -262,7 +263,6 @@
             placeholder="Giăng 3:16 · Sáng 1:1 · hoặc từ khóa: sự sáng…" />
           <button type="submit" data-i="searchBtn">Tìm</button>
         </form>
-        <p class="hint" data-i="searchHint">Gõ địa chỉ kiểu <code>Giăng 3:16</code>, <code>John 1:1</code> (không dấu cũng được) hoặc gõ từ khóa để tìm trong các chương mẫu.</p>
         <div id="searchResults"></div>
 
         <div class="testament" role="group" aria-label="Ước / Testament">
@@ -283,9 +283,8 @@
             <div class="stagecard">
               <div class="k" data-i="mixedK">Chặng đặc biệt</div>
               <h3 data-i="mixedT">Thi tổng hợp</h3>
-              <p data-i="mixedD">10 câu rút ngẫu nhiên từ cả 3 chặng, đáp án được xáo trộn mỗi lần thi.</p>
               <div class="meta">
-                <span class="pill">30 <span data-i="questions">câu</span></span>
+                <span class="pill" id="mixedCount"></span>
                 <span class="pill best hidden" id="best-mixed"></span>
                 <button type="button" class="startbtn" data-start="mixed" data-i="start">Vào thi</button>
               </div>
@@ -295,7 +294,6 @@
             <div class="stagecard">
               <div class="k" data-i="wrongK">Ôn tập</div>
               <h3 data-i="wrongT">Ôn câu sai</h3>
-              <p data-i="wrongD">Làm lại đúng những câu bạn vừa trả lời sai trong phiên này.</p>
               <div class="meta">
                 <span class="pill" id="wrongCount"></span>
                 <button type="button" class="startbtn" data-start="wrong" data-i="review">Ôn ngay</button>
@@ -326,14 +324,25 @@
             <button type="button" data-lang="en" aria-pressed="true">English</button>
             <button type="button" data-lang="both" aria-pressed="false">Việt + EN</button>
           </div>
-          <p class="hint" style="margin-top:14px" data-i="settingsNote">Your language choice is remembered on this device, so the app opens in it next time. Changing it here applies at once to the whole interface, book names, questions and explanations.</p>
+          <div class="setsect">
+            <p class="chapsub" data-i="qlenLabel">Số câu mỗi bài</p>
+            <div class="seg" role="group" aria-label="Số câu mỗi bài / Questions per quiz">
+              <button type="button" data-qlen="10" aria-pressed="false">10</button>
+              <button type="button" data-qlen="20" aria-pressed="false">20</button>
+              <button type="button" data-qlen="30" aria-pressed="true">30</button>
+              <button type="button" data-qlen="50" aria-pressed="false">50</button>
+            </div>
+          </div>
+          <div class="setsect">
+            <p class="chapsub" data-i="aboutTitle">Giới thiệu</p>
+            <div class="about" id="aboutText"></div>
+          </div>
           <div class="nextrow" style="justify-content:flex-start">
             <button type="button" class="ghostbtn" id="settingsBack" data-i="back">← Back</button>
           </div>
         </div>
       </main>
 
-      <footer id="pageFoot"></footer>
     </div>
     <div class="toast" id="toast" role="status"></div>
 
@@ -348,6 +357,7 @@ const I = {
   vi: {
     brand:"Kinh Thánh Song Ngữ", brandsub:"Việt 1925 · Anh KJV",
     settings:"Cài đặt", langLabel:"Ngôn ngữ", back:"← Quay lại",
+    qlenLabel:"Số câu mỗi bài", aboutTitle:"Giới thiệu",
     settingsNote:"Lựa chọn ngôn ngữ được nhớ trên thiết bị này, lần mở sau app vào thẳng ngôn ngữ đã chọn. Đổi ở đây áp dụng ngay cho toàn bộ giao diện, tên sách, câu hỏi và giải thích.",
     tabLookup:"Tra cứu", tabLookupSub:"66 sách · tìm theo câu, từ khóa",
     tabQuiz:"Trắc nghiệm", tabQuizSub:"Lộ trình 4 chặng · ngân hàng 1.101 câu · mỗi lượt 30 câu",
@@ -378,6 +388,7 @@ const I = {
   en: {
     brand:"Bilingual Bible", brandsub:"Vietnamese 1925 · English KJV",
     settings:"Settings", langLabel:"Language", back:"← Back",
+    qlenLabel:"Questions per quiz", aboutTitle:"About",
     settingsNote:"Your language choice is remembered on this device, so the app opens in it next time. Changing it here applies at once to the whole interface, book names, questions and explanations.",
     tabLookup:"Look up", tabLookupSub:"66 books · search by reference or keyword",
     tabQuiz:"Quiz", tabQuizSub:"4-stage roadmap · 1,101-question bank · 30 per attempt",
@@ -438,13 +449,15 @@ function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("sh
 /* ================= LANGUAGE ================= */
 function applyLang(){
   $$("[data-lang]").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.lang===lang)));
+  $$("[data-qlen]").forEach(b=>b.setAttribute("aria-pressed", String(parseInt(b.dataset.qlen,10)===EXAM_LEN)));
   const d = ui();
   document.documentElement.lang = lang==="en" ? "en" : "vi";
   document.title = !langChosen ? "Bible Quiz · Trắc nghiệm Kinh Thánh" : lang==="both" ? "Trắc nghiệm Kinh Thánh · Bible Quiz" : d.docTitle;
   $$("[data-i]").forEach(el=>{ const k=el.dataset.i; if(d[k]!==undefined) el.innerHTML=d[k]; });
   const si=$("#searchInput"); if(si) si.placeholder = d.searchPh;
   const vd=$("#votd"); if(vd) vd.setAttribute("aria-label", lang==="en" ? "Verse of the day" : lang==="both" ? "Câu gốc hôm nay / Verse of the day" : "Câu gốc hôm nay");
-  $("#pageFoot").innerHTML = d.foot;
+  const sb=$("#settingsBtn"); if(sb) sb.setAttribute("aria-label", d.settings);
+  const ab=$("#aboutText"); if(ab) ab.innerHTML = d.foot;
   renderVotd(); renderBooks(); renderReader(); renderFavs(); renderRoadmap();
   if(lastSearch && $("#searchResults").innerHTML.trim()) runSearch(lastSearch);
   if(quiz && !$("#quizRun").classList.contains("hidden")) showQuestion(false);
@@ -456,6 +469,7 @@ function pickLang(v){
   saveLang(); applyLang();
 }
 $$("[data-lang]").forEach(b=>b.addEventListener("click",()=>pickLang(b.dataset.lang)));
+$$("[data-qlen]").forEach(b=>b.addEventListener("click",()=>{ EXAM_LEN=parseInt(b.dataset.qlen,10); saveQlen(); applyLang(); }));
 $$("[data-choose]").forEach(b=>b.addEventListener("click",()=>{ pickLang(b.dataset.choose); window.scrollTo({top:0}); }));
 $("#settingsBtn").addEventListener("click",()=>{
   $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected","false"));
@@ -1201,17 +1215,15 @@ function renderRoadmap(){
     <div class="stage"><div class="stagecard">
       <div class="k">${d.stage} ${s.stage}</div>
       <h3>${bothName(s.viT,s.enT)}</h3>
-      <p>${lang==="both"? s.viD+"<br>"+s.enD : lang==="en"? s.enD : s.viD}</p>
       <div class="meta">
         <span class="pill">${d.bank}: ${BANKS[s.id].length} ${d.questions}</span>
-        <span class="pill">${d.testL}: ${EXAM_LEN} ${d.questions} · ${d.randomNR}</span>
-        <span class="pill">${d.perQ}</span>
         ${best[s.id]!==undefined?`<span class="pill best">${d.best}: ${best[s.id]}/${EXAM_LEN}</span>`:""}
         <button type="button" class="startbtn" data-start="${s.id}">${d.start}</button>
       </div>
     </div></div>`).join("");
   $("#wrongStage").classList.toggle("hidden", !wrongPool.length);
   $("#wrongCount").textContent = wrongPool.length + " " + d.questions;
+  const mc=$("#mixedCount"); if(mc) mc.textContent = EXAM_LEN + " " + d.questions;
   const bm=$("#best-mixed");
   if(best.mixed!==undefined){ bm.classList.remove("hidden"); bm.textContent = ui().best+": "+best.mixed+"/"+EXAM_LEN; }
   else bm.classList.add("hidden");
@@ -1220,7 +1232,10 @@ function renderRoadmap(){
 
 let quiz=null, timerId=null;
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-const EXAM_LEN = 30;
+const QLEN_KEY = "kt-qlen";
+function loadSavedQlen(){ try{ const v=parseInt(localStorage.getItem(QLEN_KEY),10); return [10,20,30,50].includes(v)?v:null; }catch(e){ return null; } }
+function saveQlen(){ try{ localStorage.setItem(QLEN_KEY, String(EXAM_LEN)); }catch(e){} }
+let EXAM_LEN = loadSavedQlen() || 30;
 const seenBySet = {};   // questions already served per set in this session, so attempts do not repeat until the bank is used up
 function sampleQuestions(pool, setId, n){
   if(!pool || !pool.length) return [];
