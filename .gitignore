@@ -1,0 +1,12 @@
+# Bible Quiz — local / secret files (never commit)
+node_modules/
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+*.keystore
+*.jks
+.DS_Store
+# Binary assets are stored as *.b64 in the repo (text-only push path);
+# the decoded files are generated locally / in CI, never committed.
+assets/icon.png
