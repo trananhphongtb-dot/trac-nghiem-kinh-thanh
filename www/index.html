@@ -53,15 +53,6 @@
         padding:6px 14px; border-radius:999px; min-height:2.25rem; }
       .seg button[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); }
 
-      /* ---------- verse of the day ---------- */
-      .votd{ border:1px solid var(--line); border-left:6px solid var(--gold); background:var(--surface);
-        border-radius:10px; padding:10px 14px; box-shadow:var(--shadow); margin:4px 0 12px; }
-      .votd .k{ font-size:.68rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
-      .votd blockquote{ margin:5px 0 3px; font-family:"Noto Serif",serif; font-size:1.05rem; line-height:1.45; font-weight:500; }
-      .votd .ref{ color:var(--ink2); font-weight:600; font-size:.82rem; }
-      .votd .alt{ margin-top:5px; padding-top:5px; border-top:1px dashed var(--line);
-        font-family:"Noto Serif",serif; font-style:italic; color:var(--ink2); font-size:.9rem; }
-
       /* ---------- tabs ---------- */
       .tabs{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0 0 12px; }
       .tabs button{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
@@ -209,7 +200,6 @@
       .about a{ color:var(--accent); }
       @media (max-width:560px){
         .bookgrid{ grid-template-columns:repeat(auto-fill,minmax(108px,1fr)); }
-        .votd blockquote{ font-size:1.1rem; }
         .qcard{ padding:16px; }
         .brand{ font-size:1.12rem; }
       }
@@ -244,8 +234,6 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg>
         </button>
       </div>
-
-      <section class="votd" id="votd" aria-label="Câu gốc hôm nay"></section>
 
       <nav class="tabs" role="tablist">
         <button type="button" role="tab" id="tab-lookup" aria-selected="true" data-tab="lookup">
@@ -455,10 +443,9 @@ function applyLang(){
   document.title = !langChosen ? "Bible Quiz · Trắc nghiệm Kinh Thánh" : lang==="both" ? "Trắc nghiệm Kinh Thánh · Bible Quiz" : d.docTitle;
   $$("[data-i]").forEach(el=>{ const k=el.dataset.i; if(d[k]!==undefined) el.innerHTML=d[k]; });
   const si=$("#searchInput"); if(si) si.placeholder = d.searchPh;
-  const vd=$("#votd"); if(vd) vd.setAttribute("aria-label", lang==="en" ? "Verse of the day" : lang==="both" ? "Câu gốc hôm nay / Verse of the day" : "Câu gốc hôm nay");
   const sb=$("#settingsBtn"); if(sb) sb.setAttribute("aria-label", d.settings);
   const ab=$("#aboutText"); if(ab) ab.innerHTML = d.foot;
-  renderVotd(); renderBooks(); renderReader(); renderFavs(); renderRoadmap();
+  renderBooks(); renderReader(); renderFavs(); renderRoadmap();
   if(lastSearch && $("#searchResults").innerHTML.trim()) runSearch(lastSearch);
   if(quiz && !$("#quizRun").classList.contains("hidden")) showQuestion(false);
   else if(quiz && quiz.finished && !$("#quizDone").classList.contains("hidden")) renderDone();
@@ -497,17 +484,6 @@ const VOTD = [[42,3,16],[18,23,1],[0,1,1],[42,1,1],[42,1,14],[39,5,14],[18,1,1],
 function bookName(b){ return lang==="en" ? b.en : b.vi; }
 function refLabel(bi,ch,v){ const b=BOOKS[bi]; const one=nm=>nm+" "+ch+(v?":"+v:"");
   return lang==="both" ? one(b.vi)+" · "+one(b.en) : one(bookName(b)); }
-function renderVotd(){
-  const day = Math.floor(Date.now()/86400000);
-  const [bi,ch,v] = VOTD[day % VOTD.length];
-  const b = BOOKS[bi], d = ui();
-  const main = lang==="en" ? b.data[ch].en[v-1] : b.data[ch].vi[v-1];
-  const alt  = lang==="both" ? `<div class="alt">“${b.data[ch].en[v-1]}”</div>` : "";
-  $("#votd").innerHTML = `<div class="k">${d.votd}</div>
-    <blockquote>“${main}”</blockquote>
-    <div class="ref">${refLabel(bi,ch,v)} · ${versionShort()}</div>${alt}`;
-}
-
 /* ================= LOOKUP ================= */
 $$("[data-test]").forEach(b=>b.addEventListener("click",()=>{
   curTest=b.dataset.test;
