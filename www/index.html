@@ -37,7 +37,9 @@
       html{ -webkit-text-size-adjust:100%; }
       body{ margin:0; background:var(--bg); color:var(--ink);
         font-family:"Be Vietnam Pro", system-ui, sans-serif; font-size:16px; line-height:1.55; }
-      .wrap{ max-width:880px; margin:0 auto; padding:0 16px 28px; }
+      .wrap{ max-width:880px; margin:0 auto; padding:0 16px 28px;
+        padding-top:env(safe-area-inset-top, 0px);
+        padding-bottom:calc(28px + env(safe-area-inset-bottom, 0px)); }
       h1,h2,h3,.serif{ font-family:"Noto Serif", Georgia, serif; }
       button{ font:inherit; cursor:pointer; }
       :focus-visible{ outline:3px solid var(--gold); outline-offset:2px; border-radius:6px; }
@@ -108,7 +110,7 @@
       .favhead{ display:flex; align-items:center; justify-content:space-between; margin:20px 0 8px; }
       .favhead h3{ margin:0; font-size:1.1rem; }
       .empty{ color:var(--ink2); border:1px dashed var(--line); border-radius:10px; padding:16px; text-align:center; }
-      .toast{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(20px); opacity:0;
+      .toast{ position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom, 0px)); transform:translateX(-50%) translateY(20px); opacity:0;
         background:var(--ink); color:var(--bg); padding:10px 18px; border-radius:999px; font-weight:700; font-size:.9rem;
         transition:.25s; pointer-events:none; z-index:50; max-width:92vw; text-align:center; }
       .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
@@ -173,6 +175,12 @@
       .setlabel:first-of-type{ margin-top:10px; }
       .abouttext{ color:var(--ink2); font-size:.86rem; margin:0; line-height:1.6; }
       .abouttext a{ color:var(--accent); }
+      .abouttoggle{ display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%;
+        margin-top:18px; padding:10px 0; border:0; border-top:1px dashed var(--line); background:transparent;
+        color:var(--ink); font-weight:800; font-size:.95rem; text-align:left; }
+      .abouttoggle .chev{ color:var(--ink2); transition:transform .2s; }
+      .abouttoggle[aria-expanded="true"] .chev{ transform:rotate(180deg); }
+      .readerback{ display:flex; margin:0 0 10px; }
       .hidden{ display:none !important; }
 
       /* ---------- first-visit language chooser ---------- */
@@ -180,7 +188,8 @@
       html:not(.lang-set) #chooser{ display:flex; }
       html:not(.lang-set) .wrap{ display:none; }
       .chooser{ position:fixed; inset:0; z-index:60; background:var(--bg); overflow:auto;
-        align-items:center; justify-content:center; padding:28px 16px 40px; }
+        align-items:center; justify-content:center;
+        padding:calc(28px + env(safe-area-inset-top, 0px)) 16px calc(40px + env(safe-area-inset-bottom, 0px)); }
       .chooser-card{ width:100%; max-width:560px; text-align:center; }
       .chooser-brand{ font-family:"Noto Serif",serif; font-weight:900; font-size:1.65rem; line-height:1.25; }
       .chooser-sub{ color:var(--ink2); font-weight:600; font-size:.85rem; margin:8px 0 0; line-height:1.6; }
@@ -230,12 +239,12 @@
         <div class="brand"><span data-i="brand">Kinh Thánh Song Ngữ</span>
           <small data-i="brandsub">Việt 1925 · Anh KJV</small></div>
         <button type="button" class="iconbtn" id="settingsBtn" aria-label="Settings · Cài đặt" title="Settings · Cài đặt">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
       </div>
 
       <nav class="tabs" role="tablist">
-        <button type="button" role="tab" id="tab-lookup" aria-selected="false" data-tab="lookup">
+        <button type="button" role="tab" id="tab-lookup" aria-selected="true" data-tab="lookup">
           <span data-i="tabLookup">Tra cứu</span>
         </button>
         <button type="button" role="tab" id="tab-quiz" aria-selected="false" data-tab="quiz">
@@ -244,22 +253,24 @@
       </nav>
 
       <!-- ============ LOOKUP ============ -->
-      <main id="view-lookup" class="hidden">
-        <form class="searchrow" id="searchForm">
-          <input id="searchInput" type="search" autocomplete="off"
-            placeholder="Giăng 3:16 · Sáng 1:1 · hoặc từ khóa: sự sáng…" />
-          <button type="submit" data-i="searchBtn">Tìm</button>
-        </form>
-        <div id="searchResults"></div>
+      <main id="view-lookup">
+        <div id="lookupHome">
+          <form class="searchrow" id="searchForm">
+            <input id="searchInput" type="search" autocomplete="off"
+              placeholder="Giăng 3:16 · Sáng 1:1 · hoặc từ khóa: sự sáng…" />
+            <button type="submit" data-i="searchBtn">Tìm</button>
+          </form>
+          <div id="searchResults"></div>
 
-        <div class="testament" role="group" aria-label="Ước / Testament">
-          <button type="button" data-test="ot" aria-pressed="true"><span data-i="ot">Cựu Ước</span> · 39</button>
-          <button type="button" data-test="nt" aria-pressed="false"><span data-i="nt">Tân Ước</span> · 27</button>
-          <button type="button" data-test="fav" aria-pressed="false">♥ <span data-i="fav">Yêu thích</span> (<span id="favCount">0</span>)</button>
+          <div class="testament" role="group" aria-label="Ước / Testament">
+            <button type="button" data-test="ot" aria-pressed="true"><span data-i="ot">Cựu Ước</span> · 39</button>
+            <button type="button" data-test="nt" aria-pressed="false"><span data-i="nt">Tân Ước</span> · 27</button>
+            <button type="button" data-test="fav" aria-pressed="false">♥ <span data-i="fav">Yêu thích</span> (<span id="favCount">0</span>)</button>
+          </div>
+          <div id="bookArea"></div>
+          <div id="favArea"></div>
         </div>
-        <div id="bookArea"></div>
-        <div id="readerArea"></div>
-        <div id="favArea"></div>
+        <div id="readerArea" class="hidden"></div>
       </main>
 
       <!-- ============ QUIZ ============ -->
@@ -311,8 +322,13 @@
             <button type="button" data-perq="20" aria-pressed="false">20</button>
             <button type="button" data-perq="30" aria-pressed="true">30</button>
           </div>
-          <p class="setlabel" data-i="aboutLabel">About</p>
-          <p class="abouttext" id="aboutText"></p>
+          <button type="button" class="abouttoggle" id="aboutToggle" aria-expanded="false" aria-controls="aboutBody">
+            <span data-i="aboutLabel">About</span>
+            <span class="chev" aria-hidden="true">▾</span>
+          </button>
+          <div id="aboutBody" class="hidden">
+            <p class="abouttext" id="aboutText"></p>
+          </div>
           <div class="nextrow" style="justify-content:flex-start">
             <button type="button" class="ghostbtn" id="settingsBack" data-i="back">← Back</button>
           </div>
@@ -450,9 +466,9 @@ $$("[data-perq]").forEach(b=>b.addEventListener("click",()=>{
 }));
 
 /* ================= VIEWS / TABS =================
-   Nothing is open on load: tapping a tab reveals its content,
-   tapping the open tab again folds it away. */
-let activeTab = null;
+   The Lookup tab is open on load; tapping a tab shows its
+   content right away below the tab bar. */
+let activeTab = "lookup";
 function paintTabs(){ $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected", String(x.dataset.tab===activeTab))); }
 $("#settingsBtn").addEventListener("click",()=>{
   $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected","false"));
@@ -468,15 +484,17 @@ $("#settingsBack").addEventListener("click",()=>{
   window.scrollTo({top:0, behavior:"smooth"});
 });
 $$("[data-tab]").forEach(b=>b.addEventListener("click",()=>{
-  const t=b.dataset.tab;
-  const wasOpen = activeTab===t && !$("#view-"+t).classList.contains("hidden");
-  activeTab = wasOpen ? null : t;
+  activeTab=b.dataset.tab;
   $("#view-lookup").classList.toggle("hidden", activeTab!=="lookup");
   $("#view-quiz").classList.toggle("hidden", activeTab!=="quiz");
   $("#view-settings").classList.add("hidden");
   paintTabs();
   window.scrollTo({top:0, behavior:"smooth"});
 }));
+$("#aboutToggle").addEventListener("click",()=>{
+  const body=$("#aboutBody"), open=body.classList.toggle("hidden")===false;
+  $("#aboutToggle").setAttribute("aria-expanded", String(open));
+});
 
 /* ================= LOOKUP ================= */
 function bookName(b){ return lang==="en" ? b.en : b.vi; }
@@ -501,18 +519,30 @@ function renderBooks(){
     openBook(+btn.dataset.book);
   }));
 }
+/* The reader is its own page: opening a book swaps the lookup home
+   (search + book list) for the chapter page, with a way back. */
+let readerOpen=false;
+function syncLookup(){
+  $("#lookupHome").classList.toggle("hidden", readerOpen);
+  $("#readerArea").classList.toggle("hidden", !readerOpen);
+}
+function closeReader(){ readerOpen=false; syncLookup(); window.scrollTo({top:0, behavior:"smooth"}); }
 function openBook(i){
   curBook=i; const b=BOOKS[i];
   curChapter = b.data ? +Object.keys(b.data)[0] : 1;
-  renderReader(); $("#readerArea").scrollIntoView({behavior:"smooth", block:"start"});
+  readerOpen=true; syncLookup(); renderReader();
+  window.scrollTo({top:0, behavior:"smooth"});
 }
 function verseText(b,ch,v,which){ return b.data[ch][which][v-1]; }
 function renderReader(){
   const area=$("#readerArea"), b=BOOKS[curBook], d=ui();
   if(!b){ area.innerHTML=""; return; }
   if(!b.data){
-    area.innerHTML = `<div class="panel" style="margin-top:14px"><h2>${bookName(b)}</h2>
+    area.innerHTML = `<div class="panel">
+      <div class="readerback"><button type="button" class="ghostbtn" data-back="1">${d.back}</button></div>
+      <h2>${bookName(b)}</h2>
       <p class="chapsub">${b.ch} ${d.chapters}</p><p>${d.noSample}</p></div>`;
+    area.querySelector("[data-back]").addEventListener("click", closeReader);
     return;
   }
   const chaps = Object.keys(b.data).map(Number).sort((a,c)=>a-c);
@@ -530,7 +560,8 @@ function renderReader(){
       </span></div>`;
   }).join("");
   const pos = chaps.indexOf(curChapter);
-  area.innerHTML = `<div class="panel" style="margin-top:14px">
+  area.innerHTML = `<div class="panel">
+    <div class="readerback"><button type="button" class="ghostbtn" data-back="1">${d.back}</button></div>
     <h2>${bookName(b)}</h2>
     <p class="chapsub">${d.chapter} ${curChapter} · ${versionLine()}</p>
     <div class="chips">${chaps.map(c=>`<button type="button" data-ch="${c}" aria-pressed="${c===curChapter}">${c}</button>`).join("")}</div>
@@ -539,7 +570,8 @@ function renderReader(){
       <button type="button" data-nav="-1" ${pos<=0?"disabled":""}>${d.prev}</button>
       <button type="button" data-nav="1" ${pos>=chaps.length-1?"disabled":""}>${d.next}</button>
     </div></div>`;
-  area.querySelectorAll("[data-ch]").forEach(btn=>btn.addEventListener("click",()=>{ curChapter=+btn.dataset.ch; renderReader(); }));
+  area.querySelector("[data-back]").addEventListener("click", closeReader);
+  area.querySelectorAll("[data-ch]").forEach(btn=>btn.addEventListener("click",()=>{ curChapter=+btn.dataset.ch; renderReader(); window.scrollTo({top:0, behavior:"smooth"}); }));
   area.querySelectorAll("[data-nav]").forEach(btn=>btn.addEventListener("click",()=>{
     curChapter = chaps[pos + (+btn.dataset.nav)]; renderReader();
     $("#readerArea").scrollIntoView({behavior:"smooth", block:"start"});
@@ -606,7 +638,7 @@ function runSearch(qRaw){
       if(b.data && b.data[ch] && (!v || b.data[ch].vi[v-1])){
         curTest = b.ot?"ot":"nt";
         $$("[data-test]").forEach(x=>x.setAttribute("aria-pressed", String(x.dataset.test===curTest)));
-        curBook=bi; curChapter=ch; renderBooks(); renderReader(); renderFavs();
+        curBook=bi; curChapter=ch; readerOpen=true; syncLookup(); renderBooks(); renderReader(); renderFavs();
         box.innerHTML="";
         if(v){ const el=$("#readerArea").querySelector(`.verse[data-v="${v}"]`);
           if(el){ el.classList.add("open"); el.scrollIntoView({behavior:"smooth", block:"center"}); } }
@@ -634,7 +666,7 @@ function runSearch(qRaw){
     const [bi,ch,v]=el.dataset.jump.split(":").map(Number), b=BOOKS[bi];
     curTest=b.ot?"ot":"nt";
     $$("[data-test]").forEach(x=>x.setAttribute("aria-pressed", String(x.dataset.test===curTest)));
-    curBook=bi; curChapter=ch; box.innerHTML=""; renderBooks(); renderReader(); renderFavs();
+    curBook=bi; curChapter=ch; readerOpen=true; syncLookup(); box.innerHTML=""; renderBooks(); renderReader(); renderFavs();
     const t=$("#readerArea").querySelector(`.verse[data-v="${v}"]`);
     if(t){ t.classList.add("open"); t.scrollIntoView({behavior:"smooth", block:"center"}); }
   }));
@@ -1314,7 +1346,7 @@ function fillExplain(){
     $("#view-settings").classList.add("hidden");
     curTest=b.ot?"ot":"nt";
     $$("[data-test]").forEach(x=>x.setAttribute("aria-pressed", String(x.dataset.test===curTest)));
-    curBook=bi; curChapter=ch; renderBooks(); renderReader(); renderFavs();
+    curBook=bi; curChapter=ch; readerOpen=true; syncLookup(); renderBooks(); renderReader(); renderFavs();
     const t=$("#readerArea").querySelector(`.verse[data-v="${v}"]`);
     if(t){ t.classList.add("open"); t.scrollIntoView({behavior:"smooth", block:"center"}); }
   });
