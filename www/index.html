@@ -1,0 +1,1393 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Bible Quiz · Trắc nghiệm Kinh Thánh</title>
+    <meta name="description" content="Free bilingual Bible quiz and lookup: read the Bible in English KJV and Vietnamese 1925, search by reference or keyword, and take 30-question quizzes drawn from a bank of 1,101 questions. Trắc nghiệm và tra cứu Kinh Thánh song ngữ: đọc Kinh Thánh bản Anh KJV và Việt 1925, tìm theo địa chỉ hoặc từ khóa, mỗi lượt thi 30 câu rút từ ngân hàng 1.101 câu hỏi." />
+    <script>
+      /* If a language was chosen on a previous visit, skip the first-visit chooser. */
+      try { var __savedLang = localStorage.getItem("kt-lang");
+        if (__savedLang === "vi" || __savedLang === "en" || __savedLang === "both") document.documentElement.classList.add("lang-set");
+      } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,500;0,700;0,900;1,500&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
+      * { box-sizing: border-box; }
+      :root{
+        --bg:#fbfaf6; --surface:#ffffff; --surface2:#f3eee1; --ink:#211a12; --ink2:#5c5342;
+        --line:#ddd3ba; --accent:#7c2231; --accent-ink:#ffffff; --gold:#a97b12; --gold-soft:#f5e9c8;
+        --good:#1e7a3c; --good-bg:#e2f2e5; --bad:#b3271e; --bad-bg:#fbe7e4;
+        --shadow:0 1px 2px rgba(60,45,10,.08),0 8px 24px rgba(60,45,10,.07);
+        color-scheme: light dark;
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#16120d; --surface:#201a12; --surface2:#2a2115; --ink:#f2ead8; --ink2:#bfae8f;
+          --line:#453723; --accent:#d98a94; --accent-ink:#2a0e13; --gold:#d9a92f; --gold-soft:#3a2f14;
+          --good:#6fce8b; --good-bg:#17301d; --bad:#ff9a8f; --bad-bg:#3a1712;
+          --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+        }
+      }
+      html{ -webkit-text-size-adjust:100%; }
+      body{ margin:0; background:var(--bg); color:var(--ink);
+        font-family:"Be Vietnam Pro", system-ui, sans-serif; font-size:16px; line-height:1.55; }
+      .wrap{ max-width:880px; margin:0 auto; padding:0 16px 64px; }
+      h1,h2,h3,.serif{ font-family:"Noto Serif", Georgia, serif; }
+      button{ font:inherit; cursor:pointer; }
+      :focus-visible{ outline:3px solid var(--gold); outline-offset:2px; border-radius:6px; }
+
+      /* ---------- top strip ---------- */
+      .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+        padding:14px 0 10px; }
+      .brand{ font-family:"Noto Serif",serif; font-weight:900; font-size:1.28rem; letter-spacing:.01em; }
+      .brand small{ display:block; font-family:"Be Vietnam Pro",sans-serif; font-weight:600; font-size:.72rem;
+        color:var(--ink2); letter-spacing:.08em; text-transform:uppercase; }
+      .seg{ display:inline-flex; background:var(--surface2); border:1px solid var(--line); border-radius:999px; padding:3px; }
+      .seg button{ border:0; background:transparent; color:var(--ink2); font-weight:700; font-size:.85rem;
+        padding:6px 14px; border-radius:999px; min-height:2.25rem; }
+      .seg button[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); }
+
+      /* ---------- verse of the day ---------- */
+      .votd{ border:1px solid var(--line); border-left:6px solid var(--gold); background:var(--surface);
+        border-radius:10px; padding:16px 18px; box-shadow:var(--shadow); margin:6px 0 18px; }
+      .votd .k{ font-size:.72rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
+      .votd blockquote{ margin:8px 0 4px; font-family:"Noto Serif",serif; font-size:1.22rem; line-height:1.5; font-weight:500; }
+      .votd .ref{ color:var(--ink2); font-weight:600; font-size:.9rem; }
+      .votd .alt{ margin-top:8px; padding-top:8px; border-top:1px dashed var(--line);
+        font-family:"Noto Serif",serif; font-style:italic; color:var(--ink2); font-size:1rem; }
+
+      /* ---------- tabs ---------- */
+      .tabs{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0 0 18px; }
+      .tabs button{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
+        border-radius:10px; padding:12px; font-weight:800; font-size:1rem; min-height:3rem; }
+      .tabs button[aria-selected="true"]{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+      .tabs button .sub{ display:block; font-weight:500; font-size:.76rem; opacity:.75; margin-top:2px; }
+
+      /* ---------- lookup ---------- */
+      .searchrow{ display:flex; gap:8px; margin-bottom:8px; }
+      .searchrow input{ flex:1; min-width:0; border:1px solid var(--line); border-radius:10px; background:var(--surface);
+        color:var(--ink); padding:10px 14px; font:inherit; min-height:2.75rem; }
+      .searchrow button{ border:0; border-radius:10px; background:var(--accent); color:var(--accent-ink);
+        font-weight:800; padding:10px 18px; }
+      .hint{ color:var(--ink2); font-size:.85rem; margin:0 0 14px; }
+      .hint code{ background:var(--surface2); border:1px solid var(--line); border-radius:5px; padding:0 5px; font-size:.82em; }
+      .testament{ display:flex; gap:8px; margin:14px 0 10px; }
+      .testament button{ flex:1; border:1px solid var(--line); background:transparent; color:var(--ink2);
+        border-radius:999px; font-weight:700; padding:8px; }
+      .testament button[aria-pressed="true"]{ background:var(--gold-soft); color:var(--ink); border-color:var(--gold); }
+      .bookgrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; }
+      .book{ text-align:left; border:1px solid var(--line); background:var(--surface); border-radius:10px;
+        padding:11px 12px; color:var(--ink); }
+      .book b{ display:block; font-family:"Noto Serif",serif; font-size:.98rem; line-height:1.3; overflow-wrap:anywhere; }
+      .book span{ font-size:.78rem; color:var(--ink2); }
+      .book .badge{ display:inline-block; margin-top:5px; font-size:.68rem; font-weight:800; letter-spacing:.05em;
+        background:var(--gold-soft); color:var(--gold); border-radius:999px; padding:2px 8px; text-transform:uppercase; }
+      .book.dim{ opacity:.55; }
+      .chips{ display:flex; flex-wrap:wrap; gap:7px; margin:12px 0 4px; }
+      .chips button{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px;
+        min-width:2.75rem; padding:6px 10px; font-weight:700; }
+      .chips button[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+      .panel{ border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:18px; box-shadow:var(--shadow); }
+      .panel h2{ margin:0 0 2px; font-size:1.45rem; font-weight:900; }
+      .panel .chapsub{ color:var(--ink2); margin:0 0 14px; font-size:.9rem; }
+      .verse{ padding:7px 10px; border-radius:8px; margin:0 -10px; }
+      .verse:hover{ background:var(--surface2); }
+      .verse .n{ font-size:.72rem; font-weight:800; color:var(--gold); vertical-align:super; margin-right:5px; }
+      .verse .vt{ font-family:"Noto Serif",serif; font-size:1.08rem; line-height:1.65; }
+      .verse .vt.alt{ display:block; margin-top:3px; font-style:italic; color:var(--ink2); font-size:1rem; }
+      .verse .vtools{ display:none; margin-top:6px; gap:8px; }
+      .verse.open .vtools{ display:flex; }
+      .verse .vtools button{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
+        border-radius:999px; font-size:.8rem; font-weight:700; padding:5px 12px; min-height:2.25rem; }
+      .verse.faved{ background:var(--gold-soft); }
+      .chapnav{ display:flex; justify-content:space-between; gap:8px; margin-top:16px; }
+      .chapnav button{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:10px;
+        font-weight:700; padding:9px 14px; }
+      .chapnav button:disabled{ opacity:.4; cursor:default; }
+      .results .verse{ border-bottom:1px dashed var(--line); border-radius:0; margin:0; padding:10px 4px; }
+      .results .rref{ font-weight:800; color:var(--accent); font-size:.85rem; }
+      .favhead{ display:flex; align-items:center; justify-content:space-between; margin:20px 0 8px; }
+      .favhead h3{ margin:0; font-size:1.1rem; }
+      .empty{ color:var(--ink2); border:1px dashed var(--line); border-radius:10px; padding:16px; text-align:center; }
+      .toast{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(20px); opacity:0;
+        background:var(--ink); color:var(--bg); padding:10px 18px; border-radius:999px; font-weight:700; font-size:.9rem;
+        transition:.25s; pointer-events:none; z-index:50; max-width:92vw; text-align:center; }
+      .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+      /* ---------- quiz ---------- */
+      .road{ position:relative; margin:6px 0 0; padding-left:26px; }
+      .road::before{ content:""; position:absolute; left:9px; top:14px; bottom:14px; width:2px; background:var(--line); }
+      .stage{ position:relative; margin-bottom:14px; }
+      .stage::before{ content:""; position:absolute; left:-23px; top:20px; width:14px; height:14px; border-radius:50%;
+        background:var(--bg); border:3px solid var(--gold); }
+      .stagecard{ border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:16px 18px; box-shadow:var(--shadow); }
+      .stagecard .k{ font-size:.7rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
+      .stagecard h3{ margin:4px 0 4px; font-size:1.25rem; }
+      .stagecard p{ margin:0 0 10px; color:var(--ink2); font-size:.92rem; }
+      .stagecard .meta{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+      .pill{ font-size:.78rem; font-weight:700; background:var(--surface2); border:1px solid var(--line);
+        border-radius:999px; padding:3px 10px; color:var(--ink2); }
+      .pill.best{ background:var(--gold-soft); color:var(--ink); border-color:var(--gold); }
+      .startbtn{ margin-left:auto; border:0; border-radius:10px; background:var(--accent); color:var(--accent-ink);
+        font-weight:800; padding:10px 20px; }
+      .quizbar{ display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+      .quizbar .prog{ flex:1; height:10px; border-radius:99px; background:var(--surface2); border:1px solid var(--line); overflow:hidden; }
+      .quizbar .prog i{ display:block; height:100%; background:var(--gold); transition:width .3s; }
+      .timer{ font-weight:800; font-variant-numeric:tabular-nums; border:1px solid var(--line); background:var(--surface);
+        border-radius:999px; padding:5px 12px; min-width:4.2rem; text-align:center; }
+      .timer.low{ color:var(--bad); border-color:var(--bad); }
+      .qcard{ border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:20px; box-shadow:var(--shadow); }
+      .qcard .qk{ font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); }
+      .qcard h3{ font-size:1.3rem; margin:6px 0 4px; line-height:1.4; }
+      .qcard .qalt{ font-family:"Noto Serif",serif; font-style:italic; color:var(--ink2); margin:0 0 8px; }
+      .opts{ display:grid; gap:9px; margin-top:14px; }
+      .opt{ text-align:left; border:1.5px solid var(--line); background:var(--surface); color:var(--ink);
+        border-radius:10px; padding:13px 15px; font-size:1rem; display:flex; gap:11px; align-items:flex-start; width:100%; }
+      .opt .letter{ flex:none; width:1.7rem; height:1.7rem; border-radius:50%; border:1.5px solid var(--line);
+        display:grid; place-items:center; font-weight:800; font-size:.85rem; margin-top:1px; }
+      .opt .oalt{ display:block; font-size:.86rem; color:var(--ink2); font-style:italic; margin-top:2px; }
+      .opt:not(:disabled):hover{ border-color:var(--gold); }
+      .opt.right{ border-color:var(--good); background:var(--good-bg); }
+      .opt.right .letter{ background:var(--good); border-color:var(--good); color:#fff; }
+      .opt.wrong{ border-color:var(--bad); background:var(--bad-bg); }
+      .opt.wrong .letter{ background:var(--bad); border-color:var(--bad); color:#fff; }
+      .opt:disabled{ cursor:default; opacity:1; }
+      .explain{ margin-top:14px; border-top:1px dashed var(--line); padding-top:12px; display:none; }
+      .explain.show{ display:block; }
+      .explain .verdict{ font-weight:800; margin:0 0 4px; }
+      .explain .verdict.ok{ color:var(--good); } .explain .verdict.no{ color:var(--bad); }
+      .explain p{ margin:4px 0; }
+      .explain .ealt{ color:var(--ink2); font-style:italic; font-size:.92rem; }
+      .explain .refrow{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:8px; }
+      .explain .refchip{ font-weight:800; color:var(--accent); }
+      .ghostbtn{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:10px;
+        font-weight:700; padding:9px 14px; }
+      .nextrow{ display:flex; justify-content:flex-end; margin-top:16px; }
+      .nextbtn{ border:0; border-radius:10px; background:var(--accent); color:var(--accent-ink); font-weight:800; padding:12px 24px; }
+      .scorebig{ font-family:"Noto Serif",serif; font-size:3rem; font-weight:900; text-align:center; margin:6px 0 0; }
+      .scorecard{ text-align:center; }
+      .scorecard p{ color:var(--ink2); }
+      .scoreactions{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:14px; }
+      .review{ margin-top:18px; text-align:left; }
+      .review .ritem{ border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:8px; background:var(--surface); }
+      .review .ritem b{ display:block; margin-bottom:3px; }
+      .review .ritem .yours{ color:var(--bad); } .review .ritem .corr{ color:var(--good); font-weight:700; }
+      footer{ margin-top:34px; color:var(--ink2); font-size:.84rem; border-top:1px solid var(--line); padding-top:14px; }
+      footer a{ color:var(--accent); }
+      .hidden{ display:none !important; }
+
+      /* ---------- first-visit language chooser ---------- */
+      #chooser{ display:none; }
+      html:not(.lang-set) #chooser{ display:flex; }
+      html:not(.lang-set) .wrap{ display:none; }
+      .chooser{ position:fixed; inset:0; z-index:60; background:var(--bg); overflow:auto;
+        align-items:center; justify-content:center; padding:28px 16px 40px; }
+      .chooser-card{ width:100%; max-width:560px; text-align:center; }
+      .chooser-brand{ font-family:"Noto Serif",serif; font-weight:900; font-size:1.65rem; line-height:1.25; }
+      .chooser-sub{ color:var(--ink2); font-weight:600; font-size:.85rem; margin:8px 0 0; line-height:1.6; }
+      .chooser-h{ font-size:1.4rem; font-weight:900; margin:26px 0 6px; line-height:1.35; }
+      .chooser-h span{ font-size:1.15rem; color:var(--ink2); }
+      .langopt{ display:block; width:100%; text-align:left; border:1.5px solid var(--line); background:var(--surface);
+        color:var(--ink); border-radius:12px; padding:16px 18px; margin-top:12px; box-shadow:var(--shadow); }
+      .langopt:hover{ border-color:var(--gold); }
+      .langopt.rec{ border:2px solid var(--gold); }
+      .langopt-top{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; }
+      .langopt b{ font-family:"Noto Serif",serif; font-size:1.3rem; }
+      .recbadge{ font-size:.68rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+        background:var(--gold-soft); color:var(--gold); border:1px solid var(--gold); border-radius:999px; padding:3px 10px; }
+      .langopt-d{ display:block; margin-top:6px; font-size:.92rem; }
+      .langopt-d.alt{ color:var(--ink2); font-style:italic; font-size:.88rem; margin-top:2px; }
+      .chooser-note{ color:var(--ink2); font-size:.85rem; margin:18px 0 0; line-height:1.6; }
+      .settingsbtn{ display:inline-flex; align-items:center; gap:8px; }
+      @media (max-width:560px){
+        .bookgrid{ grid-template-columns:repeat(auto-fill,minmax(108px,1fr)); }
+        .votd blockquote{ font-size:1.1rem; }
+        .qcard{ padding:16px; }
+        .brand{ font-size:1.12rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============ FIRST-VISIT LANGUAGE CHOOSER ============ -->
+    <section class="chooser" id="chooser" aria-label="Choose your language / Chọn ngôn ngữ">
+      <div class="chooser-card">
+        <div class="chooser-brand">Bible Quiz · Trắc nghiệm Kinh Thánh</div>
+        <p class="chooser-sub">English KJV · Vietnamese 1925<br>Anh KJV · Việt 1925</p>
+        <h1 class="chooser-h">Choose your language<br /><span>Chọn ngôn ngữ của bạn</span></h1>
+        <button type="button" class="langopt rec" data-choose="en">
+          <span class="langopt-top"><b>English</b><span class="recbadge">Most common · Phổ thông nhất</span></span>
+          <span class="langopt-d">Interface, book names, questions and explanations in English.</span>
+          <span class="langopt-d alt">Giao diện, tên sách, câu hỏi và giải thích bằng tiếng Anh.</span>
+        </button>
+        <button type="button" class="langopt" data-choose="vi">
+          <span class="langopt-top"><b>Tiếng Việt</b></span>
+          <span class="langopt-d">Giao diện, tên sách, câu hỏi và giải thích bằng tiếng Việt.</span>
+          <span class="langopt-d alt">Interface, book names, questions and explanations in Vietnamese.</span>
+        </button>
+        <p class="chooser-note">Your choice is remembered on this device — change it anytime in Settings.<br />Lựa chọn được nhớ trên thiết bị này — đổi lại bất cứ lúc nào trong Cài đặt.</p>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand"><span data-i="brand">Kinh Thánh Song Ngữ</span>
+          <small data-i="brandsub">Việt 1925 · Anh KJV</small></div>
+        <button type="button" class="ghostbtn settingsbtn" id="settingsBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg>
+          <span data-i="settings">Settings</span>
+        </button>
+      </div>
+
+      <section class="votd" id="votd" aria-label="Câu gốc hôm nay"></section>
+
+      <nav class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-lookup" aria-selected="true" data-tab="lookup">
+          <span data-i="tabLookup">Tra cứu</span><span class="sub" data-i="tabLookupSub">66 sách · tìm theo câu, từ khóa</span>
+        </button>
+        <button type="button" role="tab" id="tab-quiz" aria-selected="false" data-tab="quiz">
+          <span data-i="tabQuiz">Trắc nghiệm</span><span class="sub" data-i="tabQuizSub">Lộ trình 3 chặng · 50 câu</span>
+        </button>
+      </nav>
+
+      <!-- ============ LOOKUP ============ -->
+      <main id="view-lookup">
+        <form class="searchrow" id="searchForm">
+          <input id="searchInput" type="search" autocomplete="off"
+            placeholder="Giăng 3:16 · Sáng 1:1 · hoặc từ khóa: sự sáng…" />
+          <button type="submit" data-i="searchBtn">Tìm</button>
+        </form>
+        <p class="hint" data-i="searchHint">Gõ địa chỉ kiểu <code>Giăng 3:16</code>, <code>John 1:1</code> (không dấu cũng được) hoặc gõ từ khóa để tìm trong các chương mẫu.</p>
+        <div id="searchResults"></div>
+
+        <div class="testament" role="group" aria-label="Ước / Testament">
+          <button type="button" data-test="ot" aria-pressed="true"><span data-i="ot">Cựu Ước</span> · 39</button>
+          <button type="button" data-test="nt" aria-pressed="false"><span data-i="nt">Tân Ước</span> · 27</button>
+          <button type="button" data-test="fav" aria-pressed="false">♥ <span data-i="fav">Yêu thích</span> (<span id="favCount">0</span>)</button>
+        </div>
+        <div id="bookArea"></div>
+        <div id="readerArea"></div>
+        <div id="favArea"></div>
+      </main>
+
+      <!-- ============ QUIZ ============ -->
+      <main id="view-quiz" class="hidden">
+        <div id="quizHome">
+          <div class="road" id="roadmap"></div>
+          <div class="stage" style="margin-left:0">
+            <div class="stagecard">
+              <div class="k" data-i="mixedK">Chặng đặc biệt</div>
+              <h3 data-i="mixedT">Thi tổng hợp</h3>
+              <p data-i="mixedD">10 câu rút ngẫu nhiên từ cả 3 chặng, đáp án được xáo trộn mỗi lần thi.</p>
+              <div class="meta">
+                <span class="pill">30 <span data-i="questions">câu</span></span>
+                <span class="pill best hidden" id="best-mixed"></span>
+                <button type="button" class="startbtn" data-start="mixed" data-i="start">Vào thi</button>
+              </div>
+            </div>
+          </div>
+          <div class="stage hidden" id="wrongStage" style="margin-left:0">
+            <div class="stagecard">
+              <div class="k" data-i="wrongK">Ôn tập</div>
+              <h3 data-i="wrongT">Ôn câu sai</h3>
+              <p data-i="wrongD">Làm lại đúng những câu bạn vừa trả lời sai trong phiên này.</p>
+              <div class="meta">
+                <span class="pill" id="wrongCount"></span>
+                <button type="button" class="startbtn" data-start="wrong" data-i="review">Ôn ngay</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="quizRun" class="hidden">
+          <div class="quizbar">
+            <button type="button" class="ghostbtn" id="quitQuiz" data-i="quit">Thoát</button>
+            <div class="prog"><i id="progFill" style="width:0%"></i></div>
+            <div class="timer" id="timer">0:30</div>
+          </div>
+          <div class="qcard" id="qcard"></div>
+        </div>
+
+        <div id="quizDone" class="hidden"></div>
+      </main>
+
+      <!-- ============ SETTINGS ============ -->
+      <main id="view-settings" class="hidden">
+        <div class="panel">
+          <h2 data-i="settings">Settings</h2>
+          <p class="chapsub" data-i="langLabel">Language</p>
+          <div class="seg" role="group" aria-label="Ngôn ngữ / Language">
+            <button type="button" data-lang="vi" aria-pressed="false">Việt</button>
+            <button type="button" data-lang="en" aria-pressed="true">English</button>
+            <button type="button" data-lang="both" aria-pressed="false">Việt + EN</button>
+          </div>
+          <p class="hint" style="margin-top:14px" data-i="settingsNote">Your language choice is remembered on this device, so the app opens in it next time. Changing it here applies at once to the whole interface, book names, questions and explanations.</p>
+          <div class="nextrow" style="justify-content:flex-start">
+            <button type="button" class="ghostbtn" id="settingsBack" data-i="back">← Back</button>
+          </div>
+        </div>
+      </main>
+
+      <footer id="pageFoot"></footer>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* ================= DATA ================= */
+const BOOKS = [{"vi": "Sáng Thế", "en": "Genesis", "ch": 50, "ot": true, "alias": ["Sáng", "Sang The", "Gen"], "data": {"1": {"en": ["In the beginning God created the heaven and the earth.", "And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters.", "And God said, Let there be light: and there was light.", "And God saw the light, that it was good: and God divided the light from the darkness.", "And God called the light Day, and the darkness he called Night. And the evening and the morning were the first day.", "And God said, Let there be a firmament in the midst of the waters, and let it divide the waters from the waters.", "And God made the firmament, and divided the waters which were under the firmament from the waters which were above the firmament: and it was so.", "And God called the firmament Heaven. And the evening and the morning were the second day.", "And God said, Let the waters under the heaven be gathered together unto one place, and let the dry land appear: and it was so.", "And God called the dry land Earth; and the gathering together of the waters called he Seas: and God saw that it was good.", "And God said, Let the earth bring forth grass, the herb yielding seed, and the fruit tree yielding fruit after his kind, whose seed is in itself, upon the earth: and it was so.", "And the earth brought forth grass, and herb yielding seed after his kind, and the tree yielding fruit, whose seed was in itself, after his kind: and God saw that it was good.", "And the evening and the morning were the third day.", "And God said, Let there be lights in the firmament of the heaven to divide the day from the night; and let them be for signs, and for seasons, and for days, and years:", "And let them be for lights in the firmament of the heaven to give light upon the earth: and it was so.", "And God made two great lights; the greater light to rule the day, and the lesser light to rule the night: he made the stars also.", "And God set them in the firmament of the heaven to give light upon the earth,", "And to rule over the day and over the night, and to divide the light from the darkness: and God saw that it was good.", "And the evening and the morning were the fourth day.", "And God said, Let the waters bring forth abundantly the moving creature that hath life, and fowl that may fly above the earth in the open firmament of heaven.", "And God created great whales, and every living creature that moveth, which the waters brought forth abundantly, after their kind, and every winged fowl after his kind: and God saw that it was good.", "And God blessed them, saying, Be fruitful, and multiply, and fill the waters in the seas, and let fowl multiply in the earth.", "And the evening and the morning were the fifth day.", "And God said, Let the earth bring forth the living creature after his kind, cattle, and creeping thing, and beast of the earth after his kind: and it was so.", "And God made the beast of the earth after his kind, and cattle after their kind, and every thing that creepeth upon the earth after his kind: and God saw that it was good.", "And God said, Let us make man in our image, after our likeness: and let them have dominion over the fish of the sea, and over the fowl of the air, and over the cattle, and over all the earth, and over every creeping thing that creepeth upon the earth.", "So God created man in his own image, in the image of God created he him; male and female created he them.", "And God blessed them, and God said unto them, Be fruitful, and multiply, and replenish the earth, and subdue it: and have dominion over the fish of the sea, and over the fowl of the air, and over every living thing that moveth upon the earth.", "And God said, Behold, I have given you every herb bearing seed, which is upon the face of all the earth, and every tree, in the which is the fruit of a tree yielding seed; to you it shall be for meat.", "And to every beast of the earth, and to every fowl of the air, and to every thing that creepeth upon the earth, wherein there is life, I have given every green herb for meat: and it was so.", "And God saw every thing that he had made, and, behold, it was very good. And the evening and the morning were the sixth day."], "vi": ["Ban đầu Đức Chúa Trời dựng nên trời đất.", "Vả, đất là vô hình và trống không, sự mờ tối ở trên mặt vực; Thần Đức Chúa Trời vận hành trên mặt nước.", "Đức Chúa Trời phán rằng: Phải có sự sáng; thì có sự sáng.", "Đức Chúa Trời thấy sáng là tốt lành, bèn phân sáng ra cùng tối.", "Đức Chúa Trời đặt tên sự sáng là ngày; sự tối là đêm. Vậy, có buổi chiều và buổi mai; ấy là ngày thứ nhất.", "Đức Chúa Trời lại phán rằng: Phải có một khoảng không ở giữa nước đặng phân rẽ nước cách với nước.", "Ngài làm nên khoảng không, phân rẽ nước ở dưới khoảng không cách với nước ở trên khoảng không; thì có như vậy.", "Đức Chúa Trời đặt tên khoảng không là trời. Vậy, có buổi chiều và buổi mai; ấy là ngày thứ nhì.", "Đức Chúa Trời lại phán rằng: Những nước ở dưới trời phải tụ lại một nơi, và phải có chỗ khô cạn bày ra; thì có như vậy.", "Đức Chúa Trời đặt tên chỗ khô cạn là đất, còn nơi nước tụ lại là biển. Đức Chúa Trời thấy điều đó là tốt lành.", "Đức Chúa Trời lại phán rằng: Đất phải sanh cây cỏ; cỏ kết hột giống, cây trái kết quả, tùy theo loại mà có hột giống trong mình trên đất; thì có như vậy.", "Đất sanh cây cỏ: cỏ kết hột tùy theo loại, cây kết quả có hột trong mình, tùy theo loại. Đức Chúa Trời thấy điều đó là tốt lành.", "Vậy, có buổi chiều và buổi mai; ấy là ngày thứ ba.", "Đức Chúa Trời lại phán rằng: Phải có các vì sáng trong khoảng không trên trời, đặng phân ra ngày với đêm, và dùng làm dấu để định thì tiết, ngày và năm;", "lại dùng làm vì sáng trong khoảng không trên trời để soi xuống đất; thì có như vậy.", "Đức Chúa Trời làm nên hai vì sáng lớn; vì lớn hơn để cai trị ban ngày, vì nhỏ hơn để cai trị ban đêm; Ngài cũng làm các ngôi sao.", "Đức Chúa Trời đặt các vì đó trong khoảng không trên trời, đặng soi sáng đất,", "đặng cai trị ban ngày và ban đêm, đặng phân ra sự sáng với sự tối. Đức Chúa Trời thấy điều đó là tốt lành.", "Vậy, có buổi chiều và buổi mai; ấy là ngày thứ tư.", "Đức Chúa Trời lại phán rằng: Nước phải sanh các vật sống cho nhiều, và các loài chim phải bay trên mặt đất trong khoảng không trên trời.", "Đức Chúa Trời dựng nên các loài cá lớn, các vật sống hay động nhờ nước mà sanh nhiều ra, tùy theo loại, và các loài chim hay bay, tùy theo loại. Đức Chúa Trời thấy điều đó là tốt lành.", "Đức Chúa Trời ban phước cho các loài đó mà phán rằng: Hãy sanh sản, thêm nhiều, làm cho đầy dẫy dưới biển; còn các loài chim hãy sanh sản trên đất cho nhiều.", "Vậy, có buổi chiều và buổi mai; ấy là ngày thứ năm.", "Đức Chúa Trời lại phán rằng: Đất phải sanh các vật sống tùy theo loại, tức súc vật, côn trùng, và thú rừng, đều tùy theo loại; thì có như vậy.", "Đức Chúa Trời làm nên các loài thú rừng tùy theo loại, súc vật tùy theo loại, và các côn trùng trên đất tùy theo loại, Đức Chúa Trời thấy điều đó là tốt lành.", "Đức Chúa Trời phán rằng: Chúng ta hãy làm nên loài người như hình ta và theo tượng ta, đặng quản trị loài cá biển, loài chim trời, loài súc vật, loài côn trùng bò trên mặt đất, và khắp cả đất.", "Đức Chúa Trời dựng nên loài người như hình Ngài; Ngài dựng nên loài người giống như hình Đức Chúa Trời; Ngài dựng nên người nam cùng người nữ.", "Đức Chúa Trời ban phước cho loài người và phán rằng: Hãy sanh sản, thêm nhiều, làm cho đầy dẫy đất; hãy làm cho đất phục tùng, hãy quản trị loài cá dưới biển, loài chim trên trời cùng các vật sống hành động trên mặt đất.", "Đức Chúa Trời lại phán rằng: Nầy, ta sẽ ban cho các ngươi mọi thứ cỏ kết hột mọc khắp mặt đất, và các loài cây sanh quả có hột giống; ấy sẽ là đồ ăn cho các ngươi.", "Còn các loài thú ngoài đồng, các loài chim trên trời, và các động vật khác trên mặt đất, phàm giống nào có sự sống thì ta ban cho mọi thứ cỏ xanh đặng dùng làm đồ ăn; thì có như vậy.", "Đức Chúa Trời thấy các việc Ngài đã làm thật rất tốt lành. Vậy, có buổi chiều và buổi mai; ấy là ngày thứ sáu."]}, "2": {"en": ["Thus the heavens and the earth were finished, and all the host of them.", "And on the seventh day God ended his work which he had made; and he rested on the seventh day from all his work which he had made.", "And God blessed the seventh day, and sanctified it: because that in it he had rested from all his work which God created and made.", "These are the generations of the heavens and of the earth when they were created, in the day that the LORD God made the earth and the heavens,", "And every plant of the field before it was in the earth, and every herb of the field before it grew: for the LORD God had not caused it to rain upon the earth, and there was not a man to till the ground.", "But there went up a mist from the earth, and watered the whole face of the ground.", "And the LORD God formed man of the dust of the ground, and breathed into his nostrils the breath of life; and man became a living soul.", "And the LORD God planted a garden eastward in Eden; and there he put the man whom he had formed.", "And out of the ground made the LORD God to grow every tree that is pleasant to the sight, and good for food; the tree of life also in the midst of the garden, and the tree of knowledge of good and evil.", "And a river went out of Eden to water the garden; and from thence it was parted, and became into four heads.", "The name of the first is Pison: that is it which compasseth the whole land of Havilah, where there is gold;", "And the gold of that land is good: there is bdellium and the onyx stone.", "And the name of the second river is Gihon: the same is it that compasseth the whole land of Ethiopia.", "And the name of the third river is Hiddekel: that is it which goeth toward the east of Assyria. And the fourth river is Euphrates.", "And the LORD God took the man, and put him into the garden of Eden to dress it and to keep it.", "And the LORD God commanded the man, saying, Of every tree of the garden thou mayest freely eat:", "But of the tree of the knowledge of good and evil, thou shalt not eat of it: for in the day that thou eatest thereof thou shalt surely die.", "And the LORD God said, It is not good that the man should be alone; I will make him an help meet for him.", "And out of the ground the LORD God formed every beast of the field, and every fowl of the air; and brought them unto Adam to see what he would call them: and whatsoever Adam called every living creature, that was the name thereof.", "And Adam gave names to all cattle, and to the fowl of the air, and to every beast of the field; but for Adam there was not found an help meet for him.", "And the LORD God caused a deep sleep to fall upon Adam, and he slept: and he took one of his ribs, and closed up the flesh instead thereof;", "And the rib, which the LORD God had taken from man, made he a woman, and brought her unto the man.", "And Adam said, This is now bone of my bones, and flesh of my flesh: she shall be called Woman, because she was taken out of Man.", "Therefore shall a man leave his father and his mother, and shall cleave unto his wife: and they shall be one flesh.", "And they were both naked, the man and his wife, and were not ashamed."], "vi": ["Aáy vậy, trời đất và muôn vật đã dựng nên xong rồi.", "Ngày thứ bảy, Đức Chúa Trời làm xong các công việc Ngài đã làm, và ngày thứ bảy, Ngài nghỉ các công việc Ngài đã làm.", "Rồi, Ngài ban phước cho ngày thứ bảy, đặt là ngày thánh; vì trong ngày đó, Ngài nghỉ các công việc đã dựng nên và đã làm xong rồi.", "Aáy là gốc tích trời và đất khi đã dựng nên, trong lúc Giê-hô-va Đức Chúa Trời dựng nên trời và đất.", "Vả, lúc đó, chưa có một cây nhỏ nào mọc ngoài đồng, và cũng chưa có một ngọn cỏ nào mọc ngoài ruộng, vì Giê-hô-va Đức Chúa Trời chưa có cho mưa xuống trên đất, và cũng chẳng có một người nào cày cấy đất nữa.", "Song có hơi nước dưới đất bay lên tưới khắp cùng mặt đất,", "Giê-hô-va Đức Chúa Trời bèn lấy bụi đất nắn nên hình người, hà sanh khí vào lỗ mũi; thì người trở nên một loài sanh linh.", "Đoạn, Giê-hô-va Đức Chúa Trời lập một cảnh vườn tại Ê-đen, ở về hướng Đông, và đặt người mà Ngài vừa dựng nên ở đó.", "Giê-hô-va Đức Chúa Trời khiến đất mọc lên các thứ cây đẹp mắt, và trái thì ăn ngon; giữa vườn lại có cây sự sống cùng cây biết điều thiện và điều ác.", "Một con sông từ Ê-đen chảy ra đặng tưới vườn; rồi từ đó chia ra làm bốn ngả.", "Tên ngả thứ nhất là Bi-sôn; ngả đó chảy quanh xứ Ha-vi-la, là nơi có vàng.", "Vàng xứ nầy rất cao; đó lại có nhũ hương và bích ngọc.", "Tên sông thứ nhì là Ghi-hôn, chảy quanh xứ Cu-sơ.", "Tên sông thứ ba là Hi-đê-ke, chảy về phía đông bờ cõi A-si-ri. Còn sông thứ tư là sông Ơ-phơ-rát.", "Giê-hô-va Đức Chúa Trời đem người ở vào cảnh vườn Ê-đen để trồng và giữ vườn.", "Rồi, Giê-hô-va Đức Chúa Trời phán dạy rằng: Ngươi được tự do ăn hoa quả các thứ cây trong vườn;", "nhưng về cây biết điều thiện và điều ác thì chớ hề ăn đến; vì một mai ngươi ăn chắc sẽ chết.", "Giê-hô-va Đức Chúa Trời phán rằng: Loài người ở một mình thì không tốt; ta sẽ làm nên một kẻ giúp đỡ giống như nó.", "Giê-hô-va Đức Chúa Trời lấy đất nắn nên các loài thú đồng, các loài chim trời, rồi dẫn đến trước mặt A-đam đặng thử xem người đặt tên chúng nó làm sao, hầu cho tên nào A-đam đặt cho mỗi vật sống, đều thành tên riêng cho nó.", "A-đam đặt tên các loài súc vật, các loài chim trời cùng các loài thú đồng; nhưng về phần A-đam, thì chẳng tìm được một ai giúp đỡ giống như mình hết.", "Giê-hô-va Đức Chúa Trời làm cho A-đam ngủ mê, bèn lấy một xương sườn, rồi lấp thịt thế vào.", "Giê-hô-va Đức Chúa Trời dùng xương sườn đã lấy nơi A-đam làm nên một người nữ, đưa đến cùng A-đam.", "A-đam nói rằng: Người nầy là xương bởi xương tôi, thịt bởi thịt tôi mà ra. Người nầy sẽ được gọi là người nữ, vì nó do nơi người nam mà có.", "Bởi vậy cho nên người nam sẽ lìa cha mẹ mà dính díu cùng vợ mình, và cả hai sẽ trở nên một thịt.", "Vả, A-đam và vợ, cả hai đều trần truồng, mà chẳng hổ thẹn."]}, "3": {"en": ["Now the serpent was more subtil than any beast of the field which the LORD God had made. And he said unto the woman, Yea, hath God said, Ye shall not eat of every tree of the garden?", "And the woman said unto the serpent, We may eat of the fruit of the trees of the garden:", "But of the fruit of the tree which is in the midst of the garden, God hath said, Ye shall not eat of it, neither shall ye touch it, lest ye die.", "And the serpent said unto the woman, Ye shall not surely die:", "For God doth know that in the day ye eat thereof, then your eyes shall be opened, and ye shall be as gods, knowing good and evil.", "And when the woman saw that the tree was good for food, and that it was pleasant to the eyes, and a tree to be desired to make one wise, she took of the fruit thereof, and did eat, and gave also unto her husband with her; and he did eat.", "And the eyes of them both were opened, and they knew that they were naked; and they sewed fig leaves together, and made themselves aprons.", "And they heard the voice of the LORD God walking in the garden in the cool of the day: and Adam and his wife hid themselves from the presence of the LORD God amongst the trees of the garden.", "And the LORD God called unto Adam, and said unto him, Where art thou?", "And he said, I heard thy voice in the garden, and I was afraid, because I was naked; and I hid myself.", "And he said, Who told thee that thou wast naked? Hast thou eaten of the tree, whereof I commanded thee that thou shouldest not eat?", "And the man said, The woman whom thou gavest to be with me, she gave me of the tree, and I did eat.", "And the LORD God said unto the woman, What is this that thou hast done? And the woman said, The serpent beguiled me, and I did eat.", "And the LORD God said unto the serpent, Because thou hast done this, thou art cursed above all cattle, and above every beast of the field; upon thy belly shalt thou go, and dust shalt thou eat all the days of thy life:", "And I will put enmity between thee and the woman, and between thy seed and her seed; it shall bruise thy head, and thou shalt bruise his heel.", "Unto the woman he said, I will greatly multiply thy sorrow and thy conception; in sorrow thou shalt bring forth children; and thy desire shall be to thy husband, and he shall rule over thee.", "And unto Adam he said, Because thou hast hearkened unto the voice of thy wife, and hast eaten of the tree, of which I commanded thee, saying, Thou shalt not eat of it: cursed is the ground for thy sake; in sorrow shalt thou eat of it all the days of thy life;", "Thorns also and thistles shall it bring forth to thee; and thou shalt eat the herb of the field;", "In the sweat of thy face shalt thou eat bread, till thou return unto the ground; for out of it wast thou taken: for dust thou art, and unto dust shalt thou return.", "And Adam called his wife’s name Eve; because she was the mother of all living.", "Unto Adam also and to his wife did the LORD God make coats of skins, and clothed them.", "And the LORD God said, Behold, the man is become as one of us, to know good and evil: and now, lest he put forth his hand, and take also of the tree of life, and eat, and live for ever:", "Therefore the LORD God sent him forth from the garden of Eden, to till the ground from whence he was taken.", "So he drove out the man; and he placed at the east of the garden of Eden Cherubims, and a flaming sword which turned every way, to keep the way of the tree of life."], "vi": ["Vả, trong các loài thú đồng mà Giê-hô-va Đức Chúa Trời đã làm nên, có con rắn là giống quỉ quyệt hơn hết. Rắn nói cùng người nữ rằng: Mà chi! Đức Chúa Trời há có phán dặn các ngươi không được phép ăn trái các cây trong vườn sao?", "Người nữ đáp rằng: Chúng ta được ăn trái các cây trong vườn,", "song về phần trái của cây mọc giữa vườn, Đức Chúa Trời có phán rằng: Hai ngươi chẳng nên ăn đến và cũng chẳng nên đá-động đến, e khi hai ngươi phải chết chăng.", "Rắn bèn nói với người nữ rằng: Hai ngươi chẳng chết đâu;", "nhưng Đức Chúa Trời biết rằng hễ ngày nào hai ngươi ăn trái cây đó, mắt mình mở ra, sẽ như Đức Chúa Trời, biết điều thiện và điều ác.", "Người nữ thấy trái của cây đó bộ ăn ngon, lại đẹp mắt và quí vì để mở trí khôn, bèn hái ăn, rồi trao cho chồng đứng gần mình, chồng cũng ăn nữa.", "Đoạn, mắt hai người đều mở ra, biết rằng mình lõa lồ, bèn lấy lá cây vả đóng khố che thân.", "Lối chiều, nghe tiếng Giê-hô-va Đức Chúa Trời đi ngang qua vườn, A-đam và vợ ẩn mình giữa bụi cây, để tránh mặt Giê-hô-va Đức Chúa Trời.", "Giê-hô-va Đức Chúa Trời kêu A-đam mà phán hỏi rằng: Ngươi ở đâu?", "A-đam thưa rằng: Tôi có nghe tiếng Chúa trong vườn, bèn sợ, bởi vì tôi lõa lồ, nên đi ẩn mình.", "Đức Chúa Trời phán hỏi: Ai đã chỉ cho ngươi biết rằng mình lõa lồ? Ngươi có ăn trái cây ta đã dặn không nên ăn đó chăng?", "Thưa rằng: Người nữ mà Chúa đã để gần bên tôi cho tôi trái cây đó và tôi đã ăn rồi.", "Giê-hô-va Đức Chúa Trời phán hỏi người nữ rằng: Người có làm điều chi vậy? Người nữ thưa rằng: Con rắn dỗ dành tôi và tôi đã ăn rồi.", "Giê-hô-va Đức Chúa Trời bèn phán cùng rắn rằng: Vì mầy đã làm điều như vậy, mầy sẽ bị rủa sả trong vòng các loài súc vật, các loài thú đồng, mầy sẽ bò bằng bụng và ăn bụi đất trọn cả đời.", "Ta sẽ làm cho mầy cùng người nữ, dòng dõi mầy cùng dòng dõi người nữ nghịch thù nhau. Người sẽ giày đạp đầu mầy, còn mầy sẽ cắn gót chân người.", "Ngài phán cùng người nữ rằng: Ta sẽ thêm điều cực khổ bội phần trong cơn thai nghén; ngươi sẽ chịu đau đớn mỗi khi sanh con; sự dục vọng ngươi phải xu hướng về chồng, và chồng sẽ cai trị ngươi.", "Ngài lại phán cùng A-đam rằng: Vì ngươi nghe theo lời vợ mà ăn trái cây ta đã dặn không nên ăn, vậy, đất sẽ bị rủa sả vì ngươi; trọn đời ngươi phải chịu khó nhọc mới có vật đất sanh ra mà ăn.", "Đất sẽ sanh chông gai và cây tật lê, và ngươi sẽ ăn rau của đồng ruộng;", "ngươi sẽ làm đổ mồ hôi trán mới có mà ăn, cho đến ngày nào ngươi trở về đất, là nơi mà có ngươi ra; vì ngươi là bụi, ngươi sẽ trở về bụi.", "A-đam gọi vợ là Ê-va, vì là mẹ của cả loài người.", "Giê-hô-va Đức Chúa Trời lấy da thú kết thành áo dài cho vợ chồng A-đam, và mặc lấy cho.", "Giê-hô-va Đức Chúa Trời phán rằng: Nầy, về sự phân biệt điều thiện và điều ác, loài người đã thành một bực như chúng ta; vậy bây giờ, ta hãy coi chừng, e loài người giơ tay lên cũng hái trái cây sự sống mà ăn và được sống đời đời chăng.", "Giê-hô-va Đức Chúa Trời bèn đuổi loài người ra khỏi vườn Ê-đen đặng cày cấy đất, là nơi có người ra.", "Vậy, Ngài đuổi loài người ra khỏi vườn, rồi đặt tại phía đông vườn Ê-đen các thần chê-ru-bin với gươm lưỡi chói lòa, để giữ con đường đi đến cây sự sống."]}}}, {"vi": "Xuất Ai-cập", "en": "Exodus", "ch": 40, "ot": true}, {"vi": "Lê-vi", "en": "Leviticus", "ch": 27, "ot": true}, {"vi": "Dân Số", "en": "Numbers", "ch": 36, "ot": true}, {"vi": "Phục Truyền Luật Lệ", "en": "Deuteronomy", "ch": 34, "ot": true}, {"vi": "Giô-suê", "en": "Joshua", "ch": 24, "ot": true}, {"vi": "Quan Án", "en": "Judges", "ch": 21, "ot": true}, {"vi": "Ru-tơ", "en": "Ruth", "ch": 4, "ot": true}, {"vi": "1 Sa-mu-ên", "en": "1 Samuel", "ch": 31, "ot": true}, {"vi": "2 Sa-mu-ên", "en": "2 Samuel", "ch": 24, "ot": true}, {"vi": "1 Các Vua", "en": "1 Kings", "ch": 22, "ot": true}, {"vi": "2 Các Vua", "en": "2 Kings", "ch": 25, "ot": true}, {"vi": "1 Lịch Sử", "en": "1 Chronicles", "ch": 29, "ot": true}, {"vi": "2 Lịch Sử", "en": "2 Chronicles", "ch": 36, "ot": true}, {"vi": "E-xơ-ra", "en": "Ezra", "ch": 10, "ot": true}, {"vi": "Nê-hê-mi", "en": "Nehemiah", "ch": 13, "ot": true}, {"vi": "Ê-xơ-tê", "en": "Esther", "ch": 10, "ot": true}, {"vi": "Gióp", "en": "Job", "ch": 42, "ot": true}, {"vi": "Thi Thiên", "en": "Psalms", "ch": 150, "ot": true, "alias": ["Thi", "Psalm", "Ps"], "data": {"1": {"en": ["Blessed is the man that walketh not in the counsel of the ungodly, nor standeth in the way of sinners, nor sitteth in the seat of the scornful.", "But his delight is in the law of the LORD; and in his law doth he meditate day and night.", "And he shall be like a tree planted by the rivers of water, that bringeth forth his fruit in his season; his leaf also shall not wither; and whatsoever he doeth shall prosper.", "The ungodly are not so: but are like the chaff which the wind driveth away.", "Therefore the ungodly shall not stand in the judgment, nor sinners in the congregation of the righteous.", "For the LORD knoweth the way of the righteous: but the way of the ungodly shall perish."], "vi": ["Phước cho người nào chẳng theo mưu kế của kẻ dữ, Chẳng đứng trong đường tội nhân, Không ngồi chỗ của kẻ nhạo báng;", "Song lấy làm vui vẻ về luật pháp của Đức Giê-hô-va, Và suy gẫm luật pháp ấy ngày và đêm.", "Người ấy sẽ như cây trồng gần dòng nước, Sanh bông trái theo thì tiết, Lá nó cũng chẳng tàn héo; Mọi sự người làm đều sẽ thạnh vượng.", "Kẻ ác chẳng như vậy đâu; Nhưng chúng nó khác nào rơm rác gió thổi bay đi.", "Bởi cớ ấy kẻ ác chẳng đứng nổi trong ngày đoán xét, Tội nhân cũng không được vào hội người công bình.", "Vì Đức Giê-hô-va biết đường người công bình, Song đường kẻ ác rồi bị diệt vong."]}, "23": {"en": ["The LORD is my shepherd; I shall not want.", "He maketh me to lie down in green pastures: he leadeth me beside the still waters.", "He restoreth my soul: he leadeth me in the paths of righteousness for his name’s sake.", "Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.", "Thou preparest a table before me in the presence of mine enemies: thou anointest my head with oil; my cup runneth over.", "Surely goodness and mercy shall follow me all the days of my life: and I will dwell in the house of the LORD for ever."], "vi": ["Đức Giê-hô-va là Đấng chăn giữ tôi: tôi sẽ chẳng thiếu thốn gì.", "Ngài khiến tôi an nghỉ nơi đồng cỏ xanh tươi, Dẫn tôi đến mé nước bình tịnh.", "Ngài bổ lại linh hồn tôi, Dẫn tôi vào các lối công bình, vì cớ danh Ngài.", "Dầu khi tôi đi trong trũng bóng chết, Tôi sẽ chẳng sợ tai họa nào; vì Chúa ở cùng tôi; Cây trượng và cây gậy của Chúa an ủi tôi.", "Chúa dọn bàn cho tôi Trước mặt kẻ thù nghịch tôi; Chúa xức dầu cho đầu tôi, Chén tôi đầy tràn.", "Quả thật, trọn đời tôi Phước hạnh và sự thương xót sẽ theo tôi; Tôi sẽ ở trong nhà Đức Giê-hô-va Cho đến lâu dài."]}}}, {"vi": "Châm Ngôn", "en": "Proverbs", "ch": 31, "ot": true}, {"vi": "Giáo Huấn", "en": "Ecclesiastes", "ch": 12, "ot": true}, {"vi": "Tình Ca", "en": "Song of Solomon", "ch": 8, "ot": true}, {"vi": "Ê-sai", "en": "Isaiah", "ch": 66, "ot": true}, {"vi": "Giê-rê-mi", "en": "Jeremiah", "ch": 52, "ot": true}, {"vi": "Ai Ca", "en": "Lamentations", "ch": 5, "ot": true}, {"vi": "Ê-xê-chiên", "en": "Ezekiel", "ch": 48, "ot": true}, {"vi": "Đa-niên", "en": "Daniel", "ch": 12, "ot": true}, {"vi": "Ô-sê", "en": "Hosea", "ch": 14, "ot": true}, {"vi": "Giô-ên", "en": "Joel", "ch": 3, "ot": true}, {"vi": "A-mốt", "en": "Amos", "ch": 9, "ot": true}, {"vi": "Áp-đia", "en": "Obadiah", "ch": 1, "ot": true}, {"vi": "Giô-na", "en": "Jonah", "ch": 4, "ot": true}, {"vi": "Mi-ca", "en": "Micah", "ch": 7, "ot": true}, {"vi": "Na-hâm", "en": "Nahum", "ch": 3, "ot": true}, {"vi": "Ha-ba-cúc", "en": "Habakkuk", "ch": 3, "ot": true}, {"vi": "Xô-phô-ni", "en": "Zephaniah", "ch": 3, "ot": true}, {"vi": "A-gai", "en": "Haggai", "ch": 2, "ot": true}, {"vi": "Xa-cha-ri", "en": "Zechariah", "ch": 14, "ot": true}, {"vi": "Ma-la-chi", "en": "Malachi", "ch": 4, "ot": true}, {"vi": "Ma-thi-ơ", "en": "Matthew", "ch": 28, "ot": false, "alias": ["Ma-thi-ơ", "Mathio", "Mat-thi-ơ", "Mt", "Matt"], "data": {"5": {"en": ["And seeing the multitudes, he went up into a mountain: and when he was set, his disciples came unto him:", "And he opened his mouth, and taught them, saying,", "Blessed are the poor in spirit: for theirs is the kingdom of heaven.", "Blessed are they that mourn: for they shall be comforted.", "Blessed are the meek: for they shall inherit the earth.", "Blessed are they which do hunger and thirst after righteousness: for they shall be filled.", "Blessed are the merciful: for they shall obtain mercy.", "Blessed are the pure in heart: for they shall see God.", "Blessed are the peacemakers: for they shall be called the children of God.", "Blessed are they which are persecuted for righteousness’ sake: for theirs is the kingdom of heaven.", "Blessed are ye, when men shall revile you, and persecute you, and shall say all manner of evil against you falsely, for my sake.", "Rejoice, and be exceeding glad: for great is your reward in heaven: for so persecuted they the prophets which were before you.", "Ye are the salt of the earth: but if the salt have lost his savour, wherewith shall it be salted? it is thenceforth good for nothing, but to be cast out, and to be trodden under foot of men.", "Ye are the light of the world. A city that is set on an hill cannot be hid.", "Neither do men light a candle, and put it under a bushel, but on a candlestick; and it giveth light unto all that are in the house.", "Let your light so shine before men, that they may see your good works, and glorify your Father which is in heaven.", "Think not that I am come to destroy the law, or the prophets: I am not come to destroy, but to fulfil.", "For verily I say unto you, Till heaven and earth pass, one jot or one tittle shall in no wise pass from the law, till all be fulfilled.", "Whosoever therefore shall break one of these least commandments, and shall teach men so, he shall be called the least in the kingdom of heaven: but whosoever shall do and teach them, the same shall be called great in the kingdom of heaven.", "For I say unto you, That except your righteousness shall exceed the righteousness of the scribes and Pharisees, ye shall in no case enter into the kingdom of heaven.", "Ye have heard that it was said by them of old time, Thou shalt not kill; and whosoever shall kill shall be in danger of the judgment:", "But I say unto you, That whosoever is angry with his brother without a cause shall be in danger of the judgment: and whosoever shall say to his brother, Raca, shall be in danger of the council: but whosoever shall say, Thou fool, shall be in danger of hell fire.", "Therefore if thou bring thy gift to the altar, and there rememberest that thy brother hath ought against thee;", "Leave there thy gift before the altar, and go thy way; first be reconciled to thy brother, and then come and offer thy gift.", "Agree with thine adversary quickly, whiles thou art in the way with him; lest at any time the adversary deliver thee to the judge, and the judge deliver thee to the officer, and thou be cast into prison.", "Verily I say unto thee, Thou shalt by no means come out thence, till thou hast paid the uttermost farthing.", "Ye have heard that it was said by them of old time, Thou shalt not commit adultery:", "But I say unto you, That whosoever looketh on a woman to lust after her hath committed adultery with her already in his heart.", "And if thy right eye offend thee, pluck it out, and cast it from thee: for it is profitable for thee that one of thy members should perish, and not that thy whole body should be cast into hell.", "And if thy right hand offend thee, cut it off, and cast it from thee: for it is profitable for thee that one of thy members should perish, and not that thy whole body should be cast into hell.", "It hath been said, Whosoever shall put away his wife, let him give her a writing of divorcement:", "But I say unto you, That whosoever shall put away his wife, saving for the cause of fornication, causeth her to commit adultery: and whosoever shall marry her that is divorced committeth adultery.", "Again, ye have heard that it hath been said by them of old time, Thou shalt not forswear thyself, but shalt perform unto the Lord thine oaths:", "But I say unto you, Swear not at all; neither by heaven; for it is God’s throne:", "Nor by the earth; for it is his footstool: neither by Jerusalem; for it is the city of the great King.", "Neither shalt thou swear by thy head, because thou canst not make one hair white or black.", "But let your communication be, Yea, yea; Nay, nay: for whatsoever is more than these cometh of evil.", "Ye have heard that it hath been said, An eye for an eye, and a tooth for a tooth:", "But I say unto you, That ye resist not evil: but whosoever shall smite thee on thy right cheek, turn to him the other also.", "And if any man will sue thee at the law, and take away thy coat, let him have thy cloak also.", "And whosoever shall compel thee to go a mile, go with him twain.", "Give to him that asketh thee, and from him that would borrow of thee turn not thou away.", "Ye have heard that it hath been said, Thou shalt love thy neighbour, and hate thine enemy.", "But I say unto you, Love your enemies, bless them that curse you, do good to them that hate you, and pray for them which despitefully use you, and persecute you;", "That ye may be the children of your Father which is in heaven: for he maketh his sun to rise on the evil and on the good, and sendeth rain on the just and on the unjust.", "For if ye love them which love you, what reward have ye? do not even the publicans the same?", "And if ye salute your brethren only, what do ye more than others? do not even the publicans so?", "Be ye therefore perfect, even as your Father which is in heaven is perfect."], "vi": ["Đức Chúa Jêsus xem thấy đoàn dân đông, bèn lên núi kia; khi Ngài đã ngồi, thì các môn đồ đến gần.", "Ngài bèn mở miệng mà truyền dạy rằng:", "Phước cho những kẻ có lòng khó khăn, vì nước thiên đàng là của những kẻ ấy!", "Phước cho những kẻ than khóc, vì sẽ được yên ủi!", "Phước cho những kẻ nhu mì, vì sẽ hưởng được đất!", "Phước cho những kẻ đói khát sự công bình, vì sẽ được no đủ!", "Phước cho những kẻ hay thương xót, vì sẽ được thương xót!", "Phước cho những kẻ có lòng trong sạch, vì sẽ thấy Đức Chúa Trời!", "Phước cho những kẻ làm cho người hòa thuận, vì sẽ được gọi là con Đức Chúa Trời!", "Phước cho những kẻ chịu bắt bớ vì sự công bình, vì nước thiên đàng là của những kẻ ấy!", "Khi nào vì cớ ta mà người ta mắng nhiếc, bắt bớ, và lấy mọi điều dữ nói vu cho các ngươi, thì các ngươi sẽ được phước.", "Hãy vui vẻ, và nức lòng mừng rỡ, vì phần thưởng các ngươi ở trên trời sẽ lớn lắm; bởi vì người ta cũng từng bắt bớ các đấng tiên tri trước các ngươi như vậy.", "Các ngươi là muối của đất; song nếu mất mặn đi, thì sẽ lấy giống chi mà làm cho mặn lại? Muối ấy không dùng chi được nữa, chỉ phải quăng ra ngoài và bị người ta đạp dưới chân.", "Các ngươi là sự sáng của thế gian; một cái thành ở trên núi thì không khi nào bị khuất được:", "cũng không ai thắp đèn mà để dưới cái thùng, song người ta để trên chân đèn, thì nó soi sáng mọi người ở trong nhà.", "Sự sáng các ngươi hãy soi trước mặt người ta như vậy, đặng họ thấy những việc lành của các ngươi, và ngợi khen Cha các ngươi ở trên trời.", "Các ngươi đừng tưởng ta đến đặng phá luật pháp hay là lời tiên tri; ta đến, không phải để phá, song để làm cho trọn.", "Vì ta nói thật cùng các ngươi, đang khi trời đất chưa qua đi, thì một chấm một nét trong luật pháp cũng không qua đi được cho đến khi mọi sự được trọn.", "Vậy, ai hủy một điều cực nhỏ nào trong những điều răn nầy, và dạy người ta làm như vậy, thì sẽ bị xưng là cực nhỏ trong nước thiên đàng; còn như ai giữ những điều răn ấy, và dạy người ta nữa, thì sẽ được xưng là lớn trong nước thiên đàng.", "Vì ta phán cho các ngươi rằng, nếu sự công bình của các ngươi chẳng trổi hơn sự công bình của các thầy thông giáo và người dòng Pha-ri-si, thì các ngươi chắc không vào nước thiên đàng.", "Các ngươi có nghe lời phán cho người xưa rằng: Ngươi chớ giết ai; và rằng: Hễ ai giết người thì đáng bị tòa án xử đoán.", "Song ta phán cho các ngươi: Hễ ai giận anh em mình thì đáng bị tòa án xử đoán; ai mắng anh em mình rằng: Ra-ca, thì đáng bị tòa công luận xử đoán; ai mắng anh em mình là đồ điên, thì đáng bị lửa địa ngục hành phạt.", "Aáy vậy, nếu khi nào ngươi đem dâng của lễ nơi bàn thờ, mà nhớ lại anh em có điều gì nghịch cùng mình,", "thì hãy để của lễ trước bàn thờ, trở về giảng hòa với anh em trước đã; rồi hãy đến dâng của lễ.", "Khi ngươi đi đường với kẻ nghịch mình, phải lập tức hòa với họ, kẻo họ nộp ngươi cho quan án, quan án giao ngươi cho thầy đội, mà ngươi phải ở tù.", "Quả thật, ta nói cùng ngươi, ngươi trả còn thiếu một đồng tiền, thì không ra khỏi tù được.", "Các ngươi có nghe lời phán rằng: Ngươi chớ phạm tội tà dâm.", "Song ta phán cho các ngươi biết: Hễ ai ngó đàn bà mà động tình tham muốn, thì trong lòng đã phạm tội tà dâm cùng người rồi.", "Vậy nếu con mắt bên hữu xui cho ngươi phạm tội, thì hãy móc mà quăng nó cho xa ngươi đi; vì thà chịu một phần thân thể ngươi phải hư, còn hơn là cả thân thể bị ném vào địa ngục.", "Lại nếu tay hữu xui cho ngươi phạm tội, thì hãy chặt mà liệng nó cho xa ngươi đi; vì thà chịu một phần thân thể ngươi phải hư, còn hơn là cả thân thể vào địa ngục.", "Lại có nói rằng: Nếu người nào để vợ mình, thì hãy cho vợ cái tờ để.", "Song ta phán cùng các ngươi: Nếu người nào để vợ mà không phải vì cớ ngoại tình, thì người ấy làm cho vợ mình ra người tà dâm; lại nếu người nào cưới đàn bà bị để, thì cũng phạm tội tà dâm.", "Các ngươi còn có nghe lời phán cho người xưa rằng: Ngươi chớ thề dối, nhưng đối với Chúa, phải giữ vẹn lời thề mình.", "Song ta phán cùng các ngươi rằng đừng thề chi hết: đừng chỉ trời mà thề, vì là ngôi của Đức Chúa Trời;", "đừng chỉ đất mà thề, vì là bệ chân của Đức Chúa Trời; đừng chỉ thành Giê-ru-sa-lem mà thề, vì là thành của Vua lớn.", "Lại cũng đừng chỉ đầu ngươi mà thề, vì tự ngươi không thể làm cho một sợi tóc nên trắng hay là đen được.", "Song ngươi phải nói rằng: phải, phải; không, không. Còn điều người ta nói thêm đó, bởi nơi quỉ dữ mà ra.", "Các ngươi có nghe lời phán rằng: Mắt đền mắt, răng đền răng.", "Song ta bảo các ngươi, đừng chống cự kẻ dữ. Trái lại, nếu ai vả má bên hữu ngươi, hãy đưa má bên kia cho họ luôn;", "nếu ai muốn kiện ngươi đặng lột cái áo vắn, hãy để họ lấy luôn cái áo dài nữa;", "nếu ai muốn bắt ngươi đi một dặm đường, hãy đi hai dặm với họ.", "Ai xin của ngươi hãy cho, ai muốn mượn của ngươi, thì đừng trớ.", "Các ngươi có nghe lời phán rằng: Hãy yêu người lân cận, và hãy ghét kẻ thù nghịch mình.", "Song ta nói cùng các ngươi rằng: Hãy yêu kẻ thù nghịch, và cầu nguyện cho kẻ bắt bớ các ngươi,", "hầu cho các ngươi được làm con của Cha các ngươi ở trên trời; bởi vì Ngài khiến mặt trời mọc lên soi kẻ dữ cùng kẻ lành, làm mưa cho kẻ công bình cùng kẻ độc ác.", "Nếu các ngươi yêu những kẻ yêu mình, thì có được thưởng gì đâu? Những kẻ thâu thuế há chẳng làm như vậy sao?", "Lại nếu các ngươi tiếp đãi anh em mình mà thôi, thì có lạ gì hơn ai? Người ngoại há chẳng làm như vậy sao?", "Thế thì các ngươi hãy nên trọn vẹn, như Cha các ngươi ở trên trời là trọn vẹn."]}}}, {"vi": "Mác", "en": "Mark", "ch": 16, "ot": false}, {"vi": "Lu-ca", "en": "Luke", "ch": 24, "ot": false}, {"vi": "Giăng", "en": "John", "ch": 21, "ot": false, "alias": ["Giang", "Jn"], "data": {"1": {"en": ["In the beginning was the Word, and the Word was with God, and the Word was God.", "The same was in the beginning with God.", "All things were made by him; and without him was not any thing made that was made.", "In him was life; and the life was the light of men.", "And the light shineth in darkness; and the darkness comprehended it not.", "There was a man sent from God, whose name was John.", "The same came for a witness, to bear witness of the Light, that all men through him might believe.", "He was not that Light, but was sent to bear witness of that Light.", "That was the true Light, which lighteth every man that cometh into the world.", "He was in the world, and the world was made by him, and the world knew him not.", "He came unto his own, and his own received him not.", "But as many as received him, to them gave he power to become the sons of God, even to them that believe on his name:", "Which were born, not of blood, nor of the will of the flesh, nor of the will of man, but of God.", "And the Word was made flesh, and dwelt among us, (and we beheld his glory, the glory as of the only begotten of the Father,) full of grace and truth.", "John bare witness of him, and cried, saying, This was he of whom I spake, He that cometh after me is preferred before me: for he was before me.", "And of his fulness have all we received, and grace for grace.", "For the law was given by Moses, but grace and truth came by Jesus Christ.", "No man hath seen God at any time; the only begotten Son, which is in the bosom of the Father, he hath declared him.", "And this is the record of John, when the Jews sent priests and Levites from Jerusalem to ask him, Who art thou?", "And he confessed, and denied not; but confessed, I am not the Christ.", "And they asked him, What then? Art thou Elias? And he saith, I am not. Art thou that prophet? And he answered, No.", "Then said they unto him, Who art thou? that we may give an answer to them that sent us. What sayest thou of thyself?", "He said, I am the voice of one crying in the wilderness, Make straight the way of the Lord, as said the prophet Esaias.", "And they which were sent were of the Pharisees.", "And they asked him, and said unto him, Why baptizest thou then, if thou be not that Christ, nor Elias, neither that prophet?", "John answered them, saying, I baptize with water: but there standeth one among you, whom ye know not;", "He it is, who coming after me is preferred before me, whose shoe’s latchet I am not worthy to unloose.", "These things were done in Bethabara beyond Jordan, where John was baptizing.", "The next day John seeth Jesus coming unto him, and saith, Behold the Lamb of God, which taketh away the sin of the world.", "This is he of whom I said, After me cometh a man which is preferred before me: for he was before me.", "And I knew him not: but that he should be made manifest to Israel, therefore am I come baptizing with water.", "And John bare record, saying, I saw the Spirit descending from heaven like a dove, and it abode upon him.", "And I knew him not: but he that sent me to baptize with water, the same said unto me, Upon whom thou shalt see the Spirit descending, and remaining on him, the same is he which baptizeth with the Holy Ghost.", "And I saw, and bare record that this is the Son of God.", "Again the next day after John stood, and two of his disciples;", "And looking upon Jesus as he walked, he saith, Behold the Lamb of God!", "And the two disciples heard him speak, and they followed Jesus.", "Then Jesus turned, and saw them following, and saith unto them, What seek ye? They said unto him, Rabbi, (which is to say, being interpreted, Master,) where dwellest thou?", "He saith unto them, Come and see. They came and saw where he dwelt, and abode with him that day: for it was about the tenth hour.", "One of the two which heard John speak, and followed him, was Andrew, Simon Peter’s brother.", "He first findeth his own brother Simon, and saith unto him, We have found the Messias, which is, being interpreted, the Christ.", "And he brought him to Jesus. And when Jesus beheld him, he said, Thou art Simon the son of Jona: thou shalt be called Cephas, which is by interpretation, A stone.", "The day following Jesus would go forth into Galilee, and findeth Philip, and saith unto him, Follow me.", "Now Philip was of Bethsaida, the city of Andrew and Peter.", "Philip findeth Nathanael, and saith unto him, We have found him, of whom Moses in the law, and the prophets, did write, Jesus of Nazareth, the son of Joseph.", "And Nathanael said unto him, Can there any good thing come out of Nazareth? Philip saith unto him, Come and see.", "Jesus saw Nathanael coming to him, and saith of him, Behold an Israelite indeed, in whom is no guile!", "Nathanael saith unto him, Whence knowest thou me? Jesus answered and said unto him, Before that Philip called thee, when thou wast under the fig tree, I saw thee.", "Nathanael answered and saith unto him, Rabbi, thou art the Son of God; thou art the King of Israel.", "Jesus answered and said unto him, Because I said unto thee, I saw thee under the fig tree, believest thou? thou shalt see greater things than these.", "And he saith unto him, Verily, verily, I say unto you, Hereafter ye shall see heaven open, and the angels of God ascending and descending upon the Son of man."], "vi": ["Ban đầu có Ngôi Lời, Ngôi Lời ở cùng Đức Chúa Trời, và Ngôi Lời là Đức Chúa Trời.", "Ban đầu Ngài ở cùng Đức Chúa Trời.", "Muôn vật bởi Ngài làm nên, chẳng vật chi đã làm nên mà không bởi Ngài.", "Trong Ngài có sự sống, sự sống là sự sáng của loài người.", "Sự sáng soi trong tối tăm, tối tăm chẳng hề nhận lấy sự sáng.", "Có một người Đức Chúa Trời sai đến, tên là Giăng.", "Người đến để làm chứng, là làm chứng về sự sáng, hầu cho bởi người ai nấy đều tin.", "Chính người chẳng phải là sự sáng, song người phải làm chứng về sự sáng.", "Sự sáng nầy là sự sáng thật, khi đến thế gian soi sáng mọi người.", "Ngôi Lời ở thế gian, và thế gian đã làm nên bởi Ngài; nhưng thế gian chẳng từng nhìn biết Ngài.", "Ngài đã đến trong xứ mình, song dân mình chẳng hề nhận lấy.", "Nhưng hễ ai đã nhận Ngài, thì Ngài ban cho quyền phép trở nên con cái Đức Chúa Trời, là ban cho những kẻ tin danh Ngài,", "là kẻ chẳng phải sanh bởi khí huyết, hoặc bởi tình dục, hoặc bởi ý người, nhưng sanh bởi Đức Chúa Trời vậy.", "Ngôi Lời đã trở nên xác thịt, ở giữa chúng ta, đầy ơn và lẽ thật; chúng ta đã ngắm xem sự vinh hiển của Ngài, thật như vinh hiển của Con một đến từ nơi Cha.", "Giăng làm chứng về Ngài khi kêu lên rằng: Aáy là về Ngài mà ta đã nói: Đấng đến sau ta trổi hơn ta, vì Ngài vốn trước ta.", "Vả, bởi sự đầy dẫy của Ngài mà chúng ta đều có nhận được, và ơn càng thêm ơn.", "Vì luật pháp đã ban cho bởi Môi-se, còn ơn và lẽ thật bởi Đức Chúa Jêsus Christ mà đến.", "Chẳng hề ai thấy Đức Chúa Trời; chỉ Con một ở trong lòng Cha, là Đấng đã giải bày Cha cho chúng ta biết.", "Nầy là lời chứng của Giăng, khi dân Giu-đa sai mấy thầy tế lễ, mấy người Lê-vi từ thành Giê-ru-sa-lem đến hỏi người rằng: Oâng là ai?", "Người xưng ra, chẳng chối chi hết, xưng rằng mình không phải là Đấng Christ.", "Họ lại hỏi: Vậy thì ông là ai? phải là Ê-li chăng? Người trả lời: Không phải. Oâng phải là đấng tiên tri chăng: Người trả lời: Không phải.", "Họ bèn nói: Vậy thì ông là ai? hầu cho chúng tôi trả lời cùng những người đã sai chúng tôi đến. Oâng tự xưng mình là ai:", "Người trả lời: Ta là tiếng của người kêu trong đồng vắng rằng: Hãy ban đường của Chúa cho bằng, như đấng tiên tri Ê-sai đã nói.", "Những kẻ chịu sai đến cùng Giăng đều là người Pha-ri-si.", "Họ lại hỏi rằng: Nếu ông chẳng phải Đấng Christ, chẳng phải Ê-li, chẳng phải đấng tiên tri, thì cớ sao ông làm phép báp têm?", "Giăng trả lời: Về phần ta, ta làm phép báp têm bằng nước; nhưng có một Đấng ở giữa các ngươi mà các ngươi không nhận biết.", "Aáy là Đấng đến sau ta, ta chẳng đáng mở dây giày Ngài.", "Những việc đó đã xảy ra tại thành Bê-tha-ni, bên kia sông Giô-đanh, là nơi Giăng làm phép báp têm.", "Qua ngày sau, Giăng thấy Đức Chúa Jêsus đến cùng mình, thì nói rằng: Kìa, Chiên con của Đức Chúa Trời, là Đấng cất tội lỗi thế gian đi.", "Aáy về Đấng đó mà ta đã nói: Có một người đến sau ta, trổi hơn ta, vì người vốn trước ta.", "Về phần ta, ta vốn chẳng biết Ngài; nhưng ta đã đến làm phép báp-tem bằng nước, để Ngài được tỏ ra cho dân Y-sơ-ra-ên.", "Giăng lại còn làm chứng nầy nữa: Ta đã thấy Thánh Linh từ trời giáng xuống như chim bò câu, đậu trên mình Ngài.", "Về phần ta, ta vốn không biết Ngài; nhưng Đấng sai ta làm phép báp-tem bằng nước có phán cùng ta rằng: Đấng mà ngươi sẽ thấy Thánh Linh ngự xuống đậu lên trên, ấy là Đấng làm phép báp-tem bằng Đức Thánh Linh.", "Ta đã thấy, nên ta làm chứng rằng: Aáy chính Ngài là Con Đức Chúa Trời.", "Ngày mai, Giăng lại ở đó với hai môn đồ mình;", "nhìn Đức Chúa Jêsus đi ngang qua, bèn nói rằng: Kìa, Chiên con của Đức Chúa Trời!", "Hai môn đồ nghe lời đó, bèn đi theo Đức Chúa Jêsus.", "Đức Chúa Jêsus vừa xây lại, thấy hai người đi theo mình, thì phán rằng: Các ngươi tìm chi? Thưa rằng: Ra-bi (nghĩa là Thầy), Thầy ở đâu?", "Ngài phán rằng: Hãy đến xem. Vậy, hai người đi, thấy nơi Ngài ở, và ở lại cùng Ngài trong ngày đó; lúc bấy giờ độ chừng giờ thứ mười.", "Trong hai người đã nghe điều Giăng nói và đi theo Đức Chúa Jêsus đó, một là Anh-rê, em của Si-môn Phi-e-rơ.", "Trước hết người gặp anh mình là Si-môn, thì nói rằng: Chúng ta đã gặp Đấng Mê-si (nghĩa là Đấng Christ).", "Người bèn dẫn Si-môn đến cùng Đức Chúa Jêsus. Ngài vừa ngó thấy Si-môn, liền phán rằng: Ngươi là Si-môn, con của Giô-na; ngươi sẽ được gọi là Sê-pha (nghĩa là Phi-e-rơ).", "Qua ngày sau, Đức Chúa Jêsus muốn qua xứ Ga-li-lê, tìm Phi-líp, mà phán rằng: Hãy theo ta.", "Vả, Phi-líp là người Bết-sai-đa, đồng thành với Anh-rê và Phi-e-rơ.", "Phi-líp gặp Na-tha-na-ên, nói với người rằng: Chúng ta đã gặp Đấng mà Môi-se có chép trong luật pháp, và các đấng tiên tri cũng có nói đến; ấy là Đức Chúa Jêsus ở Na-xa-rét, con của Giô-sép.", "Na-tha-na-ên nói rằng: Há có vật gì tốt ra từ Na-xa-rét được sao? Phi-líp nói: Hãy đến xem.", "Đức Chúa Jêsus thấy Na-tha-na-ên đến cùng mình, bèn phán về người rằng: Nầy, một người Y-sơ-ra-ên thật, trong người không có điều dối trá chi hết.", "Na-tha-na-ên thưa rằng: Bởi đâu thầy biết tôi? Đức Chúa Jêsus đáp rằng: Trước khi Phi-líp gọi ngươi, ta đã thấy ngươi lúc ở dưới cây vả.", "Na-tha-na-ên lại nói: Lạy thầy, thầy là Con Đức Chúa Trời, thầy là Vua dân Y-sơ-ra-ên!", "Đức Chúa Jêsus đáp rằng: Vì ta đã phán cùng ngươi rằng ta thấy ngươi dưới cây vả, thì ngươi tin; ngươi sẽ thấy việc lớn hơn điều đó!", "Ngài lại phán: Quả thật, quả thật, ta nói cùng các ngươi, các ngươi sẽ thấy trời mở ra, và thiên sứ của Đức Chúa Trời lên xuống trên Con người."]}, "3": {"en": ["There was a man of the Pharisees, named Nicodemus, a ruler of the Jews:", "The same came to Jesus by night, and said unto him, Rabbi, we know that thou art a teacher come from God: for no man can do these miracles that thou doest, except God be with him.", "Jesus answered and said unto him, Verily, verily, I say unto thee, Except a man be born again, he cannot see the kingdom of God.", "Nicodemus saith unto him, How can a man be born when he is old? can he enter the second time into his mother’s womb, and be born?", "Jesus answered, Verily, verily, I say unto thee, Except a man be born of water and of the Spirit, he cannot enter into the kingdom of God.", "That which is born of the flesh is flesh; and that which is born of the Spirit is spirit.", "Marvel not that I said unto thee, Ye must be born again.", "The wind bloweth where it listeth, and thou hearest the sound thereof, but canst not tell whence it cometh, and whither it goeth: so is every one that is born of the Spirit.", "Nicodemus answered and said unto him, How can these things be?", "Jesus answered and said unto him, Art thou a master of Israel, and knowest not these things?", "Verily, verily, I say unto thee, We speak that we do know, and testify that we have seen; and ye receive not our witness.", "If I have told you earthly things, and ye believe not, how shall ye believe, if I tell you of heavenly things?", "And no man hath ascended up to heaven, but he that came down from heaven, even the Son of man which is in heaven.", "And as Moses lifted up the serpent in the wilderness, even so must the Son of man be lifted up:", "That whosoever believeth in him should not perish, but have eternal life.", "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.", "For God sent not his Son into the world to condemn the world; but that the world through him might be saved.", "He that believeth on him is not condemned: but he that believeth not is condemned already, because he hath not believed in the name of the only begotten Son of God.", "And this is the condemnation, that light is come into the world, and men loved darkness rather than light, because their deeds were evil.", "For every one that doeth evil hateth the light, neither cometh to the light, lest his deeds should be reproved.", "But he that doeth truth cometh to the light, that his deeds may be made manifest, that they are wrought in God.", "After these things came Jesus and his disciples into the land of Judaea; and there he tarried with them, and baptized.", "And John also was baptizing in Aenon near to Salim, because there was much water there: and they came, and were baptized.", "For John was not yet cast into prison.", "Then there arose a question between some of John’s disciples and the Jews about purifying.", "And they came unto John, and said unto him, Rabbi, he that was with thee beyond Jordan, to whom thou barest witness, behold, the same baptizeth, and all men come to him.", "John answered and said, A man can receive nothing, except it be given him from heaven.", "Ye yourselves bear me witness, that I said, I am not the Christ, but that I am sent before him.", "He that hath the bride is the bridegroom: but the friend of the bridegroom, which standeth and heareth him, rejoiceth greatly because of the bridegroom’s voice: this my joy therefore is fulfilled.", "He must increase, but I must decrease.", "He that cometh from above is above all: he that is of the earth is earthly, and speaketh of the earth: he that cometh from heaven is above all.", "And what he hath seen and heard, that he testifieth; and no man receiveth his testimony.", "He that hath received his testimony hath set to his seal that God is true.", "For he whom God hath sent speaketh the words of God: for God giveth not the Spirit by measure unto him.", "The Father loveth the Son, and hath given all things into his hand.", "He that believeth on the Son hath everlasting life: and he that believeth not the Son shall not see life; but the wrath of God abideth on him."], "vi": ["Trong vòng người Pha-ri-si, có người tên là Ni-cô-đem, là một người trong những kẻ cai trị dân Giu-đa.", "Ban đêm, người nầy đến cùng Đức Chúa Jêsus mà nói rằng: Thưa thầy, chúng tôi biết thầy là giáo sư từ Đức Chúa Trời đến; vì những phép lạ thầy đã làm đó, nếu Đức Chúa Trời chẳng ở cùng, thì không ai làm được.", "Đức Chúa Jêsus cất tiếng đáp rằng: Quả thật, quả thật, ta nói cùng ngươi, nếu một người chẳng sanh lại, thì không thể thấy được nước Đức Chúa Trời.", "Ni-cô-đem thưa rằng: Người đã già thì sanh lại làm sao được? Có thể nào trở vào lòng mẹ và sanh lần thứ hai sao?", "Đức Chúa Jêsus đáp rằng: Quả thật, quả thật, ta nói cùng ngươi, nếu một người chẳng nhờ nước và Thánh Linh mà sanh, thì không được vào nước Đức Chúa Trời.", "Hễ chi sanh bởi xác thịt là xác thịt; hễ chi sanh bởi Thánh Linh là thần.", "Chớ lấy làm lạ về điều ta đã nói với ngươi: Các ngươi phải sanh lại.", "Gió muốn thổi đâu thì thổi, ngươi nghe tiếng động; nhưng chẳng biết gió đến từ đâu và cũng không biết đi đâu. Hễ người nào sanh bởi Thánh Linh thì cũng như vậy.", "Ni-cô-đem lại nói: Điều đó làm thể nào được?", "Đức Chúa Jêsus đáp rằng: Ngươi là giáo sư của dân Y-sơ-ra-ên, mà không hiểu biết những điều đó sao!", "Quả thật, quả thật, ta nói cùng ngươi, chúng ta nói điều mình biết, làm chứng điều mình đã thấy; còn các ngươi chẳng hề nhận lấy lời chứng của chúng ta.", "Ví bằng ta nói với các ngươi những việc thuộc về đất, các ngươi còn chẳng tin thay; huống chi ta nói những việc thuộc về trời, thì các ngươi tin sao được?", "Chưa hề có ai lên trời, trừ ra Đấng từ trời xuống, ấy là Con người vốn ở trên trời.", "Xưa Môi-se treo con rắn lên nơi đồng vắng thể nào, thì Con người cũng phải bị treo lên dường ấy,", "hầu cho hễ ai tin đến Ngài đều được sự sống đời đời.", "Vì Đức Chúa Trời yêu thương thế gian, đến nỗi đã ban Con một của Ngài, hầu cho hễ ai tin Con ấy không bị hư mất mà được sự sống đời đời.", "Vả, Đức Chúa Trời đã sai Con Ngài xuống thế gian, chẳng phải để đoán xét thế gian đâu, nhưng hầu cho thế gian nhờ Con ấy mà được cứu.", "Ai tin Ngài thì chẳng bị đoán xét đâu; ai không tin thì đã bị đoán xét rồi, vì không tin đến danh Con một Đức Chúa Trời.", "Vả, sự đoán xét đó là như vầy: sự sáng đã đến thế gian, mà người ta ưa sự tối tăm hơn sự sáng, vì việc làm của họ là xấu xa.", "Bởi vì phàm ai làm ác thì ghét sự sáng và không đến cùng sự sáng, e rằng công việc của mình phải trách móc chăng.", "Nhưng kẻ nào làm theo lẽ thật thì đến cùng sự sáng, hầu cho các việc của mình được bày tỏ ra, vì đã làm trong Đức Chúa Trời.", "Kế đó, Đức Chúa Jêsus đi với môn đồ đến đất Giu-đê; Ngài ở với môn đồ tại đó, và làm phép báp têm.", "Giăng cũng làm phép báp têm tại Ê-nôn, gần Sa-lim, vì ở đó có nhiều nước, và người ta đến đặng chịu phép báp têm.", "Bấy giờ Giăng chưa bị bỏ vào ngục.", "Vả, môn đồ của Giăng có cãi lẫy với một người Giu-đa về lễ tinh sạch.", "Họ đến cùng Giăng và nói rằng: Thưa thầy, kìa, người ở cùng thầy bên kia sông Giô-đanh, mà thầy đã làm chứng cho, bây giờ đang làm phép báp têm, và ai nấy đều đến cùng người.", "Giăng trả lời rằng: Ví chẳng từ trên trời ban cho, thì không một người nào có thể lãnh chi được.", "Chính các ngươi làm chứng cho ta rằng ta đã nói: Aáy không phải ta là Đấng Christ, nhưng ta đã được sai đến trước Ngài.", "Ai mới cưới vợ, nấy là chàng rể, nhưng bạn của chàng rể đứng gần và nghe người, khi nghe tiếng của chàng rể thì rất đỗi vui mừng; ấy là sự vui mừng trọn vẹn của ta đó.", "Ngài phải dấy lên, ta phải hạ xuống.", "Đấng từ trên cao đến là trên hết mọi loài. Kẻ từ đất đến là thuộc về đất, và nói ra cũng như là thuộc về đất; còn Đấng từ trời đến thì trên hết mọi loài.", "Ngài làm chứng về điều Ngài đã thấy và nghe; song không có ai nhận lấy lời chứng của Ngài.", "Ai đã nhận lấy lời chứng của Ngài thì làm chứng chắc rằng Đức Chúa Trời là thật.", "Vì Đấng mà Đức Chúa Trời đã sai đến thì rao truyền lời của Đức Chúa Trời, bởi Đức Chúa Trời ban Thánh Linh cho Ngài không chừng mực.", "Cha yêu Con, và đã giao hết mọi vật trong tay Con.", "Ai tin Con, thì được sự sống đời đời; ai không chịu tin Con, thì chẳng thấy sự sống đâu, nhưng cơn thạnh nộ của Đức Chúa Trời vẫn ở trên người đó."]}}}, {"vi": "Công Vụ", "en": "Acts", "ch": 28, "ot": false}, {"vi": "La-mã", "en": "Romans", "ch": 16, "ot": false}, {"vi": "1 Cô-rinh", "en": "1 Corinthians", "ch": 16, "ot": false}, {"vi": "2 Cô-rinh", "en": "2 Corinthians", "ch": 13, "ot": false}, {"vi": "Ga-la-ti", "en": "Galatians", "ch": 6, "ot": false}, {"vi": "Ê-phê-sô", "en": "Ephesians", "ch": 6, "ot": false}, {"vi": "Phi-líp", "en": "Philippians", "ch": 4, "ot": false}, {"vi": "Cô-lô-se", "en": "Colossians", "ch": 4, "ot": false}, {"vi": "1 Tê-sa-lô-ni-ca", "en": "1 Thessalonians", "ch": 5, "ot": false}, {"vi": "2 Tê-sa-lô-ni-ca", "en": "2 Thessalonians", "ch": 3, "ot": false}, {"vi": "1 Ti-mô-thê", "en": "1 Timothy", "ch": 6, "ot": false}, {"vi": "2 Ti-mô-thê", "en": "2 Timothy", "ch": 4, "ot": false}, {"vi": "Tít", "en": "Titus", "ch": 3, "ot": false}, {"vi": "Phi-lê-môn", "en": "Philemon", "ch": 1, "ot": false}, {"vi": "Hê-bơ-rơ", "en": "Hebrews", "ch": 13, "ot": false}, {"vi": "Gia-cơ", "en": "James", "ch": 5, "ot": false}, {"vi": "1 Phia-rơ", "en": "1 Peter", "ch": 5, "ot": false}, {"vi": "2 Phia-rơ", "en": "2 Peter", "ch": 3, "ot": false}, {"vi": "1 Giăng", "en": "1 John", "ch": 5, "ot": false}, {"vi": "2 Giăng", "en": "2 John", "ch": 1, "ot": false}, {"vi": "3 Giăng", "en": "3 John", "ch": 1, "ot": false}, {"vi": "Giu-đe", "en": "Jude", "ch": 1, "ot": false}, {"vi": "Khải Thị", "en": "Revelation", "ch": 22, "ot": false}];
+const QUIZ = {"gen": [{"q_vi": "Trong ngày thứ nhất, Đức Chúa Trời phán phải có điều gì?", "q_en": "On the first day, what did God command to come into being?", "o_vi": ["Sự sáng", "Mặt trời và mặt trăng", "Đất khô", "Cỏ cây"], "o_en": ["Light", "The sun and the moon", "Dry land", "Plants"], "a": 0, "e_vi": "“Đức Chúa Trời phán rằng: Phải có sự sáng; thì có sự sáng.”", "e_en": "“And God said, Let there be light: and there was light.”", "ref": [0, 1, 3]}, {"q_vi": "Đức Chúa Trời dựng nên loài người vào ngày thứ mấy?", "q_en": "On which day did God create mankind?", "o_vi": ["Ngày thứ nhất", "Ngày thứ ba", "Ngày thứ sáu", "Ngày thứ bảy"], "o_en": ["The first day", "The third day", "The sixth day", "The seventh day"], "a": 2, "e_vi": "Loài người được dựng nên trong ngày thứ sáu, cùng ngày với các loài thú trên đất.", "e_en": "Mankind was created on the sixth day, the same day as the land animals.", "ref": [0, 1, 27]}, {"q_vi": "Loài người được dựng nên theo hình ảnh của ai?", "q_en": "In whose image was mankind created?", "o_vi": ["Các thiên sứ", "Đức Chúa Trời", "A-đam", "Các vì sao"], "o_en": ["The angels", "God", "Adam", "The stars"], "a": 1, "e_vi": "“Đức Chúa Trời dựng nên loài người như hình Ngài.”", "e_en": "“So God created man in his own image.”", "ref": [0, 1, 27]}, {"q_vi": "Đức Chúa Trời lấy gì để dựng nên người nam?", "q_en": "From what did God form the man?", "o_vi": ["Nước sông", "Bụi đất", "Đá", "Cát biển"], "o_en": ["River water", "The dust of the ground", "Stone", "Sea sand"], "a": 1, "e_vi": "“Giê-hô-va Đức Chúa Trời bèn lấy bụi đất nắn nên hình người.”", "e_en": "“The LORD God formed man of the dust of the ground.”", "ref": [0, 2, 7]}, {"q_vi": "Người nữ được dựng nên từ phần nào của người nam?", "q_en": "From what part of the man was the woman made?", "o_vi": ["Bụi đất", "Xương sườn", "Bàn tay", "Hơi thở"], "o_en": ["Dust", "A rib", "His hand", "His breath"], "a": 1, "e_vi": "Đức Chúa Trời lấy một xương sườn của A-đam và dựng nên một người nữ.", "e_en": "God took one of Adam's ribs and made a woman.", "ref": [0, 2, 22]}, {"q_vi": "Cây nào trong vườn Ê-đen bị cấm ăn trái?", "q_en": "Which tree in Eden was forbidden to eat from?", "o_vi": ["Cây sự sống", "Cây vả", "Cây biết điều thiện và điều ác", "Cây ô-li-ve"], "o_en": ["The tree of life", "The fig tree", "The tree of the knowledge of good and evil", "The olive tree"], "a": 2, "e_vi": "Chỉ trái của cây biết điều thiện và điều ác là bị cấm; cây sự sống thì chưa bị cấm lúc đó.", "e_en": "Only the tree of the knowledge of good and evil was forbidden; the tree of life was not yet barred.", "ref": [0, 2, 17]}, {"q_vi": "Con vật nào dụ dỗ người nữ ăn trái cấm?", "q_en": "Which creature tempted the woman to eat the forbidden fruit?", "o_vi": ["Con sư tử", "Con rắn", "Con chim ưng", "Con cá lớn"], "o_en": ["The lion", "The serpent", "The eagle", "The great fish"], "a": 1, "e_vi": "“Trong các loài thú đồng… có con rắn là giống quỉ quyệt hơn hết.”", "e_en": "“The serpent was more subtil than any beast of the field.”", "ref": [0, 3, 1]}, {"q_vi": "Ngay sau khi ăn trái cấm, A-đam và Ê-va nhận biết điều gì?", "q_en": "Right after eating the forbidden fruit, what did Adam and Eve realize?", "o_vi": ["Họ biết mình lõa lồ", "Họ thấy vườn đổi màu", "Họ nghe tiếng sấm", "Họ quên tên nhau"], "o_en": ["That they were naked", "That the garden changed color", "That they heard thunder", "That they forgot each other's names"], "a": 0, "e_vi": "“Đoạn, mắt hai người mở ra, biết rằng mình lõa lồ.”", "e_en": "“The eyes of them both were opened, and they knew that they were naked.”", "ref": [0, 3, 7]}, {"q_vi": "Sau khi phạm tội, A-đam và Ê-va làm gì khi nghe tiếng Đức Chúa Trời đi trong vườn?", "q_en": "After sinning, what did Adam and Eve do when they heard God's voice in the garden?", "o_vi": ["Chạy ra đón Ngài", "Trốn giữa bụi cây", "Hát ca ngợi", "Ngủ thiếp đi"], "o_en": ["Ran to meet Him", "Hid among the trees", "Sang praises", "Fell asleep"], "a": 1, "e_vi": "Hai người “ẩn mình giữa bụi cây trong vườn” để tránh mặt Đức Chúa Trời.", "e_en": "They “hid themselves from the presence of the LORD God amongst the trees of the garden.”", "ref": [0, 3, 8]}, {"q_vi": "Đức Chúa Trời đặt ai canh giữ đường đến cây sự sống?", "q_en": "Whom did God place to guard the way to the tree of life?", "o_vi": ["Các chê-ru-bin với gươm chói lòa", "Thiên sứ Gáp-ri-ên", "Một con sư tử", "Mây trụ lửa"], "o_en": ["Cherubim with a flaming sword", "The angel Gabriel", "A lion", "A pillar of fire"], "a": 0, "e_vi": "Ngài đặt các chê-ru-bin cùng gươm chói lòa để giữ đường đến cây sự sống.", "e_en": "He placed Cherubims and a flaming sword to keep the way of the tree of life.", "ref": [0, 3, 24]}, {"q_vi": "Trong ngày thứ tư, Đức Chúa Trời đặt các vì sáng trên trời để làm dấu định điều gì?", "q_en": "On the fourth day, God set the lights in the heavens as signs to mark what?", "o_vi": ["Mùa gặt", "Thì tiết, ngày và năm", "Phương hướng đi biển", "Ngày lễ của loài người"], "o_en": ["Harvest seasons", "Seasons, days and years", "Directions at sea", "Human festivals"], "a": 1, "e_vi": "Các vì sáng “dùng làm dấu để định thì tiết, ngày và năm”.", "e_en": "The lights were “for signs, and for seasons, and for days, and years.”", "ref": [0, 1, 14]}, {"q_vi": "Trong ngày thứ bảy, Đức Chúa Trời làm gì?", "q_en": "What did God do on the seventh day?", "o_vi": ["Dựng nên các thiên sứ", "Nghỉ mọi công việc và ban phước cho ngày đó", "Xuống thăm vườn Ê-đen", "Đặt tên cho các loài thú"], "o_en": ["Created the angels", "Rested from all His work and blessed the day", "Visited the garden of Eden", "Named the animals"], "a": 1, "e_vi": "“Ngày thứ bảy, Đức Chúa Trời làm xong các việc… Ngài bèn nghỉ” và ban phước cho ngày thứ bảy.", "e_en": "“On the seventh day God ended his work… and he rested,” and God blessed the seventh day.", "ref": [0, 2, 2]}, {"q_vi": "Con sông nào trong bốn con sông ở Ê-đen chảy quanh đất Ê-thi-ô-pi?", "q_en": "Which of the four rivers of Eden flows around the land of Ethiopia (Cush)?", "o_vi": ["Bi-sôn", "Ghi-hôn", "Ti-gơ-rơ (Hít-đe-ke)", "Ơ-phơ-rát"], "o_en": ["Pison", "Gihon", "Tigris (Hiddekel)", "Euphrates"], "a": 1, "e_vi": "“Tên sông thứ nhì là Ghi-hôn, chảy quanh xứ Ê-thi-ô-pi.”", "e_en": "“The name of the second river is Gihon: the same is it that compasseth the whole land of Ethiopia.”", "ref": [0, 2, 13]}, {"q_vi": "A-đam đặt tên cho Ê-va vì nàng là gì?", "q_en": "Why did Adam call his wife Eve?", "o_vi": ["Mẹ của các loài sống", "Người nữ đầu tiên", "Người giữ vườn", "Mẹ của các dân tộc"], "o_en": ["The mother of all living", "The first woman", "The keeper of the garden", "The mother of nations"], "a": 0, "e_vi": "“A-đam gọi vợ là Ê-va, vì là mẹ của cả loài người.” (bản KJV: “she was the mother of all living”).", "e_en": "“Adam called his wife's name Eve; because she was the mother of all living.”", "ref": [0, 3, 20]}, {"q_vi": "Sau khi A-đam và Ê-va phạm tội, Đức Chúa Trời lấy gì làm áo cho họ?", "q_en": "After Adam and Eve sinned, what did God make coats from for them?", "o_vi": ["Lá cây vả", "Da thú", "Vải lanh", "Lông chiên"], "o_en": ["Fig leaves", "Skins", "Linen cloth", "Sheep's wool"], "a": 1, "e_vi": "“Giê-hô-va Đức Chúa Trời lấy da thú kết thành áo dài cho vợ chồng A-đam.”", "e_en": "“Unto Adam also and to his wife did the LORD God make coats of skins.”", "ref": [0, 3, 21]}], "john": [{"q_vi": "“Ban đầu có…” — theo Giăng 1:1, ban đầu có ai?", "q_en": "“In the beginning was…” — according to John 1:1, who was in the beginning?", "o_vi": ["Ngôi Lời", "Thiên sứ trưởng", "Môi-se", "Đền thờ"], "o_en": ["The Word", "The archangel", "Moses", "The temple"], "a": 0, "e_vi": "“Ban đầu có Ngôi Lời, Ngôi Lời ở cùng Đức Chúa Trời, và Ngôi Lời là Đức Chúa Trời.”", "e_en": "“In the beginning was the Word, and the Word was with God, and the Word was God.”", "ref": [42, 1, 1]}, {"q_vi": "Ngôi Lời đã trở nên gì và ở giữa loài người?", "q_en": "The Word was made what, and dwelt among us?", "o_vi": ["Một thiên sứ", "Xác thịt", "Một vị tiên tri", "Một quyển sách"], "o_en": ["An angel", "Flesh", "A prophet", "A book"], "a": 1, "e_vi": "“Ngôi Lời đã trở nên xác thịt, ở giữa chúng ta.”", "e_en": "“And the Word was made flesh, and dwelt among us.”", "ref": [42, 1, 14]}, {"q_vi": "Người được sai đến làm chứng về sự sáng trong Giăng 1 là ai?", "q_en": "Who was sent to bear witness of the Light in John 1?", "o_vi": ["Phi-e-rơ", "Giăng Báp-tít", "Phao-lô", "Ni-cô-đem"], "o_en": ["Peter", "John the Baptist", "Paul", "Nicodemus"], "a": 1, "e_vi": "“Có một người Đức Chúa Trời sai đến, tên là Giăng. Người đến để làm chứng về sự sáng.”", "e_en": "“There was a man sent from God, whose name was John. The same came for a witness, to bear witness of the Light.”", "ref": [42, 1, 6]}, {"q_vi": "Môn đồ nào đã đưa anh mình là Si-môn Phi-e-rơ đến cùng Chúa Jêsus?", "q_en": "Which disciple brought his brother Simon Peter to Jesus?", "o_vi": ["Giăng", "Anh-rê", "Phi-líp", "Tha-đê"], "o_en": ["John", "Andrew", "Philip", "Thaddaeus"], "a": 1, "e_vi": "Anh-rê, em của Si-môn Phi-e-rơ, tìm anh mình trước hết và đưa đến cùng Chúa Jêsus.", "e_en": "Andrew, Simon Peter's brother, first found his own brother and brought him to Jesus.", "ref": [42, 1, 42]}, {"q_vi": "Ni-cô-đem đến gặp Chúa Jêsus vào lúc nào?", "q_en": "When did Nicodemus come to Jesus?", "o_vi": ["Ban mai", "Giữa trưa", "Ban đêm", "Ngày sa-bát"], "o_en": ["Early morning", "At noon", "By night", "On the Sabbath"], "a": 2, "e_vi": "“Người này đến cùng Đức Chúa Jêsus trong ban đêm.”", "e_en": "“The same came to Jesus by night.”", "ref": [42, 3, 2]}, {"q_vi": "Theo Giăng 3:3, người ta phải làm gì mới được thấy nước Đức Chúa Trời?", "q_en": "According to John 3:3, what must a person do to see the kingdom of God?", "o_vi": ["Học thuộc luật pháp", "Được sanh lại", "Dâng của lễ lớn", "Đi hành hương"], "o_en": ["Memorize the law", "Be born again", "Offer a great sacrifice", "Go on a pilgrimage"], "a": 1, "e_vi": "“Nếu một người chẳng sanh lại, thì không thể thấy được nước Đức Chúa Trời.”", "e_en": "“Except a man be born again, he cannot see the kingdom of God.”", "ref": [42, 3, 3]}, {"q_vi": "Chúa Jêsus ví Thánh Linh hoạt động như điều gì khi nói với Ni-cô-đem?", "q_en": "To what did Jesus compare the Spirit's working when speaking to Nicodemus?", "o_vi": ["Như lửa cháy", "Như gió thổi", "Như sông chảy", "Như mưa rơi"], "o_en": ["Like burning fire", "Like the blowing wind", "Like a flowing river", "Like falling rain"], "a": 1, "e_vi": "“Gió muốn thổi đâu thì thổi… hết thảy mọi người sanh bởi Thánh Linh cũng vậy.”", "e_en": "“The wind bloweth where it listeth… so is every one that is born of the Spirit.”", "ref": [42, 3, 8]}, {"q_vi": "Ai đã treo con rắn lên trong đồng vắng, được nhắc đến ở Giăng 3:14?", "q_en": "Who lifted up the serpent in the wilderness, as recalled in John 3:14?", "o_vi": ["A-rôn", "Môi-se", "Giô-suê", "Đa-vít"], "o_en": ["Aaron", "Moses", "Joshua", "David"], "a": 1, "e_vi": "“Xưa Môi-se treo con rắn lên nơi đồng vắng thể nào, thì Con người cũng phải bị treo lên dường ấy.”", "e_en": "“As Moses lifted up the serpent in the wilderness, even so must the Son of man be lifted up.”", "ref": [42, 3, 14]}, {"q_vi": "Theo Giăng 3:16, Đức Chúa Trời đã ban ai cho thế gian?", "q_en": "According to John 3:16, whom did God give to the world?", "o_vi": ["Một vị tiên tri mới", "Con một của Ngài", "Mười điều răn", "Đền thờ mới"], "o_en": ["A new prophet", "His only begotten Son", "The Ten Commandments", "A new temple"], "a": 1, "e_vi": "“Vì Đức Chúa Trời yêu thương thế gian, đến nỗi đã ban Con một của Ngài.”", "e_en": "“For God so loved the world, that he gave his only begotten Son.”", "ref": [42, 3, 16]}, {"q_vi": "Theo Giăng 3:17, Đức Chúa Trời sai Con Ngài xuống thế gian để làm gì?", "q_en": "According to John 3:17, why did God send His Son into the world?", "o_vi": ["Để đoán xét thế gian", "Để thế gian nhờ Con ấy mà được cứu", "Để lập một vương quốc trần gian", "Để thu thuế"], "o_en": ["To condemn the world", "That the world through Him might be saved", "To set up an earthly kingdom", "To collect taxes"], "a": 1, "e_vi": "Chúa đến “chẳng phải để đoán xét thế gian đâu, nhưng hầu cho thế gian nhờ Con ấy mà được cứu.”", "e_en": "He came “not to condemn the world; but that the world through him might be saved.”", "ref": [42, 3, 17]}, {"q_vi": "Theo Giăng 1:17, luật pháp được ban ra bởi ai?", "q_en": "According to John 1:17, the law was given by whom?", "o_vi": ["Áp-ra-ham", "Môi-se", "Đa-vít", "Ê-li"], "o_en": ["Abraham", "Moses", "David", "Elijah"], "a": 1, "e_vi": "“Luật pháp đã ban cho bởi Môi-se, còn ân điển và lẽ thật bởi Đức Chúa Jêsus Christ mà đến.”", "e_en": "“For the law was given by Moses, but grace and truth came by Jesus Christ.”", "ref": [42, 1, 17]}, {"q_vi": "Giăng Báp-tít tự xưng mình là gì theo Giăng 1:23?", "q_en": "How did John the Baptist describe himself in John 1:23?", "o_vi": ["Tiên tri Ê-li", "Tiếng của người kêu trong đồng vắng", "Đấng Mê-si", "Thầy tế lễ thượng phẩm"], "o_en": ["The prophet Elijah", "The voice of one crying in the wilderness", "The Messiah", "The high priest"], "a": 1, "e_vi": "“Ta là tiếng của người kêu trong đồng vắng rằng: Hãy ban đường của Chúa cho bằng.”", "e_en": "“I am the voice of one crying in the wilderness, Make straight the way of the Lord.”", "ref": [42, 1, 23]}, {"q_vi": "Giăng Báp-tít gọi Chúa Jêsus là gì khi thấy Ngài đến cùng mình?", "q_en": "What did John the Baptist call Jesus when he saw Him coming?", "o_vi": ["Chiên Con của Đức Chúa Trời", "Vua dân Giu-đa", "Con của Giu-đa", "Thầy cả"], "o_en": ["The Lamb of God", "King of the Jews", "Son of Judah", "The great Teacher"], "a": 0, "e_vi": "“Kìa, Chiên Con của Đức Chúa Trời, là Đấng cất tội lỗi thế gian đi!”", "e_en": "“Behold the Lamb of God, which taketh away the sin of the world!”", "ref": [42, 1, 29]}, {"q_vi": "Theo Giăng 3:5, người ta phải sanh bởi điều gì để vào nước Đức Chúa Trời?", "q_en": "According to John 3:5, of what must a person be born to enter the kingdom of God?", "o_vi": ["Nước và Thánh Linh", "Lửa và gió", "Đất và nước", "Ân điển và luật pháp"], "o_en": ["Water and the Spirit", "Fire and wind", "Earth and water", "Grace and law"], "a": 0, "e_vi": "“Nếu một người chẳng nhờ nước và Thánh Linh mà sanh, thì không được vào nước Đức Chúa Trời.”", "e_en": "“Except a man be born of water and of the Spirit, he cannot enter into the kingdom of God.”", "ref": [42, 3, 5]}, {"q_vi": "Giăng Báp-tít nói về Chúa Jêsus: “Ngài phải dấy lên, ta phải…”?", "q_en": "John the Baptist said of Jesus: “He must increase, but I must…”?", "o_vi": ["Đi ra", "Hạ xuống", "Im lặng", "Lui về đồng vắng"], "o_en": ["Go out", "Decrease", "Be silent", "Return to the wilderness"], "a": 1, "e_vi": "“Ngài phải dấy lên, ta phải hạ xuống.”", "e_en": "“He must increase, but I must decrease.”", "ref": [42, 3, 30]}], "mix2": [{"q_vi": "Thi Thiên 23 mở đầu: “Đức Giê-hô-va là… tôi”. Điền vào chỗ trống:", "q_en": "Psalm 23 begins: “The LORD is my…”. Fill in the blank:", "o_vi": ["Vua", "Đấng chăn giữ", "Quan xét", "Thầy tế lễ"], "o_en": ["King", "Shepherd", "Judge", "Priest"], "a": 1, "e_vi": "“Đức Giê-hô-va là Đấng chăn giữ tôi; tôi sẽ chẳng thiếu thốn gì.”", "e_en": "“The LORD is my shepherd; I shall not want.”", "ref": [18, 23, 1]}, {"q_vi": "Trong Thi Thiên 23, Đấng chăn giữ đưa chiên đến nằm nghỉ ở đâu?", "q_en": "In Psalm 23, where does the Shepherd make His sheep lie down?", "o_vi": ["Trên núi cao", "Trong đồng cỏ xanh tươi", "Bên bờ biển", "Trong hang đá"], "o_en": ["On a high mountain", "In green pastures", "By the seashore", "In a cave"], "a": 1, "e_vi": "“Ngài khiến tôi an nghỉ nơi đồng cỏ xanh tươi.”", "e_en": "“He maketh me to lie down in green pastures.”", "ref": [18, 23, 2]}, {"q_vi": "“Dầu khi tôi đi qua trũng bóng chết, tôi sẽ chẳng sợ tai họa gì” — vì sao?", "q_en": "“Though I walk through the valley of the shadow of death, I will fear no evil” — why?", "o_vi": ["Vì tôi có gươm", "Vì Chúa ở cùng tôi", "Vì trời sáng", "Vì có bạn đồng hành"], "o_en": ["Because I have a sword", "For Thou art with me", "Because it is daylight", "Because friends are near"], "a": 1, "e_vi": "“Vì Chúa ở cùng tôi; cây trượng và cây gậy của Chúa an ủi tôi.”", "e_en": "“For thou art with me; thy rod and thy staff they comfort me.”", "ref": [18, 23, 4]}, {"q_vi": "Trong Thi Thiên 23:5, Đức Chúa Trời lấy gì xức cho đầu tác giả?", "q_en": "In Psalm 23:5, with what does God anoint the psalmist's head?", "o_vi": ["Nước", "Dầu", "Rượu", "Mật ong"], "o_en": ["Water", "Oil", "Wine", "Honey"], "a": 1, "e_vi": "“Chúa xức dầu cho đầu tôi.”", "e_en": "“Thou anointest my head with oil.”", "ref": [18, 23, 5]}, {"q_vi": "Theo Thi Thiên 1, người có phước không đi theo mưu kế của ai?", "q_en": "According to Psalm 1, the blessed man does not walk in the counsel of whom?", "o_vi": ["Kẻ dữ", "Người ngoại bang", "Người già", "Thương gia"], "o_en": ["The ungodly", "Foreigners", "The elderly", "Merchants"], "a": 0, "e_vi": "“Phước cho người nào chẳng theo mưu kế của kẻ dữ.”", "e_en": "“Blessed is the man that walketh not in the counsel of the ungodly.”", "ref": [18, 1, 1]}, {"q_vi": "Người có phước trong Thi Thiên 1 được ví như cây trồng gần dòng nước, sanh bông trái thế nào?", "q_en": "The blessed man in Psalm 1 is like a tree by rivers of water, bringing forth fruit how?", "o_vi": ["Quanh năm không nghỉ", "Theo thì tiết", "Chỉ một lần duy nhất", "Sau mười năm"], "o_en": ["All year without rest", "In his season", "Only once", "After ten years"], "a": 1, "e_vi": "Cây ấy “sanh bông trái theo thì tiết, lá nó cũng chẳng tàn héo”.", "e_en": "It “bringeth forth his fruit in his season; his leaf also shall not wither.”", "ref": [18, 1, 3]}, {"q_vi": "Theo Ma-thi-ơ 5:3, ai là người có phước vì nước thiên đàng thuộc về họ?", "q_en": "According to Matthew 5:3, who is blessed, for theirs is the kingdom of heaven?", "o_vi": ["Kẻ giàu có", "Kẻ có lòng khó khăn (nghèo khó về tâm linh)", "Kẻ mạnh sức", "Kẻ khôn ngoan"], "o_en": ["The rich", "The poor in spirit", "The strong", "The wise"], "a": 1, "e_vi": "“Phước cho những kẻ có lòng khó khăn, vì nước thiên đàng là của những kẻ ấy.”", "e_en": "“Blessed are the poor in spirit: for theirs is the kingdom of heaven.”", "ref": [39, 5, 3]}, {"q_vi": "“Các ngươi là… của đất” — Chúa Jêsus gọi môn đồ là gì trong Ma-thi-ơ 5:13?", "q_en": "“Ye are the… of the earth” — what does Jesus call His disciples in Matthew 5:13?", "o_vi": ["Muối", "Men", "Hạt giống", "Nước"], "o_en": ["Salt", "Leaven", "Seed", "Water"], "a": 0, "e_vi": "“Các ngươi là muối của đất.”", "e_en": "“Ye are the salt of the earth.”", "ref": [39, 5, 13]}, {"q_vi": "Trong Ma-thi-ơ 5:14, Chúa Jêsus phán: “Các ngươi là sự sáng của…”?", "q_en": "In Matthew 5:14, Jesus says: “Ye are the light of the…”?", "o_vi": ["Giê-ru-sa-lem", "Thế gian", "Đền thờ", "Ga-li-lê"], "o_en": ["Jerusalem", "World", "Temple", "Galilee"], "a": 1, "e_vi": "“Các ngươi là sự sáng của thế gian.”", "e_en": "“Ye are the light of the world.”", "ref": [39, 5, 14]}, {"q_vi": "Theo Ma-thi-ơ 5:17, Chúa Jêsus đến không phải để phá luật pháp, nhưng để làm gì?", "q_en": "According to Matthew 5:17, Jesus came not to destroy the law, but to do what?", "o_vi": ["Viết lại luật pháp", "Làm cho trọn", "Giấu luật pháp", "Chia luật pháp ra"], "o_en": ["Rewrite the law", "Fulfil it", "Hide the law", "Divide the law"], "a": 1, "e_vi": "“Ta đến, không phải để phá, song để làm cho trọn.”", "e_en": "“I am not come to destroy, but to fulfil.”", "ref": [39, 5, 17]}, {"q_vi": "Theo Thi Thiên 1:2, người có phước lấy làm vui vẻ về luật pháp của Đức Giê-hô-va và làm gì?", "q_en": "According to Psalm 1:2, the blessed man delights in the law of the LORD and does what?", "o_vi": ["Suy gẫm ngày và đêm", "Dạy luật pháp mỗi sáng", "Thuộc lòng luật pháp", "Chép luật pháp ra"], "o_en": ["Meditates on it day and night", "Teaches it every morning", "Memorizes it", "Copies it out"], "a": 0, "e_vi": "Người “lấy làm vui vẻ về luật pháp của Đức Giê-hô-va, suy gẫm luật pháp ấy ngày và đêm”.", "e_en": "He “meditateth day and night” in God's law.", "ref": [18, 1, 2]}, {"q_vi": "Trong Thi Thiên 1:4, kẻ dữ được ví như gì mà gió thổi bay đi?", "q_en": "In Psalm 1:4, the ungodly are like what, which the wind drives away?", "o_vi": ["Bụi đất", "Rơm rác (trấu)", "Lá khô", "Khói"], "o_en": ["Dust", "Chaff", "Dry leaves", "Smoke"], "a": 1, "e_vi": "“Kẻ ác chẳng như vậy đâu; chúng nó khác nào rơm rác gió thổi bay đi.”", "e_en": "“The ungodly are not so: but are like the chaff which the wind driveth away.”", "ref": [18, 1, 4]}, {"q_vi": "Thi Thiên 23:3 — “Ngài bổ lại linh hồn tôi” và dẫn tôi vào các lối nào?", "q_en": "Psalm 23:3 — “He restoreth my soul” and leads me in which paths?", "o_vi": ["Lối công bình", "Lối hẹp", "Lối của tổ phụ", "Lối ra đồng cỏ"], "o_en": ["Paths of righteousness", "The narrow path", "The paths of the fathers", "The path to pasture"], "a": 0, "e_vi": "“Ngài dẫn tôi vào các lối công bình, vì cớ danh Ngài.”", "e_en": "“He leadeth me in the paths of righteousness for his name's sake.”", "ref": [18, 23, 3]}, {"q_vi": "Thi Thiên 23 kết thúc: điều gì sẽ theo tác giả trọn đời?", "q_en": "Psalm 23 ends: what will follow the psalmist all the days of his life?", "o_vi": ["Sự giàu sang và danh vọng", "Phước hạnh và sự thương xót", "Bình an và sức khỏe", "Bạn bè và gia đình"], "o_en": ["Riches and fame", "Goodness and mercy", "Peace and health", "Friends and family"], "a": 1, "e_vi": "“Quả thật, trọn đời tôi phước hạnh và sự thương xót sẽ theo tôi.”", "e_en": "“Surely goodness and mercy shall follow me all the days of my life.”", "ref": [18, 23, 6]}, {"q_vi": "Theo Ma-thi-ơ 5:5, kẻ nào có phước vì sẽ hưởng được đất?", "q_en": "According to Matthew 5:5, who is blessed, for they shall inherit the earth?", "o_vi": ["Kẻ nhu mì", "Kẻ hay thương xót", "Kẻ làm nên hòa thuận", "Kẻ có lòng trong sạch"], "o_en": ["The meek", "The merciful", "The peacemakers", "The pure in heart"], "a": 0, "e_vi": "“Phước cho những kẻ nhu mì, vì sẽ hưởng được đất.”", "e_en": "“Blessed are the meek: for they shall inherit the earth.”", "ref": [39, 5, 5]}, {"q_vi": "Theo Ma-thi-ơ 5:8, kẻ có lòng trong sạch sẽ được điều gì?", "q_en": "According to Matthew 5:8, what will the pure in heart receive?", "o_vi": ["Thấy Đức Chúa Trời", "Được gọi là con Đức Chúa Trời", "Được thương xót", "Được no đủ"], "o_en": ["They shall see God", "They shall be called God's children", "They shall obtain mercy", "They shall be filled"], "a": 0, "e_vi": "“Phước cho những kẻ có lòng trong sạch, vì sẽ thấy Đức Chúa Trời.”", "e_en": "“Blessed are the pure in heart: for they shall see God.”", "ref": [39, 5, 8]}, {"q_vi": "Theo Ma-thi-ơ 5:9, kẻ làm nên hòa thuận sẽ được gọi là gì?", "q_en": "According to Matthew 5:9, the peacemakers shall be called what?", "o_vi": ["Con Đức Chúa Trời", "Bạn của Chúa", "Người công bình", "Sứ giả hòa bình"], "o_en": ["The children of God", "Friends of God", "The righteous", "Messengers of peace"], "a": 0, "e_vi": "“Phước cho những kẻ làm nên hòa thuận, vì sẽ được gọi là con Đức Chúa Trời.”", "e_en": "“Blessed are the peacemakers: for they shall be called the children of God.”", "ref": [39, 5, 9]}, {"q_vi": "Trong Ma-thi-ơ 5:15, người ta thắp đèn rồi đặt đèn ở đâu?", "q_en": "In Matthew 5:15, where do people put a lighted candle?", "o_vi": ["Dưới thùng (cái đấu)", "Trên chân đèn", "Ngoài cửa sổ", "Trong phòng kín"], "o_en": ["Under a bushel", "On a candlestick", "Outside the window", "In a closed room"], "a": 1, "e_vi": "Người ta không thắp đèn mà để dưới cái thùng, “song người ta để trên chân đèn”.", "e_en": "They do not light a candle and put it under a bushel, “but on a candlestick.”", "ref": [39, 5, 15]}, {"q_vi": "Theo Ma-thi-ơ 5:16, vì sao phải để sự sáng soi trước mặt người ta?", "q_en": "According to Matthew 5:16, why let your light shine before men?", "o_vi": ["Để người ta khen mình", "Để họ thấy việc lành và ngợi khen Cha trên trời", "Để tránh bị bắt bớ", "Để được làm lớn"], "o_en": ["So people praise you", "That they may see your good works and glorify your Father in heaven", "To avoid persecution", "To become great"], "a": 1, "e_vi": "“Hầu cho họ thấy những việc lành của các ngươi, và ngợi khen Cha các ngươi ở trên trời.”", "e_en": "“That they may see your good works, and glorify your Father which is in heaven.”", "ref": [39, 5, 16]}, {"q_vi": "Theo Ma-thi-ơ 5:6, kẻ đói khát điều gì sẽ được no đủ?", "q_en": "According to Matthew 5:6, those who hunger and thirst after what shall be filled?", "o_vi": ["Sự khôn ngoan", "Sự công bình", "Sự giàu có", "Sự bình an"], "o_en": ["Wisdom", "Righteousness", "Riches", "Peace"], "a": 1, "e_vi": "“Phước cho những kẻ đói khát sự công bình, vì sẽ được no đủ.”", "e_en": "“Blessed are they which do hunger and thirst after righteousness: for they shall be filled.”", "ref": [39, 5, 6]}]};
+
+/* ================= I18N ================= */
+const I = {
+  vi: {
+    brand:"Kinh Thánh Song Ngữ", brandsub:"Việt 1925 · Anh KJV",
+    settings:"Cài đặt", langLabel:"Ngôn ngữ", back:"← Quay lại",
+    settingsNote:"Lựa chọn ngôn ngữ được nhớ trên thiết bị này, lần mở sau app vào thẳng ngôn ngữ đã chọn. Đổi ở đây áp dụng ngay cho toàn bộ giao diện, tên sách, câu hỏi và giải thích.",
+    tabLookup:"Tra cứu", tabLookupSub:"66 sách · tìm theo câu, từ khóa",
+    tabQuiz:"Trắc nghiệm", tabQuizSub:"Lộ trình 4 chặng · ngân hàng 1.101 câu · mỗi lượt 30 câu",
+    searchBtn:"Tìm", ot:"Cựu Ước", nt:"Tân Ước", fav:"Yêu thích",
+    searchHint:'Gõ địa chỉ kiểu <code>Giăng 3:16</code>, <code>John 1:1</code> (không dấu cũng được) hoặc gõ từ khóa để tìm trong các chương mẫu.',
+    votd:"Câu gốc hôm nay", chapters:"chương", sampleBadge:"Có bản mẫu",
+    noSample:"Bản mẫu hiện có văn bản đầy đủ cho Sáng Thế Ký, Thi Thiên, Ma-thi-ơ và Phúc Âm Giăng. Sách này sẽ có trong bản đầy đủ.",
+    readChapter:"Đọc chương", chapter:"Chương",
+    prev:"← Chương trước", next:"Chương sau →",
+    copy:"Sao chép", copied:"Đã sao chép câu ", favAdd:"Lưu yêu thích", favDel:"Bỏ yêu thích",
+    favTitle:"Câu yêu thích của bạn", favEmpty:"Chưa có câu nào. Mở một chương, chạm vào câu để lưu lại.",
+    searchRes:"Kết quả tìm", noRes:"Không tìm thấy trong các chương mẫu. Thử từ khóa khác, hoặc gõ địa chỉ như “Giăng 3:16”.",
+    notInSample:"Câu này chưa có trong bản mẫu.", foundIn:"Tìm thấy trong chương mẫu",
+    stage:"Chặng", questions:"câu", start:"Vào thi", review:"Ôn ngay",
+    mixedK:"Chặng đặc biệt", mixedT:"Thi tổng hợp", mixedD:"30 câu rút ngẫu nhiên không lặp lại từ toàn bộ ngân hàng 1.101 câu, đáp án được xáo trộn mỗi lần thi.",
+    wrongK:"Ôn tập", wrongT:"Ôn câu sai", wrongD:"Làm lại đúng những câu bạn vừa trả lời sai trong phiên này.",
+    quit:"Thoát", question:"Câu", correct:"Chính xác!", wrong:"Chưa đúng.",
+    timeUp:"Hết giờ!", yourAnswer:"Bạn chọn: ", rightAnswer:"Đáp án đúng: ",
+    viewVerse:"Xem câu gốc", nextQ:"Câu tiếp →", finish:"Xem kết quả →",
+    best:"Điểm cao nhất", scoreOf:"điểm",
+    doneTitle:"Hoàn thành!", again:"Làm lại", backRoad:"Về lộ trình", reviewWrong:"Ôn câu sai",
+    allRight:"Xuất sắc — không sai câu nào!", reviewTitle:"Xem lại các câu sai",
+    notAnswered:"(chưa trả lời)", perQ:"mỗi câu 30 giây",
+    bank:"Ngân hàng", testL:"Thi", randomNR:"ngẫu nhiên, không lặp",
+    searchPh:"Giăng 3:16 · Sáng 1:1 · hoặc từ khóa: sự sáng…", docTitle:"Trắc nghiệm Kinh Thánh",
+    foot:'Văn bản: Kinh Thánh Tiếng Việt 1925 (Tin Lành) và King James Version (KJV) — cả hai đều thuộc phạm vi công cộng. Văn bản tiếng Việt dùng ấn bản điện tử của bản 1925, đã chuẩn hoá dấu gạch nối so với bản in gốc. Bản mẫu gồm văn bản đầy đủ của Sáng Thế Ký 1–3, Thi Thiên 1 & 23, Ma-thi-ơ 5, Giăng 1 & 3; danh mục đủ 66 sách. Nguồn dữ liệu: kho JSON công khai <a href="https://github.com/thiagobodruk/bible" target="_blank" rel="noopener">thiagobodruk/bible</a> (Việt) và <a href="https://github.com/aruljohn/Bible-kjv" target="_blank" rel="noopener">aruljohn/Bible-kjv</a> (KJV).'
+  },
+  en: {
+    brand:"Bilingual Bible", brandsub:"Vietnamese 1925 · English KJV",
+    settings:"Settings", langLabel:"Language", back:"← Back",
+    settingsNote:"Your language choice is remembered on this device, so the app opens in it next time. Changing it here applies at once to the whole interface, book names, questions and explanations.",
+    tabLookup:"Look up", tabLookupSub:"66 books · search by reference or keyword",
+    tabQuiz:"Quiz", tabQuizSub:"4-stage roadmap · 1,101-question bank · 30 per attempt",
+    searchBtn:"Search", ot:"Old Testament", nt:"New Testament", fav:"Favorites",
+    searchHint:'Type a reference like <code>John 3:16</code> or <code>Giăng 3:16</code> (diacritics optional), or a keyword to search the sample chapters.',
+    votd:"Verse of the day", chapters:"chapters", sampleBadge:"Sample included",
+    noSample:"This sample includes full text for Genesis, Psalms, Matthew and John. This book arrives in the full version.",
+    readChapter:"Read chapter", chapter:"Chapter",
+    prev:"← Previous", next:"Next →",
+    copy:"Copy", copied:"Copied verse ", favAdd:"Save favorite", favDel:"Remove favorite",
+    favTitle:"Your favorite verses", favEmpty:"None yet. Open a chapter and tap a verse to save it.",
+    searchRes:"Search results", noRes:"Nothing found in the sample chapters. Try another keyword, or a reference like “John 3:16”.",
+    notInSample:"That verse is not in this sample yet.", foundIn:"Found in sample chapters",
+    stage:"Stage", questions:"questions", start:"Start", review:"Review now",
+    mixedK:"Special stage", mixedT:"Mixed test", mixedD:"30 questions drawn at random without repetition from the whole 1,101-question bank, answers shuffled every attempt.",
+    wrongK:"Review", wrongT:"Review mistakes", wrongD:"Redo exactly the questions you missed in this session.",
+    quit:"Quit", question:"Question", correct:"Correct!", wrong:"Not quite.",
+    timeUp:"Time's up!", yourAnswer:"You chose: ", rightAnswer:"Correct answer: ",
+    viewVerse:"View the verse", nextQ:"Next question →", finish:"See results →",
+    best:"Best", scoreOf:"score",
+    doneTitle:"Finished!", again:"Try again", backRoad:"Back to roadmap", reviewWrong:"Review mistakes",
+    allRight:"Excellent — no mistakes!", reviewTitle:"Review your mistakes",
+    notAnswered:"(no answer)", perQ:"30 seconds each",
+    bank:"Bank", testL:"Test", randomNR:"random, no repeats",
+    searchPh:"John 3:16 · Genesis 1:1 · or a keyword: light…", docTitle:"Bible Quiz",
+    foot:'Texts: Vietnamese Bible 1925 (Protestant) and the King James Version (KJV) — both public domain. The Vietnamese text follows an electronic edition of the 1925 translation with hyphenation normalized from the original printing. This sample carries the full text of Genesis 1–3, Psalms 1 & 23, Matthew 5, John 1 & 3, with the full 66-book catalog. Data sources: public JSON repos <a href="https://github.com/thiagobodruk/bible" target="_blank" rel="noopener">thiagobodruk/bible</a> (Vietnamese) and <a href="https://github.com/aruljohn/Bible-kjv" target="_blank" rel="noopener">aruljohn/Bible-kjv</a> (KJV).'
+  }
+};
+
+/* ================= STATE ================= */
+const LANG_KEY = "kt-lang";
+function loadSavedLang(){ try{ const v=localStorage.getItem(LANG_KEY); return (v==="vi"||v==="en"||v==="both") ? v : null; }catch(e){ return null; } }
+function saveLang(){ try{ localStorage.setItem(LANG_KEY, lang); }catch(e){} }
+const savedLang = loadSavedLang();
+let langChosen = !!savedLang;
+let lang = savedLang || "en";   // vi | en | both — English is the default before a choice is made
+let curBook = 0, curChapter = 1, curTest = "ot";
+const favs = new Set();        // "bookIdx:ch:v"
+const best = {};               // setId -> score
+let wrongPool = [];            // question objects missed this session
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const LONG_KEYS = new Set(["searchHint","foot","noSample","noRes","favEmpty","mixedD","wrongD","tabLookupSub","tabQuizSub","allRight","settingsNote"]);
+function ui(){
+  if(lang!=="both") return I[lang==="en"?"en":"vi"];
+  const out={};
+  Object.keys(I.vi).forEach(k=>{ out[k] = LONG_KEYS.has(k) ? I.vi[k]+"<br>"+I.en[k] : I.vi[k]+" / "+I.en[k]; });
+  return out;
+}
+const bothName = (vi,en)=> lang==="en" ? en : lang==="both" ? vi+" / "+en : vi;
+const versionLine = ()=> lang==="en" ? "King James Version" : lang==="both" ? "Kinh Thánh Tiếng Việt 1925 + King James Version" : "Kinh Thánh Tiếng Việt 1925";
+const versionShort = ()=> lang==="en" ? "KJV" : lang==="both" ? "Kinh Thánh 1925 + KJV" : "Kinh Thánh 1925";
+const strip = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),2200); }
+
+/* ================= LANGUAGE ================= */
+function applyLang(){
+  $$("[data-lang]").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.lang===lang)));
+  const d = ui();
+  document.documentElement.lang = lang==="en" ? "en" : "vi";
+  document.title = !langChosen ? "Bible Quiz · Trắc nghiệm Kinh Thánh" : lang==="both" ? "Trắc nghiệm Kinh Thánh · Bible Quiz" : d.docTitle;
+  $$("[data-i]").forEach(el=>{ const k=el.dataset.i; if(d[k]!==undefined) el.innerHTML=d[k]; });
+  const si=$("#searchInput"); if(si) si.placeholder = d.searchPh;
+  const vd=$("#votd"); if(vd) vd.setAttribute("aria-label", lang==="en" ? "Verse of the day" : lang==="both" ? "Câu gốc hôm nay / Verse of the day" : "Câu gốc hôm nay");
+  $("#pageFoot").innerHTML = d.foot;
+  renderVotd(); renderBooks(); renderReader(); renderFavs(); renderRoadmap();
+  if(lastSearch && $("#searchResults").innerHTML.trim()) runSearch(lastSearch);
+  if(quiz && !$("#quizRun").classList.contains("hidden")) showQuestion(false);
+  else if(quiz && quiz.finished && !$("#quizDone").classList.contains("hidden")) renderDone();
+}
+function pickLang(v){
+  lang=v; langChosen=true;
+  document.documentElement.classList.add("lang-set");
+  saveLang(); applyLang();
+}
+$$("[data-lang]").forEach(b=>b.addEventListener("click",()=>pickLang(b.dataset.lang)));
+$$("[data-choose]").forEach(b=>b.addEventListener("click",()=>{ pickLang(b.dataset.choose); window.scrollTo({top:0}); }));
+$("#settingsBtn").addEventListener("click",()=>{
+  $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected","false"));
+  $("#view-lookup").classList.add("hidden"); $("#view-quiz").classList.add("hidden");
+  $("#view-settings").classList.remove("hidden");
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+$("#settingsBack").addEventListener("click",()=>{
+  $("#view-settings").classList.add("hidden"); $("#view-lookup").classList.remove("hidden");
+  $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected", String(x.dataset.tab==="lookup")));
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+/* ================= TABS ================= */
+$$("[data-tab]").forEach(b=>b.addEventListener("click",()=>{
+  $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected", String(x===b)));
+  $("#view-lookup").classList.toggle("hidden", b.dataset.tab!=="lookup");
+  $("#view-quiz").classList.toggle("hidden", b.dataset.tab!=="quiz");
+  $("#view-settings").classList.add("hidden");
+  window.scrollTo({top:0, behavior:"smooth"});
+}));
+
+/* ================= VERSE OF THE DAY ================= */
+const VOTD = [[42,3,16],[18,23,1],[0,1,1],[42,1,1],[42,1,14],[39,5,14],[18,1,1],[0,2,7],[18,23,4],[39,5,3]];
+function bookName(b){ return lang==="en" ? b.en : b.vi; }
+function refLabel(bi,ch,v){ const b=BOOKS[bi]; const one=nm=>nm+" "+ch+(v?":"+v:"");
+  return lang==="both" ? one(b.vi)+" · "+one(b.en) : one(bookName(b)); }
+function renderVotd(){
+  const day = Math.floor(Date.now()/86400000);
+  const [bi,ch,v] = VOTD[day % VOTD.length];
+  const b = BOOKS[bi], d = ui();
+  const main = lang==="en" ? b.data[ch].en[v-1] : b.data[ch].vi[v-1];
+  const alt  = lang==="both" ? `<div class="alt">“${b.data[ch].en[v-1]}”</div>` : "";
+  $("#votd").innerHTML = `<div class="k">${d.votd}</div>
+    <blockquote>“${main}”</blockquote>
+    <div class="ref">${refLabel(bi,ch,v)} · ${versionShort()}</div>${alt}`;
+}
+
+/* ================= LOOKUP ================= */
+$$("[data-test]").forEach(b=>b.addEventListener("click",()=>{
+  curTest=b.dataset.test;
+  $$("[data-test]").forEach(x=>x.setAttribute("aria-pressed", String(x===b)));
+  renderBooks(); renderFavs();
+}));
+function renderBooks(){
+  const d=ui(), area=$("#bookArea");
+  if(curTest==="fav"){ area.innerHTML=""; return; }
+  const list = BOOKS.map((b,i)=>({b,i})).filter(({b})=> (curTest==="ot") === b.ot);
+  area.innerHTML = `<div class="bookgrid">${list.map(({b,i})=>`
+    <button type="button" class="book ${b.data?"":"dim"}" data-book="${i}">
+      <b>${bookName(b)}</b>
+      <span>${lang==="both"? b.en+" · ":""}${b.ch} ${d.chapters}</span>
+      ${b.data?`<span class="badge">${d.sampleBadge}</span>`:""}
+    </button>`).join("")}</div>`;
+  area.querySelectorAll("[data-book]").forEach(btn=>btn.addEventListener("click",()=>{
+    openBook(+btn.dataset.book);
+  }));
+}
+function openBook(i){
+  curBook=i; const b=BOOKS[i];
+  curChapter = b.data ? +Object.keys(b.data)[0] : 1;
+  renderReader(); $("#readerArea").scrollIntoView({behavior:"smooth", block:"start"});
+}
+function verseText(b,ch,v,which){ return b.data[ch][which][v-1]; }
+function renderReader(){
+  const area=$("#readerArea"), b=BOOKS[curBook], d=ui();
+  if(!b){ area.innerHTML=""; return; }
+  if(!b.data){
+    area.innerHTML = `<div class="panel" style="margin-top:14px"><h2>${bookName(b)}</h2>
+      <p class="chapsub">${b.ch} ${d.chapters}</p><p>${d.noSample}</p></div>`;
+    return;
+  }
+  const chaps = Object.keys(b.data).map(Number).sort((a,c)=>a-c);
+  if(!b.data[curChapter]) curChapter = chaps[0];
+  const verses = b.data[curChapter].vi.map((_,idx)=>{
+    const v=idx+1, key=curBook+":"+curChapter+":"+v, faved=favs.has(key);
+    const main = lang==="en" ? verseText(b,curChapter,v,"en") : verseText(b,curChapter,v,"vi");
+    const alt = lang==="both" ? `<span class="vt alt">${verseText(b,curChapter,v,"en")}</span>` : "";
+    return `<div class="verse ${faved?"faved":""}" data-v="${v}" tabindex="0" role="button"
+        aria-label="${refLabel(curBook,curChapter,v)}">
+      <span class="n">${v}</span><span class="vt">${main}</span>${alt}
+      <span class="vtools">
+        <button type="button" data-act="copy">${d.copy}</button>
+        <button type="button" data-act="fav">${faved?"♥ "+d.favDel:"♡ "+d.favAdd}</button>
+      </span></div>`;
+  }).join("");
+  const pos = chaps.indexOf(curChapter);
+  area.innerHTML = `<div class="panel" style="margin-top:14px">
+    <h2>${bookName(b)}</h2>
+    <p class="chapsub">${d.chapter} ${curChapter} · ${versionLine()}</p>
+    <div class="chips">${chaps.map(c=>`<button type="button" data-ch="${c}" aria-pressed="${c===curChapter}">${c}</button>`).join("")}</div>
+    <div>${verses}</div>
+    <div class="chapnav">
+      <button type="button" data-nav="-1" ${pos<=0?"disabled":""}>${d.prev}</button>
+      <button type="button" data-nav="1" ${pos>=chaps.length-1?"disabled":""}>${d.next}</button>
+    </div></div>`;
+  area.querySelectorAll("[data-ch]").forEach(btn=>btn.addEventListener("click",()=>{ curChapter=+btn.dataset.ch; renderReader(); }));
+  area.querySelectorAll("[data-nav]").forEach(btn=>btn.addEventListener("click",()=>{
+    curChapter = chaps[pos + (+btn.dataset.nav)]; renderReader();
+    $("#readerArea").scrollIntoView({behavior:"smooth", block:"start"});
+  }));
+  area.querySelectorAll(".verse").forEach(el=>{
+    const toggle=()=>{ const was=el.classList.contains("open");
+      area.querySelectorAll(".verse.open").forEach(x=>x.classList.remove("open"));
+      if(!was) el.classList.add("open"); };
+    el.addEventListener("click",e=>{
+      const act=e.target.closest("[data-act]");
+      if(act){ e.stopPropagation(); verseAction(act.dataset.act, +el.dataset.v); return; }
+      toggle();
+    });
+    el.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+  });
+}
+function verseAction(act,v){
+  const key=curBook+":"+curChapter+":"+v, d=ui(), b=BOOKS[curBook];
+  if(act==="copy"){
+    const txt = refLabel(curBook,curChapter,v)+" — "+verseText(b,curChapter,v, lang==="en"?"en":"vi");
+    if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>toast(d.copied+refLabel(curBook,curChapter,v)));
+  } else {
+    favs.has(key) ? favs.delete(key) : favs.add(key);
+    $("#favCount").textContent=favs.size; renderReader(); renderFavs();
+  }
+}
+function renderFavs(){
+  const area=$("#favArea"), d=ui();
+  if(curTest!=="fav"){ area.innerHTML=""; return; }
+  if(!favs.size){ area.innerHTML=`<h3 style="margin:16px 0 8px">${d.favTitle}</h3><div class="empty">${d.favEmpty}</div>`; return; }
+  const items=[...favs].map(key=>{
+    const [bi,ch,v]=key.split(":").map(Number), b=BOOKS[bi];
+    const main = lang==="en" ? verseText(b,ch,v,"en") : verseText(b,ch,v,"vi");
+    const alt = lang==="both" ? `<span class="vt alt">${verseText(b,ch,v,"en")}</span>` : "";
+    return `<div class="verse faved"><span class="rref" style="font-weight:800;color:var(--accent)">${refLabel(bi,ch,v)}</span><br>
+      <span class="n">${v}</span><span class="vt">${main}</span>${alt}</div>`;
+  }).join("");
+  area.innerHTML = `<div class="results"><h3 style="margin:16px 0 4px">${d.favTitle} (${favs.size})</h3>${items}</div>`;
+}
+
+/* ---- search ---- */
+function findBookByName(name){
+  const n = strip(name); if(!n) return -1;
+  let bestIdx=-1, bestLen=0;
+  BOOKS.forEach((b,i)=>{
+    [b.vi,b.en,...(b.alias||[])].forEach(nm=>{
+      const s=strip(nm);
+      if(s===n) { bestIdx=i; bestLen=99; }
+      else if(s.startsWith(n) && n.length>=3 && s.length>bestLen && bestLen<99){ bestIdx=i; bestLen=s.length; }
+    });
+  });
+  return bestIdx;
+}
+let lastSearch="";
+function runSearch(qRaw){
+  const q=(qRaw||"").trim(), d=ui(), box=$("#searchResults");
+  if(!q){ box.innerHTML=""; lastSearch=""; return; }
+  lastSearch=q;
+  const m = q.match(/^(.+?)\s+(\d+)\s*[:. ]\s*(\d+)$/) || q.match(/^(.+?)\s+(\d+)$/);
+  if(m){
+    const bi=findBookByName(m[1]);
+    if(bi>=0){
+      const ch=+m[2], v=m[3]?+m[3]:null, b=BOOKS[bi];
+      if(b.data && b.data[ch] && (!v || b.data[ch].vi[v-1])){
+        curTest = b.ot?"ot":"nt";
+        $$("[data-test]").forEach(x=>x.setAttribute("aria-pressed", String(x.dataset.test===curTest)));
+        curBook=bi; curChapter=ch; renderBooks(); renderReader(); renderFavs();
+        box.innerHTML="";
+        if(v){ const el=$("#readerArea").querySelector(`.verse[data-v="${v}"]`);
+          if(el){ el.classList.add("open"); el.scrollIntoView({behavior:"smooth", block:"center"}); } }
+        return;
+      }
+      box.innerHTML=`<div class="empty">${refLabel(bi,ch,v)} — ${d.notInSample}</div>`;
+      return;
+    }
+  }
+  // keyword search across sample chapters
+  const nq=strip(q), hits=[];
+  BOOKS.forEach((b,bi)=>{ if(!b.data) return;
+    Object.keys(b.data).forEach(ch=>{
+      b.data[ch].vi.forEach((t,idx)=>{ if(strip(t).includes(nq)) hits.push({bi,ch:+ch,v:idx+1}); });
+      b.data[ch].en.forEach((t,idx)=>{ if(strip(t).includes(nq) && !hits.some(h=>h.bi===bi&&h.ch===+ch&&h.v===idx+1)) hits.push({bi,ch:+ch,v:idx+1}); });
+    });
+  });
+  if(!hits.length){ box.innerHTML=`<div class="empty">${d.noRes}</div>`; return; }
+  box.innerHTML = `<div class="results"><h3 style="margin:10px 0 4px">${d.searchRes} · ${d.foundIn} (${hits.length})</h3>`+
+    hits.slice(0,30).map(h=>{ const b=BOOKS[h.bi];
+      const main = lang==="en" ? verseText(b,h.ch,h.v,"en") : verseText(b,h.ch,h.v,"vi");
+      return `<div class="verse" data-jump="${h.bi}:${h.ch}:${h.v}" tabindex="0" role="button">
+        <span class="rref">${refLabel(h.bi,h.ch,h.v)}</span><br><span class="vt">${main}</span></div>`; }).join("")+`</div>`;
+  box.querySelectorAll("[data-jump]").forEach(el=>el.addEventListener("click",()=>{
+    const [bi,ch,v]=el.dataset.jump.split(":").map(Number), b=BOOKS[bi];
+    curTest=b.ot?"ot":"nt";
+    $$("[data-test]").forEach(x=>x.setAttribute("aria-pressed", String(x.dataset.test===curTest)));
+    curBook=bi; curChapter=ch; box.innerHTML=""; renderBooks(); renderReader(); renderFavs();
+    const t=$("#readerArea").querySelector(`.verse[data-v="${v}"]`);
+    if(t){ t.classList.add("open"); t.scrollIntoView({behavior:"smooth", block:"center"}); }
+  }));
+}
+$("#searchForm").addEventListener("submit",e=>{ e.preventDefault(); runSearch($("#searchInput").value); });
+
+/* ================= QUESTION BANK GENERATOR ================= */
+/* Compact fact tables expanded into full bilingual questions.
+   Every generated question keeps the curated format:
+   {q_vi,q_en,o_vi,o_en,a,e_vi,e_en,ref} with a = index of the correct option
+   before shuffling (startQuiz shuffles option order per attempt). */
+function pickDistractors(list, correctIdx, count, step){
+  const out=[]; let k=step||5, guard=0;
+  while(out.length<count && guard<list.length*3){
+    const j=(correctIdx+k)%list.length;
+    if(j!==correctIdx && !out.includes(j)) out.push(j);
+    k+= (step||5)+1; guard++;
+  }
+  let j=0;
+  while(out.length<count && j<list.length){ if(j!==correctIdx && !out.includes(j)) out.push(j); j++; }
+  return out;
+}
+function optsFrom(list, correctIdx, langIdx, step){
+  const ds=pickDistractors(list, correctIdx, 3, step);
+  const vals=[list[correctIdx], ...ds.map(i=>list[i])];
+  return vals.map(v=>Array.isArray(v)? v[langIdx] : v);
+}
+function mkQ(q_vi,q_en,o_vi,o_en,e_vi,e_en,ref){
+  return { q_vi:q_vi, q_en:q_en, o_vi:o_vi, o_en:o_en, a:0, e_vi:e_vi, e_en:e_en, ref:ref };
+}
+function refStr(bi,ch,v,langIdx){ const b=BOOKS[bi]; return (langIdx? b.en : b.vi)+" "+ch+":"+v; }
+
+/* ---- People: [nameVi, nameEn, roleVi, roleEn, mainBookIdx, pool, ref] ---- */
+const PEOPLE_GEN=[
+["A-đam","Adam","Người nam đầu tiên được Đức Chúa Trời dựng nên","The first man created by God",0,[0,1,27]],
+["Ê-va","Eve","Người nữ đầu tiên, mẹ của cả loài người","The first woman, the mother of all living",0,[0,3,20]],
+["Ca-in","Cain","Con đầu lòng của A-đam, đã giết em mình là A-bên","The firstborn of Adam, who killed his brother Abel",0,[0,4,8]],
+["A-bên","Abel","Con của A-đam dâng của lễ được Đức Chúa Trời đoái xem","The son of Adam whose offering God accepted",0,[0,4,4]],
+["Nô-ê","Noah","Người công bình được Chúa bảo đóng chiếc tàu lớn qua cơn nước lụt","The righteous man told by God to build the ark before the flood",0,[0,6,9]],
+["Áp-ra-ham","Abraham","Tổ phụ được Đức Chúa Trời kêu gọi, cha của nhiều dân tộc","The patriarch called by God, father of many nations",0,[0,12,1]],
+["Sa-ra","Sarah","Vợ của Áp-ra-ham, sanh Y-sác trong tuổi già","The wife of Abraham, who bore Isaac in her old age",0,[0,21,2]],
+["Y-sác","Isaac","Con của lời hứa, bị cha dâng trên núi Mô-ri-a","The son of promise, offered by his father on Mount Moriah",0,[0,22,2]],
+["Ích-ma-ên","Ishmael","Con của Áp-ra-ham với nàng hầu A-ga","The son of Abraham by the maid Hagar",0,[0,16,15]],
+["Rê-bê-ca","Rebekah","Vợ của Y-sác, mẹ của Gia-cốp và Ê-sau","The wife of Isaac, mother of Jacob and Esau",0,[0,24,67]],
+["Gia-cốp","Jacob","Con của Y-sác, vật lộn với thiên sứ và được đổi tên là Y-sơ-ra-ên","The son of Isaac who wrestled with the angel and was renamed Israel",0,[0,32,28]],
+["Ê-sau","Esau","Anh song sinh của Gia-cốp, đã bán quyền con trưởng vì một bữa ăn","The twin brother of Jacob, who sold his birthright for a meal",0,[0,25,34]],
+["Giô-sép","Joseph","Con của Gia-cốp bị các anh bán sang Ê-díp-tô, về sau làm quan cai trị xứ ấy","The son of Jacob sold by his brothers into Egypt, who later ruled there",0,[0,41,40]],
+["Giu-đa","Judah","Con của Gia-cốp, tổ phụ của dòng dõi vua Đa-vít","The son of Jacob, ancestor of the line of King David",0,[0,49,10]],
+["Lót","Lot","Cháu của Áp-ra-ham, sống tại thành Sô-đôm","The nephew of Abraham, who lived in Sodom",0,[0,13,11]],
+["Ra-chên","Rachel","Người vợ được Gia-cốp yêu quý, mẹ của Giô-sép","The beloved wife of Jacob, mother of Joseph",0,[0,35,24]]
+];
+const PEOPLE_OT=[
+["Môi-se","Moses","Nhà lãnh đạo đưa dân Y-sơ-ra-ên ra khỏi Ê-díp-tô và nhận luật pháp tại Si-na-i","The leader who led Israel out of Egypt and received the law at Sinai",1,[1,3,10]],
+["A-rôn","Aaron","Anh của Môi-se, thầy tế lễ thượng phẩm đầu tiên","The brother of Moses, the first high priest",1,[1,28,1]],
+["Giô-suê","Joshua","Người kế nhiệm Môi-se, dẫn dân vào đất Ca-na-an","The successor of Moses, who led Israel into Canaan",5,[5,1,2]],
+["Ra-háp","Rahab","Kỹ nữ ở Giê-ri-cô đã giấu hai người do thám","The woman of Jericho who hid the two spies",5,[5,2,1]],
+["Đê-bô-ra","Deborah","Nữ tiên tri và quan xét của Y-sơ-ra-ên","The prophetess and judge of Israel",6,[6,4,4]],
+["Ghê-đê-ôn","Gideon","Quan xét thắng dân Ma-đi-an chỉ với ba trăm quân","The judge who defeated Midian with only three hundred men",6,[6,7,14]],
+["Sam-sôn","Samson","Quan xét có sức mạnh phi thường gắn với mái tóc","The judge whose great strength was tied to his hair",6,[6,16,17]],
+["Ru-tơ","Ruth","Người nữ Mô-áp theo mẹ chồng là Na-ô-mi về Bết-lê-hem","The Moabite woman who followed her mother-in-law Naomi to Bethlehem",7,[7,1,16]],
+["Ha-na","Hannah","Người mẹ cầu nguyện tha thiết và dâng con là Sa-mu-ên cho Chúa","The mother who prayed earnestly and dedicated her son Samuel to the LORD",8,[8,1,20]],
+["Sa-mu-ên","Samuel","Tiên tri và quan xét sau cùng, đã xức dầu cho Sau-lơ và Đa-vít","The prophet and last judge, who anointed Saul and David",8,[8,16,13]],
+["Sau-lơ","Saul","Vị vua đầu tiên của Y-sơ-ra-ên","The first king of Israel",8,[8,10,24]],
+["Đa-vít","David","Chàng chăn chiên thắng Gô-li-át, về sau làm vua","The shepherd boy who defeated Goliath and later became king",8,[8,17,50]],
+["Sô-lô-môn","Solomon","Vị vua khôn ngoan nhất, đã xây đền thờ tại Giê-ru-sa-lem","The wisest king, who built the temple in Jerusalem",10,[10,3,12]],
+["Na-than","Nathan","Tiên tri đến trách vua Đa-vít về tội của ông","The prophet who confronted King David about his sin",9,[9,12,7]],
+["Ê-li","Elijah","Tiên tri đối đầu với các tiên tri Ba-anh trên núi Cạt-mên","The prophet who confronted the prophets of Baal on Mount Carmel",10,[10,18,36]],
+["Ê-li-sê","Elisha","Người kế nhiệm Ê-li, nhận gấp hai phần thần linh của thầy","The successor of Elijah, who received a double portion of his spirit",11,[11,2,9]],
+["Ê-sai","Isaiah","Tiên tri loan báo về Em-ma-nu-ên và Đấng Mê-si sẽ đến","The prophet who foretold Immanuel and the coming Messiah",22,[22,7,14]],
+["Giê-rê-mi","Jeremiah","Tiên tri khóc than, báo trước sự lưu đày sang Ba-by-lôn","The weeping prophet, who foretold the exile to Babylon",23,[23,1,2]],
+["Ê-xê-chiên","Ezekiel","Tiên tri giữa vòng dân bị lưu đày, thấy khải tượng thung lũng xương khô","The prophet among the exiles, who saw the valley of dry bones",25,[25,37,10]],
+["Đa-ni-ên","Daniel","Người bị ném vào hang sư tử tại Ba-by-lôn mà không hề hấn gì","The man thrown into the lions' den in Babylon and left unharmed",26,[26,6,22]],
+["Giô-na","Jonah","Tiên tri bị cá lớn nuốt khi trốn sang Tạt-sít","The prophet swallowed by a great fish while fleeing to Tarshish",31,[31,1,17]],
+["Ê-xơ-tê","Esther","Hoàng hậu gốc Giu-đa đã cứu dân tộc mình tại Ba Tư","The Jewish queen who saved her people in Persia",16,[16,7,3]],
+["Mạc-đô-chê","Mordecai","Người bà con đã nuôi Ê-xơ-tê và phanh phui âm mưu ám sát vua","The kinsman who raised Esther and exposed the plot against the king",16,[16,2,22]],
+["Gióp","Job","Người công bình chịu thử thách mất hết của cải và con cái mà vẫn giữ đức tin","The righteous man who lost wealth and children yet kept his faith",17,[17,1,21]],
+["Nê-hê-mi","Nehemiah","Quan tửu chánh trở về xây lại vách thành Giê-ru-sa-lem","The cupbearer who returned to rebuild the wall of Jerusalem",15,[15,2,17]],
+["E-xơ-ra","Ezra","Thầy tế lễ kiêm thầy thông giáo dẫn dân hồi hương, dạy lại luật pháp","The priest and scribe who led the return and taught the law",14,[14,7,10]],
+["Ê-xê-chia","Hezekiah","Vị vua Giu-đa được Chúa gia thêm mười lăm năm tuổi thọ","The king of Judah whose life God extended by fifteen years",11,[11,20,6]],
+["Giô-si-a","Josiah","Vị vua trẻ tìm được sách luật pháp trong đền thờ và phục hưng thờ phượng","The young king who found the book of the law in the temple and led revival",11,[11,22,11]],
+["Bô-ô","Boaz","Người bà con giàu có tại Bết-lê-hem, về sau cưới Ru-tơ","The wealthy kinsman in Bethlehem who later married Ruth",7,[7,2,1]],
+["Ca-lép","Caleb","Một trong hai thám tử trung tín cùng Giô-suê, được vào Đất Hứa","One of the two faithful spies with Joshua, allowed to enter the Promised Land",3,[3,14,24]],
+["Pha-ra-ôn","Pharaoh","Vị vua Ê-díp-tô cứng lòng, không cho dân Y-sơ-ra-ên đi","The king of Egypt who hardened his heart and refused to let Israel go",1,[1,7,13]],
+["Gô-li-át","Goliath","Tên khổng lồ Phi-li-tin bị Đa-vít hạ bằng ná và một viên đá","The Philistine giant defeated by David with a sling and one stone",8,[8,17,49]]
+];
+const PEOPLE_NT=[
+["Chúa Jêsus","Jesus","Đấng Cứu Thế, Con Đức Chúa Trời, giáng sinh tại Bết-lê-hem","The Saviour, the Son of God, born in Bethlehem",42,[42,3,16]],
+["Ma-ri","Mary","Người nữ đồng trinh được chọn làm mẹ của Chúa Jêsus","The virgin chosen to be the mother of Jesus",41,[41,1,30]],
+["Giô-sép","Joseph","Chồng của Ma-ri, thợ mộc tại Na-xa-rét","The husband of Mary, a carpenter of Nazareth",39,[39,1,20]],
+["Giăng Báp-tít","John the Baptist","Người dọn đường cho Chúa, làm báp-têm tại sông Giô-đanh","The forerunner of Christ, who baptized in the Jordan",39,[39,3,11]],
+["Phi-e-rơ","Peter","Ngư phủ được gọi làm môn đồ, người tuyên xưng Chúa là Đấng Christ","The fisherman called as a disciple, who confessed Jesus as the Christ",39,[39,16,16]],
+["Anh-rê","Andrew","Môn đồ đã đưa anh mình là Phi-e-rơ đến cùng Chúa Jêsus","The disciple who brought his brother Peter to Jesus",42,[42,1,42]],
+["Giăng (sứ đồ)","John (the apostle)","Môn đồ được Chúa yêu, tác giả sách Phúc Âm thứ tư","The beloved disciple, author of the fourth Gospel",42,[42,21,24]],
+["Gia-cơ (con Xê-bê-đê)","James (son of Zebedee)","Môn đồ là anh của Giăng, con của Xê-bê-đê","The disciple who was John's brother, a son of Zebedee",39,[39,4,21]],
+["Ma-thi-ơ","Matthew","Người thâu thuế được Chúa kêu gọi, tác giả sách Phúc Âm thứ nhất","The tax collector called by Jesus, author of the first Gospel",39,[39,9,9]],
+["Thô-ma","Thomas","Môn đồ nghi ngờ cho đến khi thấy Chúa phục sinh","The disciple who doubted until he saw the risen Christ",42,[42,20,27]],
+["Giu-đa Ích-ca-ri-ốt","Judas Iscariot","Môn đồ phản Chúa vì ba mươi miếng bạc","The disciple who betrayed Jesus for thirty pieces of silver",39,[39,26,15]],
+["Ma-ri Ma-đơ-len","Mary Magdalene","Người nữ đầu tiên thấy Chúa phục sinh và báo tin cho môn đồ","The woman who first saw the risen Christ and told the disciples",42,[42,20,18]],
+["Ma-thê","Martha","Chị của La-xa-rơ, lo việc tiếp đãi Chúa tại Bê-tha-ni","The sister of Lazarus, who served Jesus at Bethany",41,[41,10,40]],
+["La-xa-rơ","Lazarus","Người bạn của Chúa đã chết bốn ngày rồi được Chúa gọi sống lại","The friend of Jesus, dead four days, whom Jesus raised",42,[42,11,43]],
+["Xa-chê","Zacchaeus","Người thâu thuế giàu có trèo lên cây sung để xem Chúa","The wealthy tax collector who climbed a sycamore tree to see Jesus",41,[41,19,8]],
+["Ni-cô-đem","Nicodemus","Người Pha-ri-si đến gặp Chúa ban đêm để hỏi về sự sanh lại","The Pharisee who came to Jesus by night to ask about being born again",42,[42,3,2]],
+["Phi-lát","Pilate","Quan tổng đốc La Mã đã trao Chúa Jêsus cho quân lính đóng đinh","The Roman governor who handed Jesus over to be crucified",42,[42,19,16]],
+["Hê-rốt Đại đế","Herod the Great","Vị vua tìm giết hài nhi Jêsus khi Ngài mới giáng sinh","The king who sought to kill the infant Jesus",39,[39,2,16]],
+["Phao-lô","Paul","Sứ đồ cho dân ngoại, trước kia bắt bớ Hội Thánh","The apostle to the Gentiles, who once persecuted the church",43,[43,9,15]],
+["Ba-na-ba","Barnabas","Bạn đồng hành của Phao-lô trong hành trình truyền giáo thứ nhất","The companion of Paul on the first missionary journey",43,[43,13,3]],
+["Ti-mô-thê","Timothy","Môn đồ trẻ, học trò của Phao-lô tại Ê-phê-sô","The young disciple, Paul's trainee at Ephesus",43,[43,16,3]],
+["Lu-ca","Luke","Thầy thuốc yêu dấu, tác giả sách Phúc Âm thứ ba và Công Vụ","The beloved physician, author of the third Gospel and Acts",41,[41,1,3]],
+["Mác","Mark","Tác giả sách Phúc Âm thứ hai, từng đồng hành với Phao-lô và Phi-e-rơ","The author of the second Gospel, companion of Paul and Peter",40,[40,1,1]],
+["Ê-tiên","Stephen","Người tử đạo đầu tiên của Hội Thánh, bị ném đá tại Giê-ru-sa-lem","The first martyr of the church, stoned at Jerusalem",43,[43,7,59]],
+["Si-la","Silas","Bạn đồng hành của Phao-lô, cùng bị giam tại Phi-líp","The companion of Paul, imprisoned with him at Philippi",43,[43,16,25]],
+["A-bô-lô","Apollos","Người giảng dạy hùng hồn tại Ê-phê-sô và Cô-rinh-tô","The eloquent teacher at Ephesus and Corinth",43,[43,18,24]],
+["Ly-đi","Lydia","Người bán vải điều tại Phi-líp, người đầu tiên tin Chúa tại Âu châu","The seller of purple at Philippi, the first believer in Europe in Acts",43,[43,16,14]],
+["Cọt-nây","Cornelius","Thầy đội La Mã tại Sê-sa-rê, người ngoại đầu tiên được nghe Phúc Âm trọn vẹn","The Roman centurion at Caesarea, the first Gentile to receive the full Gospel",43,[43,10,44]],
+["Si-mê-ôn","Simeon","Cụ già công bình ẵm hài nhi Jêsus trong đền thờ","The righteous old man who held the infant Jesus in the temple",41,[41,2,28]],
+["Gáp-ri-ên","Gabriel","Thiên sứ truyền tin cho Ma-ri về sự giáng sinh của Chúa","The angel who announced to Mary the birth of Jesus",41,[41,1,26]],
+["Ê-li-sa-bét","Elizabeth","Mẹ của Giăng Báp-tít, bà con với Ma-ri","The mother of John the Baptist, a relative of Mary",41,[41,1,41]],
+["Phi-líp (sứ đồ)","Philip (the apostle)","Môn đồ đã đưa Na-tha-na-ên đến cùng Chúa Jêsus","The disciple who brought Nathanael to Jesus",42,[42,1,45]],
+["Na-tha-na-ên","Nathanael","Người được Chúa thấy khi đang ngồi dưới cây vả","The man whom Jesus saw sitting under the fig tree",42,[42,1,48]],
+["A-na-nia (tại Đa-mách)","Ananias (of Damascus)","Môn đồ tại Đa-mách đã đặt tay và làm báp-têm cho Sau-lơ","The disciple at Damascus who laid hands on Saul and baptized him",43,[43,9,17]],
+["Đô-ca (Ta-bi-tha)","Dorcas (Tabitha)","Người nữ hay làm việc lành tại Giốp-bê, được Phi-e-rơ gọi sống lại","The woman known for good works at Joppa, raised by Peter",43,[43,9,40]],
+["A-qui-la","Aquila","Thợ làm trại, cùng vợ là Bê-rít-sin đồng công với Phao-lô","The tentmaker who worked with Paul alongside his wife Priscilla",43,[43,18,3]]
+];
+function peopleQuestions(rows){
+  const out=[];
+  const names=rows.map(r=>[r[0],r[1]]), roles=rows.map(r=>[r[2],r[3]]);
+  rows.forEach((r,i)=>{
+    const no=optsFrom(names,i,0,3), ne=optsFrom(names,i,1,3);
+    out.push(mkQ("Ai là "+r[0]+" trong Kinh Thánh?", "Who is "+r[1]+" in the Bible?",
+      optsFrom(roles,i,0,7), optsFrom(roles,i,1,7),
+      r[2]+".", r[3]+".", r[5]));
+    out.push(mkQ("Ai là người "+r[2].charAt(0).toLowerCase()+r[2].slice(1)+"?",
+      "Who is the one described as follows: "+r[3].charAt(0).toLowerCase()+r[3].slice(1)+"?",
+      no, ne, r[0]+" — "+r[2]+".", r[1]+" — "+r[3]+".", r[5]));
+    const bIdx=r[4];
+    const ds=pickDistractors(BOOKS.map((b,j)=>j), bIdx, 3, 9);
+    const bvals=[bIdx,...ds];
+    out.push(mkQ("Câu chuyện về "+r[0]+" gắn liền nhất với sách nào?",
+      "The story of "+r[1]+" is most closely tied to which book?",
+      bvals.map(j=>BOOKS[j].vi), bvals.map(j=>BOOKS[j].en),
+      "Câu chuyện về "+r[0]+" được chép chính trong sách "+BOOKS[bIdx].vi+".",
+      "The story of "+r[1]+" is told mainly in the book of "+BOOKS[bIdx].en+".", r[5]));
+  });
+  return out;
+}
+
+/* ---- Events: [titleVi,titleEn,personVi,personEn,placeVi|null,placeEn|null,bookIdx,pool,ref] ---- */
+const EVENTS=[
+["Sự sáng tạo trời đất","The creation of heaven and earth","Đức Chúa Trời","God",null,null,0,[0,1,1]],
+["Loài người sa ngã trong vườn Ê-đen","The fall of man in Eden","A-đam và Ê-va","Adam and Eve","Vườn Ê-đen","The garden of Eden",0,[0,3,6]],
+["Ca-in giết em là A-bên","Cain kills his brother Abel","Ca-in","Cain","Phía đông vườn Ê-đen","East of Eden",0,[0,4,8]],
+["Cơn nước lụt lớn thời Nô-ê","The great flood in Noah's day","Nô-ê","Noah","Núi A-ra-rát","Mount Ararat",0,[0,8,4]],
+["Tháp Ba-bên và sự phân tán ngôn ngữ","The tower of Babel and the confusion of languages","Dân cư tại Ba-bên","The people of Babel","Xứ Si-nê-a (Ba-bên)","The land of Shinar (Babel)",0,[0,11,9]],
+["Đức Chúa Trời kêu gọi Áp-ra-ham","God calls Abram","Áp-ra-ham","Abraham","Cha-ran","Haran",0,[0,12,4]],
+["Thành Sô-đôm bị hủy diệt","The destruction of Sodom","Lót","Lot","Sô-đôm","Sodom",0,[0,19,24]],
+["Áp-ra-ham dâng Y-sác","Abraham offers Isaac","Áp-ra-ham","Abraham","Núi Mô-ri-a","Mount Moriah",0,[0,22,2]],
+["Gia-cốp mơ thấy chiếc thang lên trời","Jacob dreams of a ladder to heaven","Gia-cốp","Jacob","Bê-tên","Bethel",0,[0,28,19]],
+["Gia-cốp vật lộn với thiên sứ","Jacob wrestles with the angel","Gia-cốp","Jacob","Phê-ni-ên","Peniel",0,[0,32,30]],
+["Giô-sép bị các anh bán sang Ê-díp-tô","Joseph is sold by his brothers into Egypt","Giô-sép","Joseph","Ê-díp-tô","Egypt",0,[0,37,28]],
+["Giô-sép giải mộng cho Pha-ra-ôn","Joseph interprets Pharaoh's dreams","Giô-sép","Joseph","Ê-díp-tô","Egypt",0,[0,41,40]],
+["Y-sác chào đời theo lời hứa","Isaac is born according to the promise","Sa-ra","Sarah",null,null,0,[0,21,2]],
+["Ê-sau bán quyền con trưởng","Esau sells his birthright","Ê-sau","Esau",null,null,0,[0,25,34]],
+["Gia-cốp nhận phước của cha thay Ê-sau","Jacob receives his father's blessing instead of Esau","Gia-cốp","Jacob",null,null,0,[0,27,27]],
+["Giô-sép đoàn tụ với các anh em","Joseph is reunited with his brothers","Giô-sép","Joseph","Ê-díp-tô","Egypt",0,[0,45,5]],
+["A-ga và Ích-ma-ên trong đồng vắng","Hagar and Ishmael in the wilderness","A-ga","Hagar","Đồng vắng Bê-e-Sê-ba","The wilderness of Beersheba",0,[0,21,19]],
+["Lót chọn đồng bằng sông Giô-đanh","Lot chooses the Jordan plain","Lót","Lot","Đồng bằng sông Giô-đanh","The plain of the Jordan",0,[0,13,11]],
+["Rê-bê-ca gặp tôi tớ của Áp-ra-ham tại giếng nước","Rebekah meets Abraham's servant at the well","Rê-bê-ca","Rebekah","Giếng nước tại Na-hô","The well at Nahor",0,[0,24,45]],
+["Giô-sép chống cự vợ của Phô-ti-pha","Joseph resists Potiphar's wife","Giô-sép","Joseph","Ê-díp-tô","Egypt",0,[0,39,12]],
+["A-đam đặt tên cho các loài thú","Adam names the animals","A-đam","Adam","Vườn Ê-đen","The garden of Eden",0,[0,2,20]],
+["Chúa lập giao ước với Nô-ê qua cầu vồng","God makes a covenant with Noah through the rainbow","Nô-ê","Noah",null,null,0,[0,9,13]],
+["Lễ Vượt Qua và cuộc xuất hành khỏi Ê-díp-tô","The Passover and the exodus from Egypt","Môi-se","Moses","Ê-díp-tô","Egypt",1,[1,12,41]],
+["Biển Đỏ rẽ ra cho dân Y-sơ-ra-ên đi qua","The Red Sea parts for Israel","Môi-se","Moses","Biển Đỏ","The Red Sea",1,[1,14,21]],
+["Mười Điều Răn được ban tại núi Si-na-i","The Ten Commandments given at Mount Sinai","Môi-se","Moses","Núi Si-na-i","Mount Sinai",1,[1,20,3]],
+["Ma-na rơi xuống trong đồng vắng","Manna falls in the wilderness","Môi-se","Moses","Đồng vắng Sin","The wilderness of Sin",1,[1,16,14]],
+["Mười hai thám tử do thám xứ Ca-na-an","The twelve spies scout the land of Canaan","Giô-suê và Ca-lép","Joshua and Caleb","Xứ Ca-na-an","The land of Canaan",3,[3,13,30]],
+["Dân Y-sơ-ra-ên vượt sông Giô-đanh","Israel crosses the Jordan","Giô-suê","Joshua","Sông Giô-đanh","The river Jordan",5,[5,3,17]],
+["Thành Giê-ri-cô sụp đổ","The walls of Jericho fall","Giô-suê","Joshua","Giê-ri-cô","Jericho",5,[5,6,20]],
+["Ghê-đê-ôn thắng trận với ba trăm quân","Gideon wins with three hundred men","Ghê-đê-ôn","Gideon","Suối Ha-rốt","The spring of Harod",6,[6,7,20]],
+["Sam-sôn phá đền thờ Đa-gôn","Samson pulls down the temple of Dagon","Sam-sôn","Samson","Ga-xa","Gaza",6,[6,16,30]],
+["Ru-tơ lượm lúa trong ruộng của Bô-ô","Ruth gleans in the field of Boaz","Ru-tơ","Ruth","Bết-lê-hem","Bethlehem",7,[7,2,17]],
+["Sa-mu-ên xức dầu cho Đa-vít","Samuel anoints David","Sa-mu-ên","Samuel","Bết-lê-hem","Bethlehem",8,[8,16,13]],
+["Đa-vít thắng Gô-li-át","David defeats Goliath","Đa-vít","David","Thung lũng Ê-la","The valley of Elah",8,[8,17,49]],
+["Đa-vít tha mạng Sau-lơ trong hang đá","David spares Saul's life in the cave","Đa-vít","David","Hang đá tại Ên-ghê-đi","The cave at En-gedi",8,[8,24,7]],
+["Sô-lô-môn xây cất đền thờ","Solomon builds the temple","Sô-lô-môn","Solomon","Giê-ru-sa-lem","Jerusalem",10,[10,6,38]],
+["Ê-li đối đầu các tiên tri Ba-anh","Elijah confronts the prophets of Baal","Ê-li","Elijah","Núi Cạt-mên","Mount Carmel",10,[10,18,38]],
+["Ê-li được cất lên trời","Elijah is taken up to heaven","Ê-li","Elijah","Bên kia sông Giô-đanh","Beyond the Jordan",11,[11,2,11]],
+["Giô-na bị cá lớn nuốt","Jonah is swallowed by a great fish","Giô-na","Jonah","Biển, trên đường đến Ni-ni-ve","The sea, on the way to Nineveh",31,[31,1,17]],
+["Đa-ni-ên trong hang sư tử","Daniel in the lions' den","Đa-ni-ên","Daniel","Ba-by-lôn","Babylon",26,[26,6,22]],
+["Ba bạn của Đa-ni-ên trong lò lửa hực","Daniel's three friends in the fiery furnace","Sa-đơ-rắc, Mê-sác và A-bết-nê-gô","Shadrach, Meshach and Abednego","Ba-by-lôn","Babylon",26,[26,3,25]],
+["Ê-xơ-tê cứu dân Giu-đa khỏi âm mưu của Ha-man","Esther saves the Jews from Haman's plot","Ê-xơ-tê","Esther","Kinh đô Su-sơ, Ba Tư","Susa, Persia",16,[16,7,3]],
+["Nê-hê-mi xây lại vách thành","Nehemiah rebuilds the wall","Nê-hê-mi","Nehemiah","Giê-ru-sa-lem","Jerusalem",15,[15,6,16]],
+["Gióp chịu thử thách","Job is tested","Gióp","Job","Xứ Út-xơ","The land of Uz",17,[17,1,20]],
+["Thiên sứ truyền tin cho Ma-ri","The angel announces the news to Mary","Ma-ri","Mary","Na-xa-rét","Nazareth",41,[41,1,30]],
+["Chúa Jêsus giáng sinh","The birth of Jesus","Ma-ri","Mary","Bết-lê-hem","Bethlehem",41,[41,2,7]],
+["Các nhà thông thái đến thăm hài nhi","The wise men visit the infant Jesus","Hê-rốt Đại đế","Herod the Great","Bết-lê-hem","Bethlehem",39,[39,2,11]],
+["Chúa Jêsus chịu phép báp-têm","Jesus is baptized","Giăng Báp-tít","John the Baptist","Sông Giô-đanh","The river Jordan",39,[39,3,16]],
+["Chúa Jêsus chịu cám dỗ trong đồng vắng","Jesus is tempted in the wilderness","Chúa Jêsus","Jesus","Đồng vắng Giu-đê","The wilderness of Judea",39,[39,4,10]],
+["Chúa hóa nước thành rượu","Jesus turns water into wine","Chúa Jêsus","Jesus","Ca-na, xứ Ga-li-lê","Cana of Galilee",42,[42,2,9]],
+["Ni-cô-đem đến gặp Chúa ban đêm","Nicodemus comes to Jesus by night","Ni-cô-đem","Nicodemus","Giê-ru-sa-lem","Jerusalem",42,[42,3,2]],
+["Chúa gặp người đàn bà Sa-ma-ri tại giếng","Jesus meets the Samaritan woman at the well","Người đàn bà Sa-ma-ri","The Samaritan woman","Giếng Gia-cốp tại Si-kha","Jacob's well at Sychar",42,[42,4,26]],
+["Chúa gọi La-xa-rơ sống lại","Jesus raises Lazarus","La-xa-rơ","Lazarus","Bê-tha-ni","Bethany",42,[42,11,43]],
+["Người mù Ba-ti-mê được sáng mắt","Blind Bartimaeus receives his sight","Ba-ti-mê","Bartimaeus","Giê-ri-cô","Jericho",40,[40,10,52]],
+["Xa-chê trèo lên cây sung xem Chúa","Zacchaeus climbs a sycamore tree","Xa-chê","Zacchaeus","Giê-ri-cô","Jericho",41,[41,19,8]],
+["Con gái Giai-ru được sống lại","Jairus's daughter is raised","Giai-ru","Jairus","Nhà của Giai-ru tại Ga-li-lê","The house of Jairus in Galilee",40,[40,5,41]],
+["Chúa hóa bánh cho năm ngàn người ăn","Jesus feeds the five thousand","Chúa Jêsus","Jesus","Bết-sai-đa","Bethsaida",42,[42,6,13]],
+["Chúa và Phi-e-rơ đi bộ trên mặt biển","Jesus and Peter walk on the water","Phi-e-rơ","Peter","Biển Ga-li-lê","The Sea of Galilee",39,[39,14,29]],
+["Chúa hóa hình trên núi","The transfiguration of Jesus","Phi-e-rơ","Peter","Một ngọn núi cao","A high mountain",39,[39,17,5]],
+["Dụ ngôn người con trai hoang đàng","The parable of the prodigal son","Người cha nhân từ","The forgiving father",null,null,41,[41,15,20]],
+["Dụ ngôn người Sa-ma-ri nhân lành","The parable of the good Samaritan","Người Sa-ma-ri nhân lành","The good Samaritan","Đường từ Giê-ru-sa-lem xuống Giê-ri-cô","The road from Jerusalem to Jericho",41,[41,10,33]],
+["Mười người phung được sạch","Ten lepers are cleansed","Mười người phung","Ten lepers","Biên giới Sa-ma-ri và Ga-li-lê","The border of Samaria and Galilee",41,[41,17,16]],
+["Chúa rửa chân cho các môn đồ","Jesus washes the disciples' feet","Phi-e-rơ","Peter","Giê-ru-sa-lem","Jerusalem",42,[42,13,14]],
+["Chúa cầu nguyện trong vườn Ghết-sê-ma-nê","Jesus prays in Gethsemane","Chúa Jêsus","Jesus","Vườn Ghết-sê-ma-nê","The garden of Gethsemane",39,[39,26,41]],
+["Phi-lát xét xử Chúa Jêsus","Pilate tries Jesus","Phi-lát","Pilate","Giê-ru-sa-lem","Jerusalem",42,[42,19,16]],
+["Chúa Jêsus bị đóng đinh","Jesus is crucified","Chúa Jêsus","Jesus","Gô-gô-tha","Golgotha",42,[42,19,27]],
+["Chúa Jêsus phục sinh","Jesus rises from the dead","Ma-ri Ma-đơ-len","Mary Magdalene","Giê-ru-sa-lem","Jerusalem",42,[42,20,18]],
+["Thô-ma thấy Chúa phục sinh","Thomas sees the risen Jesus","Thô-ma","Thomas","Giê-ru-sa-lem","Jerusalem",42,[42,20,27]],
+["Chúa Jêsus thăng thiên","Jesus ascends to heaven","Chúa Jêsus","Jesus","Núi Ô-li-ve","The Mount of Olives",43,[43,1,9]],
+["Thánh Linh giáng lâm trong ngày Lễ Ngũ Tuần","The Holy Spirit comes at Pentecost","Phi-e-rơ","Peter","Giê-ru-sa-lem","Jerusalem",43,[43,2,4]],
+["Ê-tiên bị ném đá tử đạo","Stephen is stoned","Ê-tiên","Stephen","Giê-ru-sa-lem","Jerusalem",43,[43,7,59]],
+["Sau-lơ trở lại đạo trên đường đi Đa-mách","Saul is converted on the road to Damascus","Phao-lô","Paul","Đường đi Đa-mách","The road to Damascus",43,[43,9,15]],
+["Phi-e-rơ rao giảng cho nhà Cọt-nây","Peter preaches to the household of Cornelius","Cọt-nây","Cornelius","Sê-sa-rê","Caesarea",43,[43,10,44]],
+["Phao-lô và Si-la hát ngợi khen trong ngục","Paul and Silas sing in prison","Si-la","Silas","Phi-líp","Philippi",43,[43,16,25]]
+];
+function eventQuestions(rows, poolPeopleNames){
+  const out=[];
+  const persons=[]; rows.forEach(r=>{ if(!persons.some(p=>p[0]===r[2])) persons.push([r[2],r[3]]); });
+  const whoPool=persons.concat((poolPeopleNames||[]).filter(n=>!persons.some(p=>p[0]===n[0])));
+  const places=[]; rows.forEach(r=>{ if(r[4] && !places.some(p=>p[0]===r[4])) places.push([r[4],r[5]]); });
+  rows.forEach((r)=>{
+    const wi=whoPool.findIndex(p=>p[0]===r[2]);
+    if(wi>=0) out.push(mkQ("Trong sự kiện “"+r[0]+"”, nhân vật chính là ai?",
+      "In the event “"+r[1]+"”, who is the main figure?",
+      optsFrom(whoPool,wi,0,4), optsFrom(whoPool,wi,1,4),
+      "Nhân vật chính là "+r[2]+".", "The main figure is "+r[3]+".", r[7]));
+    const ds=pickDistractors(BOOKS.map((b,j)=>j), r[6], 3, 11);
+    const bvals=[r[6],...ds];
+    out.push(mkQ("Sự kiện “"+r[0]+"” được chép chính trong sách nào?",
+      "The event “"+r[1]+"” is told mainly in which book?",
+      bvals.map(j=>BOOKS[j].vi), bvals.map(j=>BOOKS[j].en),
+      "Sự kiện này được chép trong sách "+BOOKS[r[6]].vi+".",
+      "This event is told in the book of "+BOOKS[r[6]].en+".", r[7]));
+    if(r[4]){
+      const pi=places.findIndex(p=>p[0]===r[4]);
+      out.push(mkQ("Sự kiện “"+r[0]+"” xảy ra tại đâu?",
+        "Where did the event “"+r[1]+"” take place?",
+        optsFrom(places,pi,0,6), optsFrom(places,pi,1,6),
+        "Sự kiện xảy ra tại "+r[4]+".", "The event took place at "+r[5]+".", r[7]));
+    }
+  });
+  return out;
+}
+
+/* ---- Famous verses: [ref, themeVi, themeEn, pool] ---- */
+const VERSES=[
+[[0,1,1],"Đức Chúa Trời dựng nên trời đất lúc ban đầu","God created the heavens and the earth in the beginning","gen"],
+[[0,1,27],"Loài người được dựng nên theo hình ảnh Đức Chúa Trời","Mankind was created in the image of God","gen"],
+[[0,2,7],"Đức Chúa Trời hà sinh khí vào lỗ mũi con người","God breathed the breath of life into man's nostrils","gen"],
+[[0,2,24],"Vợ chồng ăn ở với nhau nên một thịt","Husband and wife become one flesh","gen"],
+[[0,3,15],"Dòng dõi người nữ sẽ đạp đầu con rắn","The seed of the woman will crush the serpent's head","gen"],
+[[0,6,9],"Nô-ê là người công bình, đồng đi cùng Đức Chúa Trời","Noah was a righteous man who walked with God","gen"],
+[[0,12,3],"Các chi họ thế gian sẽ nhờ Áp-ra-ham mà được phước","All families of the earth will be blessed through Abraham","gen"],
+[[0,50,20],"Đức Chúa Trời định điều lành qua cảnh Giô-sép bị bán","God meant for good what happened to Joseph","gen"],
+[[18,23,1],"Đức Giê-hô-va là Đấng chăn giữ tôi","The LORD is my shepherd","ot"],
+[[18,1,1],"Phước cho người chẳng theo mưu kế của kẻ dữ","Blessed is the man who does not walk in the counsel of the ungodly","ot"],
+[[19,3,5],"Hãy hết lòng tin cậy Đức Giê-hô-va","Trust in the LORD with all your heart","ot"],
+[[22,7,14],"Một gái đồng trinh sẽ sanh con trai tên Em-ma-nu-ên","A virgin will bear a son called Immanuel","ot"],
+[[32,5,2],"Đấng cai trị Y-sơ-ra-ên sẽ ra từ Bết-lê-hem","The ruler of Israel will come from Bethlehem","ot"],
+[[5,1,9],"Hãy vững lòng bền chí, chớ run sợ","Be strong and of good courage, do not be afraid","ot"],
+[[1,20,3],"Trước mặt Ta ngươi chớ có các thần khác","You shall have no other gods before Me","ot"],
+[[23,29,11],"Đức Chúa Trời biết chương trình bình an Ngài định cho dân Ngài","God knows the plans of peace He has for His people","ot"],
+[[22,40,31],"Kẻ trông đợi Đức Giê-hô-va sẽ được sức mới","Those who wait on the LORD will renew their strength","ot"],
+[[18,46,1],"Đức Chúa Trời là nơi nương náu và sức lực của chúng ta","God is our refuge and strength","ot"],
+[[18,119,105],"Lời Chúa là ngọn đèn cho chân tôi","Your word is a lamp to my feet","ot"],
+[[20,12,1],"Hãy nhớ Đấng Tạo Hóa trong buổi còn thơ ấu","Remember your Creator in the days of your youth","ot"],
+[[13,7,14],"Dân sự hạ mình, cầu nguyện thì Chúa sẽ tha thứ và chữa lành đất","If God's people humble themselves and pray, He will forgive and heal their land","ot"],
+[[37,4,6],"Chẳng phải bởi quyền thế hay năng lực, bèn là bởi Thần Ta","Not by might nor by power, but by My Spirit","ot"],
+[[17,1,21],"Đức Giê-hô-va đã ban cho, Đức Giê-hô-va lại cất đi","The LORD gave, and the LORD has taken away","ot"],
+[[7,1,16],"Mẹ đi đâu, con sẽ đi đó; dân của mẹ là dân của con","Where you go I will go; your people shall be my people","ot"],
+[[8,16,7],"Đức Giê-hô-va xem xét trong lòng, loài người xem bề ngoài","The LORD looks on the heart, man looks on the outward appearance","ot"],
+[[42,3,16],"Đức Chúa Trời yêu thương thế gian, đã ban Con một của Ngài","God so loved the world that He gave His only begotten Son","nt"],
+[[42,1,1],"Ban đầu có Ngôi Lời, Ngôi Lời là Đức Chúa Trời","In the beginning was the Word, and the Word was God","nt"],
+[[42,1,14],"Ngôi Lời đã trở nên xác thịt, ở giữa chúng ta","The Word was made flesh and dwelt among us","nt"],
+[[39,5,14],"Các ngươi là sự sáng của thế gian","You are the light of the world","nt"],
+[[39,11,28],"Hỡi những kẻ mệt mỏi và gánh nặng, hãy đến cùng Ta","Come to Me, all you who labour and are heavy laden","nt"],
+[[39,28,19],"Hãy đi dạy dỗ muôn dân và làm phép báp-têm cho họ","Go and teach all nations, baptizing them","nt"],
+[[41,2,11],"Đấng Cứu Thế là Chúa, đã sanh tại thành Đa-vít","A Saviour, who is Christ the Lord, is born in the city of David","nt"],
+[[42,14,6],"Ta là đường đi, lẽ thật và sự sống","I am the way, the truth, and the life","nt"],
+[[42,10,11],"Ta là người chăn hiền lành, phó sự sống vì chiên","I am the good shepherd who gives his life for the sheep","nt"],
+[[42,11,25],"Ta là sự sống lại và sự sống","I am the resurrection and the life","nt"],
+[[43,1,8],"Khi Thánh Linh giáng trên các ngươi, các ngươi sẽ làm chứng về Ta","When the Holy Spirit comes on you, you will be My witnesses","nt"],
+[[44,8,28],"Mọi sự hiệp lại làm ích cho kẻ yêu mến Đức Chúa Trời","All things work together for good to those who love God","nt"],
+[[44,3,23],"Mọi người đều đã phạm tội, thiếu mất sự vinh hiển của Đức Chúa Trời","All have sinned and fall short of the glory of God","nt"],
+[[44,6,23],"Tiền công của tội lỗi là sự chết, sự ban cho của Đức Chúa Trời là sự sống đời đời","The wages of sin is death, but the gift of God is eternal life","nt"],
+[[49,4,13],"Tôi làm được mọi sự nhờ Đấng ban thêm sức cho tôi","I can do all things through Christ who strengthens me","nt"],
+[[57,11,1],"Đức tin là sự biết chắc vững vàng của những điều mình đang trông mong","Faith is the substance of things hoped for","nt"],
+[[58,1,5],"Ai thiếu khôn ngoan hãy cầu xin Đức Chúa Trời","If any of you lacks wisdom, let him ask of God","nt"],
+[[45,13,4],"Tình yêu thương hay nhịn nhục, hay nhân từ","Love suffers long and is kind","nt"],
+[[47,5,22],"Trái của Thánh Linh là lòng yêu thương, sự vui mừng, bình an","The fruit of the Spirit is love, joy, peace","nt"],
+[[65,21,4],"Chúa sẽ lau ráo nước mắt, chẳng còn sự chết nữa","God will wipe away all tears, and there shall be no more death","nt"],
+[[40,10,45],"Con người đến không phải để được hầu việc, nhưng để hầu việc và phó sự sống mình","The Son of man came not to be served, but to serve and give his life","nt"],
+[[54,3,16],"Cả Kinh Thánh đều là bởi Đức Chúa Trời soi dẫn","All Scripture is given by inspiration of God","nt"]
+];
+function verseQuestions(rows){
+  const out=[];
+  const themes=rows.map(r=>[r[1],r[2]]);
+  const refs=rows.map(r=>r[0]);
+  rows.forEach((r,i)=>{
+    const ti=pickDistractors(themes,i,3,5), oi=[i,...ti];
+    out.push(mkQ(refStr(r[0][0],r[0][1],r[0][2],0)+" nói về điều gì?",
+      "What does "+refStr(r[0][0],r[0][1],r[0][2],1)+" speak about?",
+      oi.map(j=>themes[j][0]), oi.map(j=>themes[j][1]),
+      "“"+r[1]+"”", "“"+r[2]+"”", r[0]));
+    const ri=pickDistractors(refs,i,3,8), ro=[i,...ri];
+    out.push(mkQ("Lời dạy “"+r[1]+"” được chép ở đâu?",
+      "Where is this teaching recorded: “"+r[2]+"”?",
+      ro.map(j=>refStr(refs[j][0],refs[j][1],refs[j][2],0)),
+      ro.map(j=>refStr(refs[j][0],refs[j][1],refs[j][2],1)),
+      "Câu này ở "+refStr(r[0][0],r[0][1],r[0][2],0)+".",
+      "This verse is at "+refStr(r[0][0],r[0][1],r[0][2],1)+".", r[0]));
+  });
+  return out;
+}
+
+/* ---- Psalms themes: [psalmNo, themeVi, themeEn] ---- */
+const PSALMS=[
+[1,"Hai con đường: người công bình và kẻ ác","The two ways: the righteous and the wicked"],
+[8,"Sự oai nghi của Chúa và phẩm giá loài người","The majesty of God and the dignity of man"],
+[19,"Trời xanh bày tỏ vinh hiển của Đức Chúa Trời","The heavens declare the glory of God"],
+[23,"Đức Giê-hô-va là Đấng chăn giữ tôi","The LORD is my shepherd"],
+[27,"Chúa là sự sáng và sự cứu rỗi, chỉ xin ở trong nhà Ngài","The LORD is my light and salvation; one thing desired: to dwell in His house"],
+[42,"Linh hồn khát khao Chúa như con nai khát khe nước","As the deer pants for water, so my soul thirsts for God"],
+[46,"Đức Chúa Trời là nơi nương náu và sức lực","God is our refuge and strength"],
+[51,"Lời xưng tội của Đa-vít và lòng tan vỡ ăn năn","David's confession and a broken, contrite heart"],
+[90,"Cầu xin Chúa dạy chúng tôi biết đếm các ngày chúng tôi","Teach us to number our days"],
+[100,"Hãy cất tiếng reo mừng và vào cửa Ngài với lời cảm tạ","Make a joyful noise and enter His gates with thanksgiving"],
+[117,"Thi Thiên ngắn nhất: muôn dân hãy ngợi khen Chúa","The shortest psalm: all nations praise the LORD"],
+[119,"Thi Thiên dài nhất: tình yêu đối với luật pháp Chúa","The longest psalm: love for God's law"],
+[121,"Tôi ngước mắt lên trên núi: sự tiếp trợ tôi đến từ đâu","I lift up my eyes to the hills: where does my help come from"],
+[127,"Nếu Chúa không xây nhà thì thợ xây cũng uổng công; con cái là cơ nghiệp","Unless the LORD builds the house, the builders labour in vain; children are a heritage"],
+[139,"Chúa biết hết mọi sự; tôi được dựng nên cách đáng sợ lạ lùng","God knows everything; I am fearfully and wonderfully made"],
+[150,"Mọi vật có hơi thở hãy ngợi khen Đức Giê-hô-va","Let everything that has breath praise the LORD"]
+];
+function psalmQuestions(){
+  const out=[];
+  const themes=PSALMS.map(p=>[p[1],p[2]]), nums=PSALMS.map(p=>String(p[0]));
+  PSALMS.forEach((p,i)=>{
+    const ti=pickDistractors(themes,i,3,4), oi=[i,...ti];
+    out.push(mkQ("Thi Thiên "+p[0]+" nói về điều gì?",
+      "What is Psalm "+p[0]+" about?",
+      oi.map(j=>themes[j][0]), oi.map(j=>themes[j][1]),
+      "Chủ đề của Thi Thiên "+p[0]+": "+p[1]+".", "The theme of Psalm "+p[0]+": "+p[2]+".", [18, p[0]===1||p[0]===23? p[0]:1, 1]));
+    const ni=pickDistractors(nums,i,3,6), no2=[i,...ni];
+    out.push(mkQ("Chủ đề “"+p[1]+"” thuộc Thi Thiên nào?",
+      "The theme “"+p[2]+"” belongs to which Psalm?",
+      no2.map(j=>"Thi Thiên "+nums[j]), no2.map(j=>"Psalm "+nums[j]),
+      "Đó là Thi Thiên "+p[0]+".", "That is Psalm "+p[0]+".", [18, p[0]===1||p[0]===23? p[0]:1, 1]));
+  });
+  return out;
+}
+
+/* ---- Genesis family & creation ---- */
+const FATHERS=[
+["Ca-in","Cain","A-đam","Adam"],["A-bên","Abel","A-đam","Adam"],["Sết","Seth","A-đam","Adam"],
+["Nô-ê","Noah","La-méc","Lamech"],["Sem","Shem","Nô-ê","Noah"],["Cham","Ham","Nô-ê","Noah"],["Gia-phết","Japheth","Nô-ê","Noah"],
+["Áp-ra-ham","Abraham","Tha-rê","Terah"],["Y-sác","Isaac","Áp-ra-ham","Abraham"],["Ích-ma-ên","Ishmael","Áp-ra-ham","Abraham"],
+["Gia-cốp","Jacob","Y-sác","Isaac"],["Ê-sau","Esau","Y-sác","Isaac"],
+["Giô-sép","Joseph","Gia-cốp","Jacob"],["Bên-gia-min","Benjamin","Gia-cốp","Jacob"],["Giu-đa","Judah","Gia-cốp","Jacob"]
+];
+const MOTHERS=[
+["Y-sác","Isaac","Sa-ra","Sarah"],["Gia-cốp","Jacob","Rê-bê-ca","Rebekah"],["Ê-sau","Esau","Rê-bê-ca","Rebekah"],
+["Giô-sép","Joseph","Ra-chên","Rachel"],["Bên-gia-min","Benjamin","Ra-chên","Rachel"],
+["Ích-ma-ên","Ishmael","A-ga","Hagar"],["Ca-in","Cain","Ê-va","Eve"]
+];
+const WIVES=[
+["A-đam","Adam","Ê-va","Eve"],["Áp-ra-ham","Abraham","Sa-ra","Sarah"],
+["Y-sác","Isaac","Rê-bê-ca","Rebekah"],["Giô-sép","Joseph","A-sê-nát","Asenath"]
+];
+const SONS_JACOB=["Ru-bên|Reuben","Si-mê-ôn|Simeon","Lê-vi|Levi","Giu-đa|Judah","Đan|Dan","Nép-ta-li|Naphtali","Gát|Gad","A-se|Asher","Y-sa-ca|Issachar","Sa-bu-lôn|Zebulun","Giô-sép|Joseph","Bên-gia-min|Benjamin"];
+const DAYS=[
+[1,"Sự sáng","Light"],[2,"Bầu trời (khoảng không)","The sky (the firmament)"],
+[3,"Đất khô và cây cỏ","Dry land and plants"],[4,"Mặt trời, mặt trăng và các vì sao","The sun, the moon and the stars"],
+[5,"Cá dưới nước và chim trên trời","Fish in the waters and birds in the sky"],[6,"Thú vật trên đất và loài người","Land animals and mankind"],[7,"Đức Chúa Trời nghỉ ngơi","God rested"]
+];
+const GEN_EXTRA=[
+{q_vi:"Người sống thọ nhất trong Sáng Thế Ký là ai, thọ 969 tuổi?",q_en:"Who lived the longest in Genesis, reaching 969 years?",o_vi:["Mê-tu-sê-la","Nô-ê","A-đam","Sết"],o_en:["Methuselah","Noah","Adam","Seth"],a:0,e_vi:"Mê-tu-sê-la thọ 969 tuổi (Sáng Thế Ký 5:27).",e_en:"Methuselah lived 969 years (Genesis 5:27).",ref:[0,5,27]},
+{q_vi:"Ai “đồng đi cùng Đức Chúa Trời” rồi được Ngài tiếp lấy, không thấy sự chết?",q_en:"Who “walked with God” and was taken by Him without seeing death?",o_vi:["Hê-nóc","Ê-li","Nô-ê","Sết"],o_en:["Enoch","Elijah","Noah","Seth"],a:0,e_vi:"Hê-nóc đồng đi cùng Đức Chúa Trời và được Ngài tiếp lấy (Sáng Thế Ký 5:24).",e_en:"Enoch walked with God and God took him (Genesis 5:24).",ref:[0,5,24]},
+{q_vi:"Áo choàng nhiều màu sắc là món quà Gia-cốp dành cho con nào?",q_en:"The coat of many colours was Jacob's gift to which son?",o_vi:["Giô-sép","Ru-bên","Giu-đa","Bên-gia-min"],o_en:["Joseph","Reuben","Judah","Benjamin"],a:0,e_vi:"Gia-cốp yêu Giô-sép hơn các con khác và may cho chàng một chiếc áo dài nhiều màu sắc.",e_en:"Jacob loved Joseph more than his other sons and made him a coat of many colours.",ref:[0,37,3]},
+{q_vi:"Mên-chi-xê-đéc, vua của Sa-lem, giữ chức vụ gì?",q_en:"Melchizedek, king of Salem, held what office?",o_vi:["Thầy tế lễ của Đức Chúa Trời Chí Cao","Tiên tri","Quan xét","Thầy thông giáo"],o_en:["Priest of God Most High","Prophet","Judge","Scribe"],a:0,e_vi:"Mên-chi-xê-đéc là thầy tế lễ của Đức Chúa Trời Chí Cao, đã chúc phước cho Áp-ram.",e_en:"Melchizedek was priest of God Most High and blessed Abram.",ref:[0,14,18]},
+{q_vi:"Ba người khách lạ đến thăm Áp-ra-ham báo tin vui gì?",q_en:"What good news did the three visitors bring to Abraham?",o_vi:["Sa-ra sẽ sanh một con trai","Sẽ có cơn nước lụt","Phải rời xứ ngay","Sô-đôm được tha"],o_en:["Sarah would bear a son","A flood was coming","He must leave the land at once","Sodom would be spared"],a:0,e_vi:"Các khách báo rằng Sa-ra sẽ sanh một con trai vào năm sau.",e_en:"The visitors said Sarah would bear a son the next year.",ref:[0,18,10]},
+{q_vi:"Gia-cốp lừa cha lấy phước lành nhờ sự giúp đỡ của ai?",q_en:"With whose help did Jacob deceive his father to get the blessing?",o_vi:["Mẹ là Rê-bê-ca","Anh là Ê-sau","Cha vợ La-ban","Anh cả Ru-bên"],o_en:["His mother Rebekah","His brother Esau","His father-in-law Laban","His eldest brother Reuben"],a:0,e_vi:"Rê-bê-ca bày mưu và chuẩn bị mọi thứ để Gia-cốp nhận phước thay Ê-sau.",e_en:"Rebekah planned and prepared everything so Jacob received the blessing instead of Esau.",ref:[0,27,10]},
+{q_vi:"Giô-sép được Pha-ra-ôn đặt tên mới là gì sau khi giải mộng?",q_en:"What new name did Pharaoh give Joseph after he interpreted the dreams?",o_vi:["Xáp-na-phi-a-nê-ách (kẻ bày tỏ điều kín nhiệm)","A-sê-nát","Phô-ti-pha","A-bi-mê-léc"],o_en:["Zaphenath-paneah (revealer of secrets)","Asenath","Potiphar","Abimelech"],a:0,e_vi:"Pha-ra-ôn gọi Giô-sép là Xáp-na-phi-a-nê-ách và gả A-sê-nát cho chàng.",e_en:"Pharaoh called Joseph Zaphenath-paneah and gave him Asenath as wife.",ref:[0,41,45]},
+{q_vi:"Khi chào đời, Ê-sau có đặc điểm gì khiến được đặt tên như vậy?",q_en:"What feature at birth gave Esau his description?",o_vi:["Đỏ và đầy lông như áo choàng lông","Rất nhỏ con","Sinh đôi với Ra-chên","Nắm gót anh mình"],o_en:["Red and hairy like a hairy garment","Very small","Twin of Rachel","Grasping his brother's heel"],a:0,e_vi:"Đứa đầu tiên ra đời “đỏ như áo choàng lông”, nên đặt tên là Ê-sau; còn việc nắm gót là của Gia-cốp.",e_en:"The first came out “red, all over like an hairy garment”, so he was called Esau; grasping the heel describes Jacob.",ref:[0,25,25]},
+{q_vi:"Áp-ra-ham mua hang đá nào làm nơi chôn cất Sa-ra?",q_en:"Which cave did Abraham buy as a burial place for Sarah?",o_vi:["Hang Mặc-bê-la","Hang A-đu-lam","Hang En-ghê-đi","Hang tại Bê-tên"],o_en:["The cave of Machpelah","The cave of Adullam","The cave at En-gedi","The cave at Bethel"],a:0,e_vi:"Áp-ra-ham mua ruộng và hang Mặc-bê-la tại Hếp-rôn để chôn Sa-ra.",e_en:"Abraham bought the field and cave of Machpelah at Hebron to bury Sarah.",ref:[0,23,19]},
+{q_vi:"Sau cơn nước lụt, Đức Chúa Trời đặt dấu hiệu giao ước là gì?",q_en:"After the flood, what sign did God set for His covenant?",o_vi:["Cái mống (cầu vồng) trên mây","Một bàn thờ đá","Cột lửa","Phép cắt bì"],o_en:["The rainbow in the clouds","A stone altar","A pillar of fire","Circumcision"],a:0,e_vi:"“Ta đặt cái mống của Ta trên từng mây, làm dấu chỉ sự giao ước.” Phép cắt bì là dấu của giao ước với Áp-ra-ham, về sau.",e_en:"“I do set my bow in the cloud, and it shall be for a token of a covenant.” Circumcision was the sign of the later covenant with Abraham.",ref:[0,9,13]}
+];
+const GEN_EXTRA2=[
+{q_vi:"Con trai út của Gia-cốp là ai?",q_en:"Who was the youngest son of Jacob?",o_vi:["Bên-gia-min","Giô-sép","Giu-đa","Ru-bên"],o_en:["Benjamin","Joseph","Judah","Reuben"],a:0,e_vi:"Bên-gia-min là con út của Gia-cốp, con thứ hai của Ra-chên.",e_en:"Benjamin was Jacob's youngest son, Rachel's second son.",ref:[0,35,18]},
+{q_vi:"Anh cả trong mười hai con trai của Gia-cốp là ai?",q_en:"Who was the eldest of Jacob's twelve sons?",o_vi:["Ru-bên","Si-mê-ôn","Lê-vi","Giu-đa"],o_en:["Reuben","Simeon","Levi","Judah"],a:0,e_vi:"Ru-bên là con trưởng của Gia-cốp và Lê-a.",e_en:"Reuben was the firstborn of Jacob and Leah.",ref:[0,35,23]},
+{q_vi:"Vợ của Lót hóa thành gì khi quay nhìn lại thành Sô-đôm đang cháy?",q_en:"What did Lot's wife become when she looked back at burning Sodom?",o_vi:["Một trụ muối","Một bụi cây cháy","Một tượng đá thường","Một dòng suối"],o_en:["A pillar of salt","A burning bush","An ordinary stone statue","A stream"],a:0,e_vi:"Vợ của Lót quay nhìn lại phía sau và hóa thành một trụ muối.",e_en:"Lot's wife looked back and became a pillar of salt.",ref:[0,19,26]},
+{q_vi:"Trong giấc mơ của Giô-sép, mặt trời, mặt trăng và mười một ngôi sao cúi lạy tượng trưng cho điều gì?",q_en:"In Joseph's dream, what did the sun, moon and eleven stars bowing down represent?",o_vi:["Gia đình chàng sẽ cúi trước chàng","Các vua Ê-díp-tô","Mười một chi phái bị lưu đày","Các thiên sứ trên trời"],o_en:["His family would bow before him","The kings of Egypt","Eleven exiled tribes","The angels of heaven"],a:0,e_vi:"Giấc mơ báo trước cha mẹ và các anh của Giô-sép sẽ cúi mình trước chàng.",e_en:"The dream foretold that Joseph's parents and brothers would bow before him.",ref:[0,37,9]},
+{q_vi:"Sau khi tàu dừng, Nô-ê thả con chim nào ra trước để dò xem nước đã rút chưa?",q_en:"After the ark rested, which bird did Noah send out first to test the waters?",o_vi:["Con quạ","Chim bồ câu","Chim én","Chim ưng"],o_en:["A raven","A dove","A swallow","A falcon"],a:0,e_vi:"Nô-ê thả một con quạ ra trước; sau đó mới thả chim bồ câu.",e_en:"Noah first sent out a raven; afterwards he sent a dove.",ref:[0,8,7]},
+{q_vi:"Chim bồ câu trở về tàu mang theo điều gì, báo hiệu nước đã rút?",q_en:"What did the dove bring back to the ark, showing the waters had receded?",o_vi:["Lá ô-li-ve","Một cành nho","Một bông lúa","Một viên đá"],o_en:["An olive leaf","A grape branch","A head of wheat","A stone"],a:0,e_vi:"Chim bồ câu trở về với một lá ô-li-ve trong mỏ.",e_en:"The dove returned with an olive leaf in its beak.",ref:[0,8,11]},
+{q_vi:"Áp-ra-ham được bao nhiêu tuổi khi Y-sác chào đời?",q_en:"How old was Abraham when Isaac was born?",o_vi:["100 tuổi","75 tuổi","86 tuổi","99 tuổi"],o_en:["100 years old","75 years old","86 years old","99 years old"],a:0,e_vi:"Y-sác chào đời khi Áp-ra-ham vừa đúng một trăm tuổi.",e_en:"Isaac was born when Abraham was one hundred years old.",ref:[0,21,5]},
+{q_vi:"Sa-ra qua đời tại Hếp-rôn, thọ bao nhiêu tuổi?",q_en:"Sarah died at Hebron at what age?",o_vi:["127 tuổi","100 tuổi","110 tuổi","90 tuổi"],o_en:["127 years old","100 years old","110 years old","90 years old"],a:0,e_vi:"Sa-ra thọ một trăm hai mươi bảy tuổi.",e_en:"Sarah lived to be one hundred and twenty-seven years old.",ref:[0,23,1]},
+{q_vi:"Gia-cốp phải phục vụ La-ban bao nhiêu năm vì hai người con gái của ông?",q_en:"How many years did Jacob serve Laban for his two daughters?",o_vi:["14 năm","7 năm","20 năm","6 năm"],o_en:["14 years","7 years","20 years","6 years"],a:0,e_vi:"Gia-cốp phục vụ bảy năm vì Lê-a và bảy năm nữa vì Ra-chên, cộng mười bốn năm; sáu năm sau là vì bầy súc vật.",e_en:"Jacob served seven years for Leah and seven more for Rachel, fourteen in all; the six later years were for the flock.",ref:[0,31,41]},
+{q_vi:"Ai là người vợ thứ hai của Áp-ra-ham sau khi Sa-ra qua đời?",q_en:"Who was Abraham's second wife after Sarah's death?",o_vi:["Kê-tu-ra","A-ga","Rê-bê-ca","Ra-chên"],o_en:["Keturah","Hagar","Rebekah","Rachel"],a:0,e_vi:"Sau khi Sa-ra mất, Áp-ra-ham cưới Kê-tu-ra làm vợ.",e_en:"After Sarah's death, Abraham married Keturah.",ref:[0,25,1]},
+{q_vi:"Ê-sau cưới vợ thuộc dân nào khiến cha mẹ buồn lòng, theo Sáng Thế Ký 26?",q_en:"Esau's wives, who grieved his parents in Genesis 26, belonged to which people?",o_vi:["Dân Hê-tít","Dân Ê-díp-tô","Dân Phi-li-tin","Dân Mô-áp"],o_en:["The Hittites","The Egyptians","The Philistines","The Moabites"],a:0,e_vi:"Ê-sau cưới hai người vợ Hê-tít, làm buồn lòng Y-sác và Rê-bê-ca.",e_en:"Esau married two Hittite wives, who grieved Isaac and Rebekah.",ref:[0,26,35]},
+{q_vi:"Con sông thứ tư được kể trong Ê-đen, cũng là sông lớn gắn liền với Ba-by-lôn, là sông nào?",q_en:"Which is the fourth river named in Eden, the great river linked with Babylon?",o_vi:["Ơ-phơ-rát","Bi-sôn","Ghi-hôn","Ti-gơ-rơ"],o_en:["Euphrates","Pison","Gihon","Tigris"],a:0,e_vi:"Sông thứ tư là Ơ-phơ-rát.",e_en:"The fourth river is the Euphrates.",ref:[0,2,14]}
+];
+function genesisExtras(){
+  const out=[];
+  const fathers=[]; FATHERS.forEach(f=>{ if(!fathers.some(x=>x[0]===f[2])) fathers.push([f[2],f[3]]); });
+  FATHERS.forEach((f,i)=>{
+    const fi=fathers.findIndex(x=>x[0]===f[2]);
+    out.push(mkQ("Cha của "+f[0]+" là ai?", "Who was the father of "+f[1]+"?",
+      optsFrom(fathers,fi,0,3), optsFrom(fathers,fi,1,3),
+      f[2]+" là cha của "+f[0]+".", f[3]+" was the father of "+f[1]+".", [0,5,32]));
+    out[out.length-1].ref=[0, f[1]==="Noah"?6: (f[1]==="Abraham"?11:5), 1];
+  });
+  const mothers=[]; MOTHERS.forEach(m=>{ if(!mothers.some(x=>x[0]===m[2])) mothers.push([m[2],m[3]]); });
+  MOTHERS.forEach((m)=>{
+    const mi=mothers.findIndex(x=>x[0]===m[2]);
+    out.push(mkQ("Mẹ của "+m[0]+" là ai?", "Who was the mother of "+m[1]+"?",
+      optsFrom(mothers,mi,0,4), optsFrom(mothers,mi,1,4),
+      m[2]+" là mẹ của "+m[0]+".", m[3]+" was the mother of "+m[1]+".", [0,21,2]));
+  });
+  WIVES.forEach((w)=>{
+    const allWives=WIVES.map(x=>[x[2],x[3]]); const wi=allWives.findIndex(x=>x[0]===w[2]);
+    out.push(mkQ("Vợ của "+w[0]+" là ai?", "Who was the wife of "+w[1]+"?",
+      optsFrom(allWives,wi,0,5), optsFrom(allWives,wi,1,5),
+      w[2]+" là vợ của "+w[0]+".", w[3]+" was the wife of "+w[1]+".", [0,2,22]));
+  });
+  const notSons=[["Ê-sau","Esau"],["Y-sác","Isaac"],["Ích-ma-ên","Ishmael"],["Lót","Lot"],["Ê-li-ê-se","Eliezer"],["A-đam","Adam"]];
+  SONS_JACOB.forEach((s,k)=>{
+    const nm=s.split("|");
+    const ds=pickDistractors(notSons.map((n,j)=>j), k%notSons.length, 3, 2);
+    const vals=[[nm[0],nm[1]], ...ds.map(j=>notSons[j])];
+    out.push(mkQ("Người nào sau đây là một trong mười hai con trai của Gia-cốp?",
+      "Which of the following was one of the twelve sons of Jacob?",
+      vals.map(v=>v[0]), vals.map(v=>v[1]),
+      nm[0]+" là con trai của Gia-cốp, tổ phụ một chi phái Y-sơ-ra-ên.",
+      nm[1]+" was a son of Jacob, forefather of a tribe of Israel.", [0,35,23]));
+  });
+  const items=DAYS.map(d=>[d[1],d[2]]);
+  DAYS.forEach((d,i)=>{
+    out.push(mkQ("Trong ngày thứ "+d[0]+" của công cuộc sáng tạo, điều gì xuất hiện?",
+      "On day "+d[0]+" of creation, what came into being?",
+      optsFrom(items,i,0,4), optsFrom(items,i,1,4),
+      "Ngày thứ "+d[0]+": "+d[1]+".", "Day "+d[0]+": "+d[1]+".", [0,1,Math.min(d[0]*4,31)]));
+    out.push(mkQ("“"+d[1]+"” thuộc ngày thứ mấy của công cuộc sáng tạo?",
+      "“"+d[2]+"” belongs to which day of creation?",
+      (()=>{ const ds=pickDistractors(DAYS,i,3,3); const v=[d,...ds.map(j=>DAYS[j])]; return v.map(x=>"Ngày thứ "+x[0]); })(),
+      (()=>{ const ds=pickDistractors(DAYS,i,3,3); const v=[d,...ds.map(j=>DAYS[j])]; return v.map(x=>"Day "+x[0]); })(),
+      "Đó là ngày thứ "+d[0]+".", "That was day "+d[0]+".", [0,1,1]));
+  });
+  return out.concat(GEN_EXTRA, GEN_EXTRA2);
+}
+
+/* ---- Book-structure generator (66 books) ---- */
+function bookGroup(i){
+  if(i<5) return ["Ngũ Thư","the Pentateuch"];
+  if(i<17) return ["Sách Lịch sử","the Historical Books"];
+  if(i<22) return ["Sách Thi ca & Khôn ngoan","the Poetry & Wisdom Books"];
+  if(i<27) return ["Sách Tiên tri lớn","the Major Prophets"];
+  if(i<39) return ["Sách Tiên tri nhỏ","the Minor Prophets"];
+  if(i<43) return ["Sách Phúc Âm","the Gospels"];
+  if(i===43) return ["Sách Công vụ","the Book of Acts"];
+  if(i<57) return ["Các thư của Phao-lô","the Letters of Paul"];
+  if(i<65) return ["Các thư chung","the General Letters"];
+  return ["Sách Khải Huyền","the Book of Revelation"];
+}
+const BOOK_GROUPS=[["Ngũ Thư","the Pentateuch"],["Sách Lịch sử","the Historical Books"],["Sách Thi ca & Khôn ngoan","the Poetry & Wisdom Books"],["Sách Tiên tri lớn","the Major Prophets"],["Sách Tiên tri nhỏ","the Minor Prophets"],["Sách Phúc Âm","the Gospels"],["Sách Công vụ","the Book of Acts"],["Các thư của Phao-lô","the Letters of Paul"],["Các thư chung","the General Letters"],["Sách Khải Huyền","the Book of Revelation"]];
+function bookQuestions(){
+  const out=[];
+  const names=BOOKS.map(b=>[b.vi,b.en]);
+  BOOKS.forEach((b,i)=>{
+    /* chapters */
+    const cand=[]; const usedCh=new Set([b.ch]); let k=7;
+    while(cand.length<3 && k<400){ const j=(i+k)%66; if(!usedCh.has(BOOKS[j].ch) && !cand.includes(j)){ cand.push(j); usedCh.add(BOOKS[j].ch); } k+=6; }
+    const cvals=[b.ch,...cand.map(j=>BOOKS[j].ch)];
+    out.push(mkQ("Sách "+b.vi+" có bao nhiêu chương?", "How many chapters does the book of "+b.en+" have?",
+      cvals.map(c=>c+" chương"), cvals.map(c=>c+" chapters"),
+      "Sách "+b.vi+" có "+b.ch+" chương.", "The book of "+b.en+" has "+b.ch+" chapters.", [i,1,1]));
+    /* testament */
+    const tvals=b.ot? ["Cựu Ước","Tân Ước","Ngụy kinh","Sách ngoại điển"] : ["Tân Ước","Cựu Ước","Ngụy kinh","Sách ngoại điển"];
+    const tvalsEn=b.ot? ["Old Testament","New Testament","Apocrypha","Pseudepigrapha"] : ["New Testament","Old Testament","Apocrypha","Pseudepigrapha"];
+    out.push(mkQ("Sách "+b.vi+" thuộc phần nào của Kinh Thánh?", "Which part of the Bible does the book of "+b.en+" belong to?",
+      tvals, tvalsEn,
+      "Sách "+b.vi+" thuộc "+(b.ot?"Cựu Ước":"Tân Ước")+".",
+      "The book of "+b.en+" belongs to the "+(b.ot?"Old Testament":"New Testament")+".", [i,1,1]));
+    /* position */
+    out.push(mkQ("Sách thứ "+(i+1)+" trong 66 sách của Kinh Thánh là sách nào?",
+      "Which is book number "+(i+1)+" of the 66 books of the Bible?",
+      optsFrom(names,i,0,13), optsFrom(names,i,1,13),
+      "Thứ tự: sách thứ "+(i+1)+" là "+b.vi+".", "In order, book number "+(i+1)+" is "+b.en+".", [i,1,1]));
+    /* group */
+    const g=bookGroup(i), gi=BOOK_GROUPS.findIndex(x=>x[0]===g[0]);
+    out.push(mkQ("Sách "+b.vi+" thuộc nhóm sách nào?", "The book of "+b.en+" belongs to which group of books?",
+      optsFrom(BOOK_GROUPS,gi,0,3), optsFrom(BOOK_GROUPS,gi,1,3),
+      "Sách "+b.vi+" thuộc nhóm "+g[0]+".", "The book of "+b.en+" belongs to "+g[1]+".", [i,1,1]));
+    /* next / previous */
+    if(i<65){
+      out.push(mkQ("Sách nào đứng ngay sau sách "+b.vi+"?", "Which book comes immediately after "+b.en+"?",
+        optsFrom(names,i+1,0,13), optsFrom(names,i+1,1,13),
+        "Sau "+b.vi+" là sách "+BOOKS[i+1].vi+".", "After "+b.en+" comes "+BOOKS[i+1].en+".", [i+1,1,1]));
+    }
+    if(i>0){
+      out.push(mkQ("Sách nào đứng ngay trước sách "+b.vi+"?", "Which book comes immediately before "+b.en+"?",
+        optsFrom(names,i-1,0,13), optsFrom(names,i-1,1,13),
+        "Trước "+b.vi+" là sách "+BOOKS[i-1].vi+".", "Before "+b.en+" comes "+BOOKS[i-1].en+".", [i-1,1,1]));
+    }
+  });
+  return out;
+}
+
+/* ---- Assemble banks ---- */
+function dedupeBank(arr){
+  const seen=new Set(), out=[];
+  arr.forEach(q=>{ if(q && q.q_vi && !seen.has(q.q_vi)){ seen.add(q.q_vi); out.push(q); } });
+  return out;
+}
+function buildBanks(){
+  const genEv=EVENTS.filter(e=>e[6]===0), otEv=EVENTS.filter(e=>e[6]>0 && e[6]<39), ntEv=EVENTS.filter(e=>e[6]>=39);
+  const genNames=PEOPLE_GEN.map(r=>[r[0],r[1]]), otNames=PEOPLE_OT.map(r=>[r[0],r[1]]), ntNames=PEOPLE_NT.map(r=>[r[0],r[1]]);
+  const genVerses=VERSES.filter(v=>v[3]==="gen"), otVerses=VERSES.filter(v=>v[3]==="ot"), ntVerses=VERSES.filter(v=>v[3]==="nt");
+  const psalmQs=QUIZ.mix2.filter(q=>q.ref[0]===18), mattQs=QUIZ.mix2.filter(q=>q.ref[0]===39);
+  return {
+    gen: dedupeBank([].concat(QUIZ.gen, peopleQuestions(PEOPLE_GEN), eventQuestions(genEv, genNames), verseQuestions(genVerses), genesisExtras())),
+    ot: dedupeBank([].concat(psalmQs, peopleQuestions(PEOPLE_OT), eventQuestions(otEv, otNames), verseQuestions(otVerses), psalmQuestions())),
+    nt: dedupeBank([].concat(QUIZ.john, mattQs, peopleQuestions(PEOPLE_NT), eventQuestions(ntEv, ntNames), verseQuestions(ntVerses))),
+    books: dedupeBank(bookQuestions())
+  };
+}
+const BANKS = buildBanks();
+/* ================= END QUESTION BANK GENERATOR ================= */
+
+/* ================= QUIZ ================= */
+const SETS = [
+  { id:"gen",  stage:1, viT:"Sáng Thế Ký & Các Tổ Phụ", enT:"Genesis & the Patriarchs",
+    viD:"Sáng tạo, Ê-đen, các tổ phụ Áp-ra-ham, Y-sác, Gia-cốp, Giô-sép và gia phả đầu tiên.", enD:"Creation, Eden, the patriarchs Abraham, Isaac, Jacob, Joseph and the first family lines." },
+  { id:"ot", stage:2, viT:"Cựu Ước: Lịch Sử, Thi Ca & Tiên Tri", enT:"Old Testament: History, Poetry & Prophets",
+    viD:"Môi-se, các quan xét, vua chúa, tiên tri, Thi Thiên và những câu gốc nổi tiếng của Cựu Ước.", enD:"Moses, the judges, kings, prophets, the Psalms and famous Old Testament verses." },
+  { id:"nt", stage:3, viT:"Tân Ước: Phúc Âm, Công Vụ & Thư Tín", enT:"New Testament: Gospels, Acts & Letters",
+    viD:"Chúa Jêsus, các môn đồ, phép lạ, Hội Thánh đầu tiên và các thư tín.", enD:"Jesus, the disciples, the miracles, the early church and the letters." },
+  { id:"books", stage:4, viT:"66 Sách & Cấu Trúc Kinh Thánh", enT:"The 66 Books & the Bible's Structure",
+    viD:"Thứ tự 66 sách, số chương, nhóm sách và hai giao ước — phần luyện trí nhớ về toàn bộ Kinh Thánh.", enD:"The order of the 66 books, chapter counts, book groups and the two testaments." }
+];
+function renderRoadmap(){
+  const d=ui();
+  $("#roadmap").innerHTML = SETS.map(s=>`
+    <div class="stage"><div class="stagecard">
+      <div class="k">${d.stage} ${s.stage}</div>
+      <h3>${bothName(s.viT,s.enT)}</h3>
+      <p>${lang==="both"? s.viD+"<br>"+s.enD : lang==="en"? s.enD : s.viD}</p>
+      <div class="meta">
+        <span class="pill">${d.bank}: ${BANKS[s.id].length} ${d.questions}</span>
+        <span class="pill">${d.testL}: ${EXAM_LEN} ${d.questions} · ${d.randomNR}</span>
+        <span class="pill">${d.perQ}</span>
+        ${best[s.id]!==undefined?`<span class="pill best">${d.best}: ${best[s.id]}/${EXAM_LEN}</span>`:""}
+        <button type="button" class="startbtn" data-start="${s.id}">${d.start}</button>
+      </div>
+    </div></div>`).join("");
+  $("#wrongStage").classList.toggle("hidden", !wrongPool.length);
+  $("#wrongCount").textContent = wrongPool.length + " " + d.questions;
+  const bm=$("#best-mixed");
+  if(best.mixed!==undefined){ bm.classList.remove("hidden"); bm.textContent = ui().best+": "+best.mixed+"/"+EXAM_LEN; }
+  else bm.classList.add("hidden");
+  $$("#quizHome [data-start]").forEach(b=>b.addEventListener("click",()=>startQuiz(b.dataset.start)));
+}
+
+let quiz=null, timerId=null;
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+const EXAM_LEN = 30;
+const seenBySet = {};   // questions already served per set in this session, so attempts do not repeat until the bank is used up
+function sampleQuestions(pool, setId, n){
+  if(!pool || !pool.length) return [];
+  if(n>=pool.length){ seenBySet[setId]=new Set(); return shuffle(pool); }
+  let seen = seenBySet[setId];
+  if(!seen){ seen = new Set(); seenBySet[setId]=seen; }
+  let fresh = pool.filter(q=>!seen.has(q));
+  if(fresh.length < n){ seen.clear(); fresh = pool.slice(); }
+  const picked = shuffle(fresh).slice(0, n);
+  picked.forEach(q=>seen.add(q));
+  return picked;
+}
+function startQuiz(setId){
+  let qs;
+  if(setId==="mixed") qs = sampleQuestions([].concat(BANKS.gen, BANKS.ot, BANKS.nt, BANKS.books), "mixed", EXAM_LEN);
+  else if(setId==="wrong") qs = shuffle(wrongPool);
+  else qs = sampleQuestions(BANKS[setId], setId, EXAM_LEN);
+  quiz = { setId, qs: qs.map(q=>{
+      const order = shuffle([0,1,2,3]);
+      return { q, order, correctPos: order.indexOf(q.a) };
+    }), idx:0, score:0, results:[], answered:false, chosenPos:-1, timedOut:false, timeLeft:30, finished:false };
+  $("#quizHome").classList.add("hidden"); $("#quizDone").classList.add("hidden");
+  $("#quizRun").classList.remove("hidden");
+  showQuestion();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+function stopTimer(){ if(timerId){ clearInterval(timerId); timerId=null; } }
+function setTitle(id){
+  const s=SETS.find(x=>x.id===id);
+  if(s) return bothName(s.viT,s.enT);
+  const d=ui();
+  if(id==="mixed") return d.mixedT;
+  if(id==="wrong") return d.wrongT;
+  return "";
+}
+function showQuestion(fresh){
+  stopTimer();
+  if(fresh!==false){ quiz.answered=false; quiz.chosenPos=-1; quiz.timedOut=false; quiz.timeLeft=30; }
+  const d=ui(), item=quiz.qs[quiz.idx], q=item.q;
+  $("#progFill").style.width = (quiz.idx/quiz.qs.length*100)+"%";
+  const en = lang==="en";
+  const qMain = en? q.q_en : q.q_vi;
+  const qAlt = lang==="both" ? `<p class="qalt">${q.q_en}</p>` : "";
+  $("#qcard").innerHTML = `
+    <div class="qk">${d.question} ${quiz.idx+1}/${quiz.qs.length} · ${setTitle(quiz.setId)}</div>
+    <h3>${qMain}</h3>${qAlt}
+    <div class="opts">${item.order.map((oi,pos)=>`
+      <button type="button" class="opt" data-pos="${pos}">
+        <span class="letter">${"ABCD"[pos]}</span>
+        <span>${en? q.o_en[oi] : q.o_vi[oi]}${lang==="both"?`<span class="oalt">${q.o_en[oi]}</span>`:""}</span>
+      </button>`).join("")}</div>
+    <div class="explain" id="explain"></div>
+    <div class="nextrow"><button type="button" class="nextbtn hidden" id="nextBtn"></button></div>`;
+  $$("#qcard .opt").forEach(b=>b.addEventListener("click",()=>answer(+b.dataset.pos,false)));
+  if(quiz.answered){
+    $$("#qcard .opt").forEach(b=>{
+      const p=+b.dataset.pos; b.disabled=true;
+      if(p===item.correctPos) b.classList.add("right");
+      else if(p===quiz.chosenPos) b.classList.add("wrong");
+    });
+    const tEl=$("#timer");
+    tEl.textContent = "0:"+String(Math.max(0,quiz.timeLeft||0)).padStart(2,"0");
+    tEl.classList.toggle("low", (quiz.timeLeft||0)<=10);
+    fillExplain();
+    return;
+  }
+  // timer 30s
+  let left=quiz.timeLeft||30; const tEl=$("#timer");
+  const paint=()=>{ quiz.timeLeft=left; tEl.textContent = "0:"+String(left).padStart(2,"0"); tEl.classList.toggle("low", left<=10); };
+  paint();
+  timerId=setInterval(()=>{ left--; paint(); if(left<=0){ stopTimer(); answer(-1,true); } },1000);
+}
+function answer(pos, timedOut){
+  if(!quiz || quiz.answered) return;
+  stopTimer();
+  quiz.answered=true; quiz.chosenPos=pos; quiz.timedOut=!!timedOut;
+  const item=quiz.qs[quiz.idx], q=item.q;
+  const ok = pos===item.correctPos;
+  if(ok) quiz.score++;
+  quiz.results.push({ q, chosenPos:pos, item });
+  if(!ok && !wrongPool.includes(q)) wrongPool.push(q);
+  if(ok && quiz.setId==="wrong"){ const i=wrongPool.indexOf(q); if(i>=0) wrongPool.splice(i,1); }
+  $$("#qcard .opt").forEach(b=>{
+    const p=+b.dataset.pos; b.disabled=true;
+    if(p===item.correctPos) b.classList.add("right");
+    else if(p===pos) b.classList.add("wrong");
+  });
+  fillExplain();
+  const nb0=$("#nextBtn"); if(nb0) nb0.focus();
+}
+function fillExplain(){
+  const d=ui(), item=quiz.qs[quiz.idx], q=item.q;
+  const pos=quiz.chosenPos, timedOut=quiz.timedOut;
+  const ok = pos===item.correctPos;
+  const en = lang==="en";
+  const chosenTxt = pos<0 ? d.notAnswered : (en? q.o_en[item.order[pos]] : q.o_vi[item.order[pos]]);
+  const rightTxt = en? q.o_en[q.a] : q.o_vi[q.a];
+  const ex=$("#explain"); if(!ex) return; ex.classList.add("show");
+  ex.innerHTML = `
+    <p class="verdict ${ok?"ok":"no"}">${timedOut? d.timeUp+" " : ""}${ok? d.correct : d.wrong}</p>
+    ${ok?"":`<p>${d.yourAnswer}<b>${chosenTxt}</b><br>${d.rightAnswer}<b>${rightTxt}</b></p>`}
+    <p>${en? q.e_en : q.e_vi}</p>
+    ${lang==="both"?`<p class="ealt">${q.e_en}</p>`:""}
+    <div class="refrow"><span class="refchip">${refLabel(q.ref[0],q.ref[1],q.ref[2])}</span>
+      <button type="button" class="ghostbtn" id="viewVerseBtn">${d.viewVerse}</button></div>`;
+  $("#viewVerseBtn").addEventListener("click",()=>{
+    const [bi,ch,v]=q.ref, b=BOOKS[bi];
+    $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected", String(x.dataset.tab==="lookup")));
+    $("#view-lookup").classList.remove("hidden"); $("#view-quiz").classList.add("hidden");
+    curTest=b.ot?"ot":"nt";
+    $$("[data-test]").forEach(x=>x.setAttribute("aria-pressed", String(x.dataset.test===curTest)));
+    curBook=bi; curChapter=ch; renderBooks(); renderReader(); renderFavs();
+    const t=$("#readerArea").querySelector(`.verse[data-v="${v}"]`);
+    if(t){ t.classList.add("open"); t.scrollIntoView({behavior:"smooth", block:"center"}); }
+  });
+  const nb=$("#nextBtn");
+  nb.textContent = quiz.idx>=quiz.qs.length-1 ? d.finish : d.nextQ;
+  nb.classList.remove("hidden");
+  nb.addEventListener("click",()=>{
+    quiz.idx++;
+    if(quiz.idx>=quiz.qs.length) finishQuiz(); else showQuestion();
+  });
+}
+function finishQuiz(){
+  stopTimer();
+  if(best[quiz.setId]===undefined || quiz.score>best[quiz.setId]) best[quiz.setId]=quiz.score;
+  quiz.finished=true;
+  $("#quizRun").classList.add("hidden");
+  renderDone();
+  renderRoadmap();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+function renderDone(){
+  const d=ui();
+  const wrongs = quiz.results.filter(r=>r.chosenPos!==r.item.correctPos);
+  const done=$("#quizDone"); done.classList.remove("hidden");
+  done.innerHTML = `<div class="panel scorecard">
+    <h2>${d.doneTitle}</h2>
+    <div class="scorebig">${quiz.score}/${quiz.qs.length}</div>
+    <p>${quiz.score===quiz.qs.length ? d.allRight : ""}</p>
+    <div class="scoreactions">
+      <button type="button" class="nextbtn" id="againBtn">${d.again}</button>
+      ${wrongs.length?`<button type="button" class="ghostbtn" id="revBtn">${d.reviewWrong} (${wrongs.length})</button>`:""}
+      <button type="button" class="ghostbtn" id="backBtn">${d.backRoad}</button>
+    </div></div>
+    ${wrongs.length?`<div class="review"><h3>${d.reviewTitle}</h3>${wrongs.map(r=>{
+      const en=lang==="en", q=r.q;
+      const yours = r.chosenPos<0 ? d.notAnswered : (en? q.o_en[r.item.order[r.chosenPos]] : q.o_vi[r.item.order[r.chosenPos]]);
+      return `<div class="ritem"><b>${en? q.q_en : q.q_vi}</b>${lang==="both"?`<b style="font-weight:500;font-style:italic;color:var(--ink2)">${q.q_en}</b>`:""}
+        <span class="yours">${d.yourAnswer}${yours}</span><br>
+        <span class="corr">${d.rightAnswer}${en? q.o_en[q.a] : q.o_vi[q.a]}</span><br>
+        <span style="color:var(--ink2)">${refLabel(q.ref[0],q.ref[1],q.ref[2])}</span></div>`;
+    }).join("")}</div>`:""}`;
+  $("#againBtn").addEventListener("click",()=>startQuiz(quiz.setId==="wrong"?"mixed":quiz.setId));
+  const rb=$("#revBtn"); if(rb) rb.addEventListener("click",()=>startQuiz("wrong"));
+  $("#backBtn").addEventListener("click",()=>{
+    done.classList.add("hidden"); $("#quizHome").classList.remove("hidden"); renderRoadmap();
+  });
+}
+$("#quitQuiz").addEventListener("click",()=>{
+  stopTimer(); quiz=null;
+  $("#quizRun").classList.add("hidden"); $("#quizHome").classList.remove("hidden"); renderRoadmap();
+});
+
+/* ================= INIT ================= */
+if(langChosen) document.documentElement.classList.add("lang-set");
+applyLang();
+</script>
+  </body>
+</html>
