@@ -115,9 +115,9 @@
       .verse .vtools button{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
         border-radius:999px; font-size:.78rem; font-weight:700; padding:3px 10px; min-height:1.8rem; }
       .verse.faved{ background:var(--gold-soft); }
-      .chapnav{ display:flex; flex:none; justify-content:space-between; gap:6px; margin-top:8px; }
-      .chapnav button{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:9px;
-        font-weight:700; font-size:.88rem; padding:5px 12px; min-height:2rem; }
+      .chapnav{ display:flex; flex:none; gap:6px; margin-top:8px; }
+      .chapnav button{ flex:1 1 0; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:9px;
+        font-weight:700; font-size:.88rem; padding:5px 12px; min-height:2.4rem; }
       .chapnav button:disabled{ opacity:.4; cursor:default; }
       .results .verse{ border-bottom:1px dashed var(--line); border-radius:0; margin:0; padding:7px 4px; }
       .results .rref{ font-weight:800; color:var(--accent); font-size:.82rem; }
@@ -146,8 +146,25 @@
       .timer{ font-weight:800; font-size:.9rem; font-variant-numeric:tabular-nums; border:1px solid var(--line); background:var(--surface);
         border-radius:999px; padding:3px 10px; min-width:3.6rem; text-align:center; }
       .timer.low{ color:var(--bad); border-color:var(--bad); }
+      /* The question card is pushed to the bottom of the run screen; the
+         explanation sits at the top, under the title bar, and the
+         Prev / Next bar is pinned to the very bottom. */
       .qcard{ border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:12px 14px; box-shadow:var(--shadow);
-        flex:1 1 auto; min-height:0; overflow-y:auto; scrollbar-width:thin; }
+        flex:0 1 auto; min-height:0; margin-top:auto; overflow-y:auto; scrollbar-width:thin; }
+      .explain-top{ display:none; flex:none; border:1px solid var(--line); background:var(--surface);
+        border-radius:12px; padding:10px 12px; box-shadow:var(--shadow); margin-bottom:8px; }
+      .explain-top.show{ display:block; }
+      .explain-top .verdict{ font-weight:800; margin:0 0 2px; }
+      .explain-top .verdict.ok{ color:var(--good); } .explain-top .verdict.no{ color:var(--bad); }
+      .explain-top p{ margin:2px 0; font-size:.92rem; }
+      .explain-top .refrow{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:6px; }
+      .explain-top .refchip{ font-weight:800; color:var(--accent); font-size:.9rem; }
+      .quiznav{ display:flex; flex:none; gap:6px; margin-top:8px; }
+      .quiznav button{ flex:1 1 0; min-height:2.5rem; }
+      .quiznav button:disabled{ opacity:.4; cursor:default; }
+      /* While a quiz is running, the tab bar (Contents tab included) is
+         hidden, the same way the reading page hides it. */
+      body.quizzing .tabs{ display:none; }
       .qcard .qk{ font-size:.66rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); }
       .qcard h3{ font-size:1.08rem; margin:4px 0 2px; line-height:1.35; }
       .qcard .qalt{ font-family:"Noto Serif",serif; font-style:italic; font-size:.9rem; color:var(--ink2); margin:0 0 4px; }
@@ -197,6 +214,11 @@
       .abouttoggle[aria-expanded="true"] .chev{ transform:rotate(180deg); }
       .readerback{ display:flex; flex:none; margin:0 0 6px; }
       .readerhead{ flex:none; }
+      /* ---------- reader page: its own chrome, app header + tabs hidden ---------- */
+      body.reading .topbar, body.reading .tabs{ display:none; }
+      .readerbar{ display:flex; flex:none; align-items:center; gap:8px; margin:0 0 8px; }
+      .readerbar .rtitle{ flex:1 1 auto; min-width:0; text-align:center; margin:0;
+        font-size:1.18rem; font-weight:900; line-height:1.2; }
       .hidden{ display:none !important; }
 
       /* ---------- first-visit language chooser ---------- */
@@ -268,14 +290,14 @@
       <div class="topbar">
         <div class="brand"><span data-i="brand">Kinh Thánh Song Ngữ</span>
           <small data-i="brandsub">Việt 1925 · Anh KJV</small></div>
-        <button type="button" class="iconbtn" id="settingsBtn" aria-label="Settings · Cài đặt" title="Settings · Cài đặt">
+        <button type="button" class="iconbtn" id="settingsBtn" data-settings="1" aria-label="Settings · Cài đặt" title="Settings · Cài đặt">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
       </div>
 
       <nav class="tabs" role="tablist">
         <button type="button" role="tab" id="tab-lookup" aria-selected="true" data-tab="lookup">
-          <span data-i="tabLookup">Tra cứu</span>
+          <span data-i="tabLookup">Nội dung</span>
         </button>
         <button type="button" role="tab" id="tab-quiz" aria-selected="false" data-tab="quiz">
           <span data-i="tabQuiz">Trắc nghiệm</span>
@@ -330,7 +352,12 @@
             <div class="prog"><i id="progFill" style="width:0%"></i></div>
             <div class="timer" id="timer">0:30</div>
           </div>
+          <div class="explain-top" id="explainTop"></div>
           <div class="qcard" id="qcard"></div>
+          <div class="quiznav">
+            <button type="button" class="ghostbtn" id="prevQBtn">← Câu trước</button>
+            <button type="button" class="nextbtn" id="nextQBtn">Câu tiếp →</button>
+          </div>
         </div>
 
         <div id="quizDone" class="hidden"></div>
@@ -390,7 +417,7 @@ const I = {
     settings:"Cài đặt", langLabel:"Ngôn ngữ", back:"← Quay lại",
     perQuizLabel:"Số câu mỗi lượt thi", aboutLabel:"Giới thiệu",
     settingsNote:"Lựa chọn ngôn ngữ được nhớ trên thiết bị này, lần mở sau app vào thẳng ngôn ngữ đã chọn. Đổi ở đây áp dụng ngay cho toàn bộ giao diện, tên sách, câu hỏi và giải thích.",
-    tabLookup:"Tra cứu", tabLookupSub:"66 sách · tìm theo câu, từ khóa",
+    tabLookup:"Nội dung", tabLookupSub:"66 sách · tìm theo câu, từ khóa",
     tabQuiz:"Trắc nghiệm", tabQuizSub:"Lộ trình 4 chặng · ngân hàng 1.101 câu · mỗi lượt 30 câu",
     searchBtn:"Tìm", ot:"Cựu Ước", nt:"Tân Ước", fav:"Yêu thích",
     searchHint:'Gõ địa chỉ kiểu <code>Giăng 3:16</code>, <code>John 1:1</code> (không dấu cũng được) hoặc gõ từ khóa để tìm trong các chương mẫu.',
@@ -407,7 +434,7 @@ const I = {
     wrongK:"Ôn tập", wrongT:"Ôn câu sai", wrongD:"Làm lại đúng những câu bạn vừa trả lời sai trong phiên này.",
     quit:"Thoát", question:"Câu", correct:"Chính xác!", wrong:"Chưa đúng.",
     timeUp:"Hết giờ!", yourAnswer:"Bạn chọn: ", rightAnswer:"Đáp án đúng: ",
-    viewVerse:"Xem câu gốc", nextQ:"Câu tiếp →", finish:"Xem kết quả →",
+    viewVerse:"Xem câu gốc", prevQ:"← Câu trước", nextQ:"Câu tiếp →", finish:"Xem kết quả →",
     best:"Điểm cao nhất", scoreOf:"điểm",
     doneTitle:"Hoàn thành!", again:"Làm lại", backRoad:"Về lộ trình", reviewWrong:"Ôn câu sai",
     allRight:"Xuất sắc — không sai câu nào!", reviewTitle:"Xem lại các câu sai",
@@ -421,7 +448,7 @@ const I = {
     settings:"Settings", langLabel:"Language", back:"← Back",
     perQuizLabel:"Questions per attempt", aboutLabel:"About",
     settingsNote:"Your language choice is remembered on this device, so the app opens in it next time. Changing it here applies at once to the whole interface, book names, questions and explanations.",
-    tabLookup:"Look up", tabLookupSub:"66 books · search by reference or keyword",
+    tabLookup:"Contents", tabLookupSub:"66 books · search by reference or keyword",
     tabQuiz:"Quiz", tabQuizSub:"4-stage roadmap · 1,101-question bank · 30 per attempt",
     searchBtn:"Search", ot:"Old Testament", nt:"New Testament", fav:"Favorites",
     searchHint:'Type a reference like <code>John 3:16</code> or <code>Giăng 3:16</code> (diacritics optional), or a keyword to search the sample chapters.',
@@ -438,7 +465,7 @@ const I = {
     wrongK:"Review", wrongT:"Review mistakes", wrongD:"Redo exactly the questions you missed in this session.",
     quit:"Quit", question:"Question", correct:"Correct!", wrong:"Not quite.",
     timeUp:"Time's up!", yourAnswer:"You chose: ", rightAnswer:"Correct answer: ",
-    viewVerse:"View the verse", nextQ:"Next question →", finish:"See results →",
+    viewVerse:"View the verse", prevQ:"← Previous", nextQ:"Next question →", finish:"See results →",
     best:"Best", scoreOf:"score",
     doneTitle:"Finished!", again:"Try again", backRoad:"Back to roadmap", reviewWrong:"Review mistakes",
     allRight:"Excellent — no mistakes!", reviewTitle:"Review your mistakes",
@@ -510,12 +537,13 @@ $$("[data-perq]").forEach(b=>b.addEventListener("click",()=>{
    content right away below the tab bar. */
 let activeTab = "lookup";
 function paintTabs(){ $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected", String(x.dataset.tab===activeTab))); }
-$("#settingsBtn").addEventListener("click",()=>{
+function openSettings(){
   $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected","false"));
   $("#view-lookup").classList.add("hidden"); $("#view-quiz").classList.add("hidden");
   $("#view-settings").classList.remove("hidden");
   window.scrollTo({top:0, behavior:"smooth"});
-});
+}
+$$("[data-settings]").forEach(b=>b.addEventListener("click", openSettings));
 $("#settingsBack").addEventListener("click",()=>{
   $("#view-settings").classList.add("hidden");
   if(activeTab==="lookup") $("#view-lookup").classList.remove("hidden");
@@ -557,17 +585,59 @@ function renderBooks(){
     openBook(+btn.dataset.book);
   }));
 }
-/* The reader is its own page: opening a book swaps the lookup home
-   (search + book list) for the chapter page, with a way back. */
+/* The reader is its own page: opening a book swaps the contents home
+   (search + book list) for a full reading page — the app header and the
+   two tabs are hidden, and the page carries only its own bar:
+   back on the left, the book's name in the middle, settings on the right. */
 let readerOpen=false;
 function syncLookup(){
   $("#lookupHome").classList.toggle("hidden", readerOpen);
   $("#readerArea").classList.toggle("hidden", !readerOpen);
+  document.body.classList.toggle("reading", readerOpen);
 }
-function closeReader(){ readerOpen=false; syncLookup(); window.scrollTo({top:0, behavior:"smooth"}); }
+function closeReader(){ saveReadPos(); readerOpen=false; syncLookup(); window.scrollTo({top:0, behavior:"smooth"}); }
+/* Reading position, remembered per book on this device (same store the
+   app already uses for language): reopening a book returns to the exact
+   chapter and verse where reading stopped. */
+const READ_KEY="kt-readpos";
+let readPos = (()=>{ try{ const v=JSON.parse(localStorage.getItem(READ_KEY)); return (v && typeof v==="object") ? v : {}; }catch(e){ return {}; } })();
+let pendingRestoreVerse = null;
+let renderedChapter = null;
+let posSaveTimer = null;
+function saveReadPos(){
+  const box=$("#readerArea") && $("#readerArea").querySelector(".verses");
+  if(!box || !readerOpen) return;
+  const top=box.getBoundingClientRect().top;
+  let v=1;
+  for(const el of box.querySelectorAll(".verse")){
+    if(el.getBoundingClientRect().bottom > top+6){ v=+el.dataset.v; break; }
+  }
+  readPos[curBook]={ch:curChapter, v:v};
+  try{ localStorage.setItem(READ_KEY, JSON.stringify(readPos)); }catch(e){}
+}
+const GEAR_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>';
+function readerBarHTML(b){
+  return `<div class="readerbar">
+    <button type="button" class="iconbtn" data-back="1" aria-label="Back · Quay lại" title="Back · Quay lại">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+    </button>
+    <h2 class="rtitle">${bookName(b)}</h2>
+    <button type="button" class="iconbtn" data-settings="1" aria-label="Settings · Cài đặt" title="Settings · Cài đặt">${GEAR_SVG}</button>
+  </div>`;
+}
+function bindReaderBar(area){
+  const back=area.querySelector("[data-back]"); if(back) back.addEventListener("click", closeReader);
+  const set=area.querySelector("[data-settings]"); if(set) set.addEventListener("click", openSettings);
+}
 function openBook(i){
   curBook=i; const b=BOOKS[i];
-  curChapter = b.data ? +Object.keys(b.data)[0] : 1;
+  const saved = readPos[i];
+  pendingRestoreVerse = null;
+  if(b.data){
+    const chaps = Object.keys(b.data).map(Number).sort((a,c)=>a-c);
+    if(saved && b.data[saved.ch]){ curChapter=saved.ch; pendingRestoreVerse=saved.v||null; }
+    else curChapter = chaps[0];
+  } else curChapter = 1;
   readerOpen=true; syncLookup(); renderReader();
   window.scrollTo({top:0, behavior:"smooth"});
 }
@@ -577,10 +647,10 @@ function renderReader(){
   if(!b){ area.innerHTML=""; return; }
   if(!b.data){
     area.innerHTML = `<div class="panel">
-      <div class="readerback"><button type="button" class="ghostbtn" data-back="1">${d.back}</button></div>
-      <div class="readerhead"><h2>${bookName(b)}</h2></div>
+      ${readerBarHTML(b)}
       <p style="margin:6px 0 0">${d.noSample}</p></div>`;
-    area.querySelector("[data-back]").addEventListener("click", closeReader);
+    bindReaderBar(area);
+    renderedChapter = null;
     return;
   }
   const chaps = Object.keys(b.data).map(Number).sort((a,c)=>a-c);
@@ -598,18 +668,37 @@ function renderReader(){
       </span></div>`;
   }).join("");
   const pos = chaps.indexOf(curChapter);
+  /* Preserve the reading spot across re-renders (favorite tap, language
+     switch): capture the topmost visible verse of the outgoing page. */
+  let anchorV = pendingRestoreVerse; pendingRestoreVerse = null;
+  if(!anchorV && renderedChapter===curChapter){
+    const oldBox=area.querySelector(".verses");
+    if(oldBox && oldBox.clientHeight>0){ const t=oldBox.getBoundingClientRect().top;
+      for(const el of oldBox.querySelectorAll(".verse")){
+        if(el.getBoundingClientRect().bottom > t+6){ anchorV=+el.dataset.v; break; } } }
+  }
   area.innerHTML = `<div class="panel">
-    <div class="readerback"><button type="button" class="ghostbtn" data-back="1">${d.back}</button></div>
-    <div class="readerhead"><h2>${bookName(b)}</h2>
-    <p class="chapsub">${d.chapter} ${curChapter} · ${versionLine()}</p></div>
-    <div class="chips">${chaps.map(c=>`<button type="button" data-ch="${c}" aria-pressed="${c===curChapter}">${c}</button>`).join("")}</div>
+    ${readerBarHTML(b)}
     <div class="verses">${verses}</div>
     <div class="chapnav">
       <button type="button" data-nav="-1" ${pos<=0?"disabled":""}>${d.prev}</button>
       <button type="button" data-nav="1" ${pos>=chaps.length-1?"disabled":""}>${d.next}</button>
     </div></div>`;
-  area.querySelector("[data-back]").addEventListener("click", closeReader);
-  area.querySelectorAll("[data-ch]").forEach(btn=>btn.addEventListener("click",()=>{ curChapter=+btn.dataset.ch; renderReader(); window.scrollTo({top:0, behavior:"smooth"}); }));
+  bindReaderBar(area);
+  const versesBox=area.querySelector(".verses");
+  if(versesBox){
+    versesBox.addEventListener("scroll",()=>{ clearTimeout(posSaveTimer); posSaveTimer=setTimeout(saveReadPos,200); },{passive:true});
+    /* Only record / restore a position while the reader is actually on
+       screen — re-renders behind the settings view or at startup must
+       not overwrite the remembered spot. */
+    if(versesBox.clientHeight>0){
+      if(anchorV){ const el=versesBox.querySelector(`.verse[data-v="${anchorV}"]`);
+        if(el) versesBox.scrollTop += el.getBoundingClientRect().top - versesBox.getBoundingClientRect().top - 6; }
+      readPos[curBook]={ch:curChapter, v:anchorV||1};
+      try{ localStorage.setItem(READ_KEY, JSON.stringify(readPos)); }catch(e){}
+    }
+  }
+  renderedChapter = curChapter;
   area.querySelectorAll("[data-nav]").forEach(btn=>btn.addEventListener("click",()=>{
     curChapter = chaps[pos + (+btn.dataset.nav)]; renderReader();
     $("#readerArea").scrollIntoView({behavior:"smooth", block:"start"});
@@ -1292,8 +1381,9 @@ function startQuiz(setId){
   else qs = sampleQuestions(BANKS[setId], setId, examLen);
   quiz = { setId, qs: qs.map(q=>{
       const order = shuffle([0,1,2,3]);
-      return { q, order, correctPos: order.indexOf(q.a) };
-    }), idx:0, score:0, results:[], answered:false, chosenPos:-1, timedOut:false, timeLeft:30, finished:false };
+      return { q, order, correctPos: order.indexOf(q.a), answered:false, chosenPos:-1, timedOut:false, timeLeft:0 };
+    }), idx:0, score:0, results:[], answered:false, chosenPos:-1, timedOut:false, timeLeft:30, finished:false, _shownIdx:-1 };
+  document.body.classList.add("quizzing");
   $("#quizHome").classList.add("hidden"); $("#quizDone").classList.add("hidden");
   $("#quizRun").classList.remove("hidden");
   showQuestion();
@@ -1308,10 +1398,26 @@ function setTitle(id){
   if(id==="wrong") return d.wrongT;
   return "";
 }
-function showQuestion(fresh){
+/* Bottom bar of the run screen: Prev on the left half, Next on the
+   right half. Prev steps back through questions already answered;
+   Next only unlocks once the current question is answered. */
+function updateNav(){
+  const d=ui(), prev=$("#prevQBtn"), next=$("#nextQBtn");
+  if(!prev || !next) return;
+  prev.textContent = d.prevQ;
+  if(!quiz){ prev.disabled=true; next.disabled=true; return; }
+  prev.disabled = quiz.idx<=0;
+  next.textContent = quiz.idx>=quiz.qs.length-1 ? d.finish : d.nextQ;
+  next.disabled = !quiz.answered;
+}
+function showQuestion(){
   stopTimer();
-  if(fresh!==false){ quiz.answered=false; quiz.chosenPos=-1; quiz.timedOut=false; quiz.timeLeft=30; }
   const d=ui(), item=quiz.qs[quiz.idx], q=item.q;
+  /* Each question keeps its own state on its item, so stepping back
+     with Prev shows it exactly as it was left. */
+  quiz.answered=!!item.answered;
+  quiz.chosenPos=(item.chosenPos===undefined ? -1 : item.chosenPos);
+  quiz.timedOut=!!item.timedOut;
   $("#progFill").style.width = (quiz.idx/quiz.qs.length*100)+"%";
   const en = lang==="en";
   const qMain = en? q.q_en : q.q_vi;
@@ -1323,24 +1429,28 @@ function showQuestion(fresh){
       <button type="button" class="opt" data-pos="${pos}">
         <span class="letter">${"ABCD"[pos]}</span>
         <span>${en? q.o_en[oi] : q.o_vi[oi]}${lang==="both"?`<span class="oalt">${q.o_en[oi]}</span>`:""}</span>
-      </button>`).join("")}</div>
-    <div class="explain" id="explain"></div>
-    <div class="nextrow"><button type="button" class="nextbtn hidden" id="nextBtn"></button></div>`;
+      </button>`).join("")}</div>`;
   $$("#qcard .opt").forEach(b=>b.addEventListener("click",()=>answer(+b.dataset.pos,false)));
+  const exT=$("#explainTop"); exT.classList.remove("show"); exT.innerHTML="";
   if(quiz.answered){
     $$("#qcard .opt").forEach(b=>{
       const p=+b.dataset.pos; b.disabled=true;
       if(p===item.correctPos) b.classList.add("right");
       else if(p===quiz.chosenPos) b.classList.add("wrong");
     });
-    const tEl=$("#timer");
-    tEl.textContent = "0:"+String(Math.max(0,quiz.timeLeft||0)).padStart(2,"0");
-    tEl.classList.toggle("low", (quiz.timeLeft||0)<=10);
+    const tEl=$("#timer"), tl=item.timeLeft||0;
+    tEl.textContent = "0:"+String(Math.max(0,tl)).padStart(2,"0");
+    tEl.classList.toggle("low", tl<=10);
     fillExplain();
+    updateNav();
     return;
   }
-  // timer 30s
-  let left=quiz.timeLeft||30; const tEl=$("#timer");
+  updateNav();
+  // timer 30s — re-rendering the same unanswered question (language
+  // switch, stepping back and forth) keeps the time it had left
+  let left = (quiz._shownIdx===quiz.idx && quiz.timeLeft>0) ? quiz.timeLeft : 30;
+  quiz._shownIdx = quiz.idx;
+  const tEl=$("#timer");
   const paint=()=>{ quiz.timeLeft=left; tEl.textContent = "0:"+String(left).padStart(2,"0"); tEl.classList.toggle("low", left<=10); };
   paint();
   timerId=setInterval(()=>{ left--; paint(); if(left<=0){ stopTimer(); answer(-1,true); } },1000);
@@ -1350,6 +1460,7 @@ function answer(pos, timedOut){
   stopTimer();
   quiz.answered=true; quiz.chosenPos=pos; quiz.timedOut=!!timedOut;
   const item=quiz.qs[quiz.idx], q=item.q;
+  item.answered=true; item.chosenPos=pos; item.timedOut=!!timedOut; item.timeLeft=quiz.timeLeft;
   const ok = pos===item.correctPos;
   if(ok) quiz.score++;
   quiz.results.push({ q, chosenPos:pos, item });
@@ -1361,7 +1472,8 @@ function answer(pos, timedOut){
     else if(p===pos) b.classList.add("wrong");
   });
   fillExplain();
-  const nb0=$("#nextBtn"); if(nb0) nb0.focus();
+  updateNav();
+  const nb0=$("#nextQBtn"); if(nb0) nb0.focus();
 }
 function fillExplain(){
   const d=ui(), item=quiz.qs[quiz.idx], q=item.q;
@@ -1370,7 +1482,7 @@ function fillExplain(){
   const en = lang==="en";
   const chosenTxt = pos<0 ? d.notAnswered : (en? q.o_en[item.order[pos]] : q.o_vi[item.order[pos]]);
   const rightTxt = en? q.o_en[q.a] : q.o_vi[q.a];
-  const ex=$("#explain"); if(!ex) return; ex.classList.add("show");
+  const ex=$("#explainTop"); if(!ex) return; ex.classList.add("show");
   ex.innerHTML = `
     <p class="verdict ${ok?"ok":"no"}">${timedOut? d.timeUp+" " : ""}${ok? d.correct : d.wrong}</p>
     ${ok?"":`<p>${d.yourAnswer}<b>${chosenTxt}</b><br>${d.rightAnswer}<b>${rightTxt}</b></p>`}
@@ -1378,6 +1490,7 @@ function fillExplain(){
       <button type="button" class="ghostbtn" id="viewVerseBtn">${d.viewVerse}</button></div>`;
   $("#viewVerseBtn").addEventListener("click",()=>{
     const [bi,ch,v]=q.ref, b=BOOKS[bi];
+    document.body.classList.remove("quizzing");
     activeTab="lookup";
     $$("[data-tab]").forEach(x=>x.setAttribute("aria-selected", String(x.dataset.tab==="lookup")));
     $("#view-lookup").classList.remove("hidden"); $("#view-quiz").classList.add("hidden");
@@ -1388,16 +1501,19 @@ function fillExplain(){
     const t=$("#readerArea").querySelector(`.verse[data-v="${v}"]`);
     if(t){ t.classList.add("open"); t.scrollIntoView({behavior:"smooth", block:"center"}); }
   });
-  const nb=$("#nextBtn");
-  nb.textContent = quiz.idx>=quiz.qs.length-1 ? d.finish : d.nextQ;
-  nb.classList.remove("hidden");
-  nb.addEventListener("click",()=>{
-    quiz.idx++;
-    if(quiz.idx>=quiz.qs.length) finishQuiz(); else showQuestion();
-  });
 }
+$("#prevQBtn").addEventListener("click",()=>{
+  if(!quiz || quiz.idx<=0) return;
+  quiz.idx--; showQuestion();
+});
+$("#nextQBtn").addEventListener("click",()=>{
+  if(!quiz || !quiz.answered) return;
+  if(quiz.idx>=quiz.qs.length-1) finishQuiz();
+  else { quiz.idx++; showQuestion(); }
+});
 function finishQuiz(){
   stopTimer();
+  document.body.classList.remove("quizzing");
   if(best[quiz.setId]===undefined || quiz.score>best[quiz.setId]) best[quiz.setId]=quiz.score;
   quiz.finished=true;
   $("#quizRun").classList.add("hidden");
@@ -1434,6 +1550,7 @@ function renderDone(){
 }
 $("#quitQuiz").addEventListener("click",()=>{
   stopTimer(); quiz=null;
+  document.body.classList.remove("quizzing");
   $("#quizRun").classList.add("hidden"); $("#quizHome").classList.remove("hidden"); renderRoadmap();
 });
 
