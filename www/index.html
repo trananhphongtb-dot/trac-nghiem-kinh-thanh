@@ -115,6 +115,15 @@
       .verse .vtools button{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
         border-radius:999px; font-size:.78rem; font-weight:700; padding:3px 10px; min-height:1.8rem; }
       .verse.faved{ background:var(--gold-soft); }
+      .verse.speaking{ background:var(--gold-soft); box-shadow:inset 0 0 0 1.5px var(--gold); }
+      /* ---------- listen (text-to-speech) bar ---------- */
+      .listenbar{ display:flex; flex:none; flex-wrap:wrap; gap:6px; align-items:center; margin:0 0 8px; }
+      .listenbtn{ border:0; border-radius:9px; background:var(--accent); color:var(--accent-ink);
+        font-weight:800; font-size:.9rem; padding:5px 16px; min-height:2.15rem; }
+      .speedwrap{ display:inline-flex; align-items:center; gap:5px; margin-left:auto;
+        color:var(--ink2); font-size:.82rem; font-weight:700; }
+      .speedwrap select{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
+        border-radius:7px; padding:3px 6px; font:inherit; font-size:.85rem; font-weight:700; min-height:1.9rem; }
       .chapnav{ display:flex; flex:none; gap:6px; margin-top:8px; }
       .chapnav button{ flex:1 1 0; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:9px;
         font-weight:700; font-size:.88rem; padding:5px 12px; min-height:2.4rem; }
@@ -425,6 +434,8 @@ const I = {
     noSample:"Bản mẫu hiện có văn bản đầy đủ cho Sáng Thế Ký, Thi Thiên, Ma-thi-ơ và Phúc Âm Giăng. Sách này sẽ có trong bản đầy đủ.",
     readChapter:"Đọc chương", chapter:"Chương",
     prev:"← Chương trước", next:"Chương sau →",
+    listen:"Nghe", pauseListen:"Tạm dừng", resumeListen:"Đọc tiếp", stopListen:"Dừng hẳn",
+    speedLabel:"Tốc độ", noVoice:"Thiết bị này không có giọng đọc.",
     copy:"Sao chép", copied:"Đã sao chép câu ", favAdd:"Lưu yêu thích", favDel:"Bỏ yêu thích",
     favTitle:"Câu yêu thích của bạn", favEmpty:"Chưa có câu nào. Mở một chương, chạm vào câu để lưu lại.",
     searchRes:"Kết quả tìm", noRes:"Không tìm thấy trong các chương mẫu. Thử từ khóa khác, hoặc gõ địa chỉ như “Giăng 3:16”.",
@@ -456,6 +467,8 @@ const I = {
     noSample:"This sample includes full text for Genesis, Psalms, Matthew and John. This book arrives in the full version.",
     readChapter:"Read chapter", chapter:"Chapter",
     prev:"← Previous", next:"Next →",
+    listen:"Listen", pauseListen:"Pause", resumeListen:"Resume", stopListen:"Stop",
+    speedLabel:"Speed", noVoice:"This device has no text-to-speech voice.",
     copy:"Copy", copied:"Copied verse ", favAdd:"Save favorite", favDel:"Remove favorite",
     favTitle:"Your favorite verses", favEmpty:"None yet. Open a chapter and tap a verse to save it.",
     searchRes:"Search results", noRes:"Nothing found in the sample chapters. Try another keyword, or a reference like “John 3:16”.",
@@ -595,7 +608,7 @@ function syncLookup(){
   $("#readerArea").classList.toggle("hidden", !readerOpen);
   document.body.classList.toggle("reading", readerOpen);
 }
-function closeReader(){ saveReadPos(); readerOpen=false; syncLookup(); window.scrollTo({top:0, behavior:"smooth"}); }
+function closeReader(){ stopListen(); saveReadPos(); readerOpen=false; syncLookup(); window.scrollTo({top:0, behavior:"smooth"}); }
 /* Reading position, remembered per book on this device (same store the
    app already uses for language): reopening a book returns to the exact
    chapter and verse where reading stopped. */
@@ -645,6 +658,9 @@ function verseText(b,ch,v,which){ return b.data[ch][which][v-1]; }
 function renderReader(){
   const area=$("#readerArea"), b=BOOKS[curBook], d=ui();
   if(!b){ area.innerHTML=""; return; }
+  /* Playback belongs to one book + chapter + language: if this render is
+     for anything else (chapter nav, language switch), stop reading. */
+  if(tts && (tts.book!==curBook || tts.ch!==curChapter || tts.lk!==ttsLangKey())) stopListen();
   if(!b.data){
     area.innerHTML = `<div class="panel">
       ${readerBarHTML(b)}
@@ -679,12 +695,48 @@ function renderReader(){
   }
   area.innerHTML = `<div class="panel">
     ${readerBarHTML(b)}
+    <div class="listenbar">
+      <button type="button" class="listenbtn" data-listen="toggle">▶ ${d.listen}</button>
+      <button type="button" class="ghostbtn hidden" data-listen="stop">■ ${d.stopListen}</button>
+      <label class="speedwrap">${d.speedLabel}
+        <select data-listen="rate" aria-label="${d.speedLabel}">
+          <option value="0.75">0.75×</option>
+          <option value="1">1×</option>
+          <option value="1.25">1.25×</option>
+          <option value="1.5">1.5×</option>
+          <option value="2">2×</option>
+        </select>
+      </label>
+    </div>
     <div class="verses">${verses}</div>
     <div class="chapnav">
       <button type="button" data-nav="-1" ${pos<=0?"disabled":""}>${d.prev}</button>
       <button type="button" data-nav="1" ${pos>=chaps.length-1?"disabled":""}>${d.next}</button>
     </div></div>`;
   bindReaderBar(area);
+  const listenBar=area.querySelector(".listenbar");
+  if(listenBar){
+    listenBar.querySelector('[data-listen="toggle"]').addEventListener("click",()=>{
+      if(!tts) startListen(); else if(tts.paused) resumeListen(); else pauseListen();
+    });
+    listenBar.querySelector('[data-listen="stop"]').addEventListener("click",()=>stopListen());
+    listenBar.querySelector('[data-listen="rate"]').addEventListener("change",e=>{
+      ttsRate=parseFloat(e.target.value)||1;
+      if(tts){
+        tts.rate=ttsRate;
+        if(!tts.paused){   // restart the current verse at the new speed
+          tts.token=++ttsSeq;
+          try{ synth.cancel(); }catch(err){}
+          const token=tts.token;
+          setTimeout(()=>{ if(tts && tts.token===token) speakVerse(); }, 80);
+        }
+      }
+    });
+    paintListenBar();
+    /* A re-render of the same chapter (favorite tap) keeps the highlight
+       on the verse being read. */
+    if(tts && tts.book===curBook && tts.ch===curChapter) markSpeaking(tts.idx,false);
+  }
   const versesBox=area.querySelector(".verses");
   if(versesBox){
     versesBox.addEventListener("scroll",()=>{ clearTimeout(posSaveTimer); posSaveTimer=setTimeout(saveReadPos,200); },{passive:true});
@@ -725,6 +777,84 @@ function verseAction(act,v){
     $("#favCount").textContent=favs.size; renderReader(); renderFavs();
   }
 }
+/* ================= LISTEN (đọc thành tiếng) =================
+   Reads the open chapter aloud, verse by verse, with the device's own
+   text-to-speech voices (Google Text-to-Speech on Android) — no network,
+   no cost. The spoken language follows the text on screen: Vietnamese
+   text is read with a Vietnamese voice, English with an English one
+   (in "both" mode the main text is Vietnamese, so it reads Vietnamese).
+   The verse being read is highlighted and scrolled into view, and
+   playback stops by itself at the end of the chapter. */
+const synth = ("speechSynthesis" in window) ? window.speechSynthesis : null;
+let tts = null;      // {book, ch, lk, idx, rate, paused, token}
+let ttsRate = 1;
+let ttsSeq = 0;
+if(synth){ try{ synth.getVoices(); }catch(e){} }   // warm up the voice list
+function ttsLangKey(){ return lang==="en" ? "en" : "vi"; }
+function pickVoice(lk){
+  if(!synth) return null;
+  const vs = synth.getVoices() || [];
+  const norm = s => (s||"").toLowerCase().replace(/_/g,"-");
+  return vs.find(x=>norm(x.lang)===(lk==="vi" ? "vi-vn" : "en-us"))
+      || vs.find(x=>norm(x.lang).startsWith(lk)) || null;
+}
+function clearSpeakMark(){ $$("#readerArea .verse.speaking").forEach(el=>el.classList.remove("speaking")); }
+function markSpeaking(idx, scroll){
+  clearSpeakMark();
+  const el = document.querySelector('#readerArea .verse[data-v="'+(idx+1)+'"]');
+  if(el){ el.classList.add("speaking"); if(scroll!==false) el.scrollIntoView({block:"center", behavior:"smooth"}); }
+}
+function speakVerse(){
+  if(!tts || !synth) return;
+  const b = BOOKS[tts.book];
+  const arr = (b && b.data && b.data[tts.ch]) ? b.data[tts.ch][tts.lk] : null;
+  if(!arr || tts.idx >= arr.length){ stopListen(); return; }   // end of chapter: stop
+  markSpeaking(tts.idx);
+  const u = new SpeechSynthesisUtterance(arr[tts.idx]);
+  u.lang = tts.lk==="vi" ? "vi-VN" : "en-US";
+  const v = pickVoice(tts.lk); if(v) u.voice = v;
+  u.rate = tts.rate;
+  const token = tts.token, idx = tts.idx;
+  const advance = ()=>{ if(tts && tts.token===token && !tts.paused){ tts.idx = idx+1; speakVerse(); } };
+  u.onend = advance;
+  u.onerror = e => { if(e && (e.error==="canceled" || e.error==="interrupted")) return; advance(); };
+  try{ synth.speak(u); }catch(e){ stopListen(); }
+}
+function startListen(){
+  if(!synth){ toast(ui().noVoice); return; }
+  const b = BOOKS[curBook];
+  if(!b || !b.data || !b.data[curChapter]) return;
+  if(tts){ tts.token = ++ttsSeq; tts = null; }
+  try{ synth.cancel(); }catch(e){}
+  tts = { book:curBook, ch:curChapter, lk:ttsLangKey(), idx:0, rate:ttsRate, paused:false, token:++ttsSeq };
+  const token = tts.token;
+  paintListenBar();
+  /* A short beat after cancel(): speaking in the same tick can be
+     swallowed by some engines. */
+  setTimeout(()=>{ if(tts && tts.token===token) speakVerse(); }, 80);
+}
+function pauseListen(){ if(!tts || tts.paused) return; tts.paused = true; try{ synth.pause(); }catch(e){} paintListenBar(); }
+function resumeListen(){ if(!tts || !tts.paused) return; tts.paused = false; try{ synth.resume(); }catch(e){} paintListenBar(); }
+function stopListen(){
+  if(tts) tts.token = ++ttsSeq;
+  tts = null;
+  if(synth){ try{ synth.cancel(); }catch(e){} }
+  clearSpeakMark();
+  paintListenBar();
+}
+function paintListenBar(){
+  const bar = $("#readerArea .listenbar"); if(!bar) return;
+  const d = ui();
+  const toggle = bar.querySelector('[data-listen="toggle"]');
+  const stop = bar.querySelector('[data-listen="stop"]');
+  const sel = bar.querySelector('[data-listen="rate"]');
+  if(!toggle || !stop) return;
+  if(!tts){ toggle.textContent = "▶ " + d.listen; stop.classList.add("hidden"); }
+  else if(tts.paused){ toggle.textContent = "▶ " + d.resumeListen; stop.classList.remove("hidden"); }
+  else { toggle.textContent = "❚❚ " + d.pauseListen; stop.classList.remove("hidden"); }
+  if(sel) sel.value = String(tts ? tts.rate : ttsRate);
+}
+
 function renderFavs(){
   const area=$("#favArea"), d=ui();
   if(curTest!=="fav"){ area.innerHTML=""; return; }
