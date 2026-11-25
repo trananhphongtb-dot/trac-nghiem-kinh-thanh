@@ -53,7 +53,7 @@ jobs:
       - name: Build APK
         run: |
           cd android
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/debug.keystore -Pandroid.injected.signing.store.password=android -Pandroid.injected.signing.key.alias=androiddebugkey -Pandroid.injected.signing.key.password=android -Pandroid.injected.signing.store.type=pkcs12
       - uses: actions/upload-artifact@v4
         with:
           name: bible-quiz-apk
