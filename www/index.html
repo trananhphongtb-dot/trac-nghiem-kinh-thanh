@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="data:," />
-    <title>Bible Quiz · Trắc nghiệm Kinh Thánh</title>
-    <meta name="description" content="Free bilingual Bible quiz and lookup: read the Bible in English KJV and Vietnamese 1925, search by reference or keyword, and take 30-question quizzes drawn from a bank of 1,101 questions. Trắc nghiệm và tra cứu Kinh Thánh song ngữ: đọc Kinh Thánh bản Anh KJV và Việt 1925, tìm theo địa chỉ hoặc từ khóa, mỗi lượt thi 30 câu rút từ ngân hàng 1.101 câu hỏi." />
+    <title>Kinh Thánh: Nghe, Đọc &amp; Trắc nghiệm · Bible: Listen, Read &amp; Quiz</title>
+    <meta name="description" content="Kinh Thánh: nghe, đọc và trắc nghiệm — nghe đọc thành tiếng, đọc song ngữ Anh KJV và Việt 1925, tìm theo địa chỉ hoặc từ khóa, và làm trắc nghiệm 30 câu rút từ ngân hàng 1.101 câu hỏi. Bible: listen, read and quiz — listen aloud, read bilingually in English KJV and Vietnamese 1925, search by reference or keyword, and take 30-question quizzes drawn from a bank of 1,101 questions." />
     <script>
       /* If a language was chosen on a previous visit, skip the first-visit chooser. */
       try { var __savedLang = localStorage.getItem("kt-lang");
@@ -23,6 +23,7 @@
         --bg:#fbfaf6; --surface:#ffffff; --surface2:#f3eee1; --ink:#211a12; --ink2:#5c5342;
         --line:#ddd3ba; --accent:#7c2231; --accent-ink:#ffffff; --gold:#a97b12; --gold-soft:#f5e9c8;
         --good:#1e7a3c; --good-bg:#e2f2e5; --bad:#b3271e; --bad-bg:#fbe7e4;
+        --kara-bg:#ffd23f; --kara-ink:#211a12;
         --shadow:0 1px 2px rgba(60,45,10,.08),0 8px 24px rgba(60,45,10,.07);
         color-scheme: light dark;
       }
@@ -31,6 +32,7 @@
           --bg:#16120d; --surface:#201a12; --surface2:#2a2115; --ink:#f2ead8; --ink2:#bfae8f;
           --line:#453723; --accent:#d98a94; --accent-ink:#2a0e13; --gold:#d9a92f; --gold-soft:#3a2f14;
           --good:#6fce8b; --good-bg:#17301d; --bad:#ff9a8f; --bad-bg:#3a1712;
+          --kara-bg:#d9a92f; --kara-ink:#16120d;
           --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
         }
       }
@@ -116,22 +118,31 @@
         border-radius:999px; font-size:.78rem; font-weight:700; padding:3px 10px; min-height:1.8rem; }
       .verse.faved{ background:var(--gold-soft); }
       .verse.speaking{ background:var(--gold-soft); box-shadow:inset 0 0 0 1.5px var(--gold); }
+      /* karaoke: the word currently being read aloud */
+      .verse .vt .w{ border-radius:3px; padding:0 1px; margin:0 -1px; }
+      .verse .vt .w.kara{ background:var(--kara-bg); color:var(--kara-ink); font-weight:700; }
       /* ---------- listen (text-to-speech) bar ---------- */
-      .listenbar{ display:flex; flex:none; flex-wrap:wrap; gap:6px; align-items:center; margin:0 0 8px; }
+      /* One compact row: Listen · Speed · Time (Stop shrinks to a square
+         icon button while playing so the row still fits on one line). */
+      .listenbar{ display:flex; flex:none; flex-wrap:nowrap; gap:5px; align-items:center; margin:0 0 8px; }
       .listenbtn{ border:0; border-radius:9px; background:var(--accent); color:var(--accent-ink);
-        font-weight:800; font-size:.9rem; padding:5px 16px; min-height:2.15rem; }
-      .speedwrap{ display:inline-flex; align-items:center; gap:5px; margin-left:auto;
-        color:var(--ink2); font-size:.82rem; font-weight:700; }
-      .speedwrap select{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
-        border-radius:7px; padding:3px 6px; font:inherit; font-size:.85rem; font-weight:700; min-height:1.9rem; }
-      /* ---------- sleep timer (hẹn giờ tắt) ---------- */
-      .sleeprow{ display:flex; flex:none; flex-wrap:wrap; gap:5px; align-items:center; margin:0 0 8px; }
-      .sleeplabel{ color:var(--ink2); font-size:.82rem; font-weight:700; margin-right:2px; }
-      .sleepchip{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px;
-        font-size:.8rem; font-weight:700; padding:3px 10px; min-height:1.8rem; font-variant-numeric:tabular-nums; }
-      .sleepchip[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
-      .sleepcount{ font-weight:800; font-size:.88rem; color:var(--accent); font-variant-numeric:tabular-nums;
-        border:1px solid var(--accent); border-radius:999px; padding:2px 10px; }
+        font-weight:800; font-size:.88rem; padding:5px 12px; min-height:2.15rem; white-space:nowrap; }
+      .listenbar .stopbtn{ flex:none; padding:5px 9px; min-height:2.15rem; font-size:.85rem; line-height:1; }
+      .speedwrap{ display:inline-flex; align-items:center; gap:4px; margin-left:auto; flex:none;
+        color:var(--ink2); font-size:.78rem; font-weight:700; white-space:nowrap; }
+      .speedwrap select, .timewrap select{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
+        border-radius:7px; padding:3px 4px; font:inherit; font-size:.83rem; font-weight:700; min-height:1.9rem; }
+      /* ---------- sleep timer (hẹn giờ tắt): a "Time" dropdown like Speed;
+         once set, the closed select itself shows the live countdown and
+         tapping it opens the choices again ---------- */
+      .timewrap{ display:inline-flex; align-items:center; flex:none; }
+      .timewrap select{ font-variant-numeric:tabular-nums; }
+      .timewrap select.counting{ color:var(--accent); border-color:var(--accent); font-weight:800; }
+      @media (max-width:400px){
+        .listenbtn{ padding:5px 9px; font-size:.84rem; }
+        .speedwrap{ font-size:.72rem; gap:3px; }
+        .speedwrap select, .timewrap select{ font-size:.79rem; padding:3px 2px; }
+      }
       .chapnav{ display:flex; flex:none; gap:6px; margin-top:8px; }
       .chapnav button{ flex:1 1 0; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:9px;
         font-weight:700; font-size:.88rem; padding:5px 12px; min-height:2.4rem; }
@@ -286,7 +297,7 @@
     <!-- ============ FIRST-VISIT LANGUAGE CHOOSER ============ -->
     <section class="chooser" id="chooser" aria-label="Choose your language / Chọn ngôn ngữ">
       <div class="chooser-card">
-        <div class="chooser-brand">Bible Quiz · Trắc nghiệm Kinh Thánh</div>
+        <div class="chooser-brand">Kinh Thánh: Nghe, Đọc &amp; Trắc nghiệm<br /><span style="font-size:.8em;color:var(--ink2)">Bible: Listen, Read &amp; Quiz</span></div>
         <p class="chooser-sub">English KJV · Vietnamese 1925<br>Anh KJV · Việt 1925</p>
         <h1 class="chooser-h">Choose your language<br /><span>Chọn ngôn ngữ của bạn</span></h1>
         <button type="button" class="langopt rec" data-choose="en">
@@ -305,7 +316,7 @@
 
     <div class="wrap">
       <div class="topbar">
-        <div class="brand"><span data-i="brand">Kinh Thánh Song Ngữ</span>
+        <div class="brand"><span data-i="brand">Kinh Thánh: Nghe, Đọc &amp; Trắc nghiệm</span>
           <small data-i="brandsub">Việt 1925 · Anh KJV</small></div>
         <button type="button" class="iconbtn" id="settingsBtn" data-settings="1" aria-label="Settings · Cài đặt" title="Settings · Cài đặt">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -430,7 +441,7 @@ const QUIZ = {"gen": [{"q_vi": "Trong ngày thứ nhất, Đức Chúa Trời ph
 /* ================= I18N ================= */
 const I = {
   vi: {
-    brand:"Kinh Thánh Song Ngữ", brandsub:"Việt 1925 · Anh KJV",
+    brand:"Kinh Thánh: Nghe, Đọc & Trắc nghiệm", brandsub:"Việt 1925 · Anh KJV",
     settings:"Cài đặt", langLabel:"Ngôn ngữ", back:"← Quay lại",
     perQuizLabel:"Số câu mỗi lượt thi", aboutLabel:"Giới thiệu",
     settingsNote:"Lựa chọn ngôn ngữ được nhớ trên thiết bị này, lần mở sau app vào thẳng ngôn ngữ đã chọn. Đổi ở đây áp dụng ngay cho toàn bộ giao diện, tên sách, câu hỏi và giải thích.",
@@ -444,7 +455,7 @@ const I = {
     prev:"← Chương trước", next:"Chương sau →",
     listen:"Nghe", pauseListen:"Tạm dừng", resumeListen:"Đọc tiếp", stopListen:"Dừng hẳn",
     speedLabel:"Tốc độ", noVoice:"Thiết bị này không có giọng đọc.",
-    sleepTimer:"Hẹn giờ tắt (phút)", sleepOff:"Tắt", sleepSet:"Đã hẹn tắt sau ", sleepMin:" phút",
+    sleepTimer:"Hẹn giờ tắt", sleepOff:"Tắt hẹn giờ", sleepSet:"Đã hẹn tắt sau ", sleepMin:" phút",
     sleepDone:"Đã hết giờ hẹn — dừng đọc.",
     copy:"Sao chép", copied:"Đã sao chép câu ", favAdd:"Lưu yêu thích", favDel:"Bỏ yêu thích",
     favTitle:"Câu yêu thích của bạn", favEmpty:"Chưa có câu nào. Mở một chương, chạm vào câu để lưu lại.",
@@ -461,11 +472,11 @@ const I = {
     allRight:"Xuất sắc — không sai câu nào!", reviewTitle:"Xem lại các câu sai",
     notAnswered:"(chưa trả lời)", perQ:"mỗi câu 30 giây",
     bank:"Ngân hàng", testL:"Thi", randomNR:"ngẫu nhiên, không lặp",
-    searchPh:"Giăng 3:16 · Sáng 1:1 · hoặc từ khóa: sự sáng…", docTitle:"Trắc nghiệm Kinh Thánh",
+    searchPh:"Giăng 3:16 · Sáng 1:1 · hoặc từ khóa: sự sáng…", docTitle:"Kinh Thánh: Nghe, Đọc & Trắc nghiệm",
     foot:'Văn bản: Kinh Thánh Tiếng Việt 1925 (Tin Lành) và King James Version (KJV) — cả hai đều thuộc phạm vi công cộng. Văn bản tiếng Việt dùng ấn bản điện tử của bản 1925, đã chuẩn hoá dấu gạch nối so với bản in gốc. Bản mẫu gồm văn bản đầy đủ của Sáng Thế Ký 1–3, Thi Thiên 1 & 23, Ma-thi-ơ 5, Giăng 1 & 3; danh mục đủ 66 sách. Nguồn dữ liệu: kho JSON công khai <a href="https://github.com/thiagobodruk/bible" target="_blank" rel="noopener">thiagobodruk/bible</a> (Việt) và <a href="https://github.com/aruljohn/Bible-kjv" target="_blank" rel="noopener">aruljohn/Bible-kjv</a> (KJV).'
   },
   en: {
-    brand:"Bilingual Bible", brandsub:"Vietnamese 1925 · English KJV",
+    brand:"Bible: Listen, Read & Quiz", brandsub:"Vietnamese 1925 · English KJV",
     settings:"Settings", langLabel:"Language", back:"← Back",
     perQuizLabel:"Questions per attempt", aboutLabel:"About",
     settingsNote:"Your language choice is remembered on this device, so the app opens in it next time. Changing it here applies at once to the whole interface, book names, questions and explanations.",
@@ -479,7 +490,7 @@ const I = {
     prev:"← Previous", next:"Next →",
     listen:"Listen", pauseListen:"Pause", resumeListen:"Resume", stopListen:"Stop",
     speedLabel:"Speed", noVoice:"This device has no text-to-speech voice.",
-    sleepTimer:"Sleep timer (min)", sleepOff:"Off", sleepSet:"Sleep timer set: ", sleepMin:" min",
+    sleepTimer:"Sleep timer", sleepOff:"Timer off", sleepSet:"Sleep timer set: ", sleepMin:" min",
     sleepDone:"Sleep timer ended — reading stopped.",
     copy:"Copy", copied:"Copied verse ", favAdd:"Save favorite", favDel:"Remove favorite",
     favTitle:"Your favorite verses", favEmpty:"None yet. Open a chapter and tap a verse to save it.",
@@ -496,7 +507,7 @@ const I = {
     allRight:"Excellent — no mistakes!", reviewTitle:"Review your mistakes",
     notAnswered:"(no answer)", perQ:"30 seconds each",
     bank:"Bank", testL:"Test", randomNR:"random, no repeats",
-    searchPh:"John 3:16 · Genesis 1:1 · or a keyword: light…", docTitle:"Bible Quiz",
+    searchPh:"John 3:16 · Genesis 1:1 · or a keyword: light…", docTitle:"Bible: Listen, Read & Quiz",
     foot:'Texts: Vietnamese Bible 1925 (Protestant) and the King James Version (KJV) — both public domain. The Vietnamese text follows an electronic edition of the 1925 translation with hyphenation normalized from the original printing. This sample carries the full text of Genesis 1–3, Psalms 1 & 23, Matthew 5, John 1 & 3, with the full 66-book catalog. Data sources: public JSON repos <a href="https://github.com/thiagobodruk/bible" target="_blank" rel="noopener">thiagobodruk/bible</a> (Vietnamese) and <a href="https://github.com/aruljohn/Bible-kjv" target="_blank" rel="noopener">aruljohn/Bible-kjv</a> (KJV).'
   }
 };
@@ -533,7 +544,7 @@ function applyLang(){
   $$("[data-lang]").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.lang===lang)));
   const d = ui();
   document.documentElement.lang = lang==="en" ? "en" : "vi";
-  document.title = !langChosen ? "Bible Quiz · Trắc nghiệm Kinh Thánh" : lang==="both" ? "Trắc nghiệm Kinh Thánh · Bible Quiz" : d.docTitle;
+  document.title = !langChosen ? "Kinh Thánh: Nghe, Đọc & Trắc nghiệm · Bible: Listen, Read & Quiz" : lang==="both" ? "Kinh Thánh: Nghe, Đọc & Trắc nghiệm · Bible: Listen, Read & Quiz" : d.docTitle;
   $$("[data-i]").forEach(el=>{ const k=el.dataset.i; if(d[k]!==undefined) el.innerHTML=d[k]; });
   const si=$("#searchInput"); if(si) si.placeholder = d.searchPh;
   const ab=$("#aboutText"); if(ab) ab.innerHTML = d.foot;
@@ -667,6 +678,19 @@ function openBook(i){
   window.scrollTo({top:0, behavior:"smooth"});
 }
 function verseText(b,ch,v,which){ return b.data[ch][which][v-1]; }
+const escapeHtml = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+/* Split a verse into one span per word, each carrying its start/end
+   character offsets in the raw text — the same offsets the speech
+   engines report for the word being read (karaoke highlighting). */
+function verseWordsHTML(text){
+  let out="", last=0, m; const re=/\S+/g;
+  while((m=re.exec(text))){
+    out += escapeHtml(text.slice(last, m.index));
+    out += '<span class="w" data-s="'+m.index+'" data-e="'+(m.index+m[0].length)+'">'+escapeHtml(m[0])+'</span>';
+    last = m.index + m[0].length;
+  }
+  return out + escapeHtml(text.slice(last));
+}
 function renderReader(){
   const area=$("#readerArea"), b=BOOKS[curBook], d=ui();
   if(!b){ area.innerHTML=""; return; }
@@ -689,7 +713,7 @@ function renderReader(){
     const alt = lang==="both" ? `<span class="vt alt">${verseText(b,curChapter,v,"en")}</span>` : "";
     return `<div class="verse ${faved?"faved":""}" data-v="${v}" tabindex="0" role="button"
         aria-label="${refLabel(curBook,curChapter,v)}">
-      <span class="n">${v}</span><span class="vt">${main}</span>${alt}
+      <span class="n">${v}</span><span class="vt mainvt">${verseWordsHTML(main)}</span>${alt}
       <span class="vtools">
         <button type="button" data-act="copy">${d.copy}</button>
         <button type="button" data-act="fav">${faved?"♥ "+d.favDel:"♡ "+d.favAdd}</button>
@@ -709,7 +733,7 @@ function renderReader(){
     ${readerBarHTML(b)}
     <div class="listenbar">
       <button type="button" class="listenbtn" data-listen="toggle">▶ ${d.listen}</button>
-      <button type="button" class="ghostbtn hidden" data-listen="stop">■ ${d.stopListen}</button>
+      <button type="button" class="ghostbtn stopbtn hidden" data-listen="stop" title="${d.stopListen}" aria-label="${d.stopListen}">■</button>
       <label class="speedwrap">${d.speedLabel}
         <select data-listen="rate" aria-label="${d.speedLabel}">
           <option value="0.75">0.75×</option>
@@ -719,11 +743,13 @@ function renderReader(){
           <option value="2">2×</option>
         </select>
       </label>
-    </div>
-    <div class="sleeprow" role="group" aria-label="${d.sleepTimer}">
-      <span class="sleeplabel">⏱ ${d.sleepTimer}</span>
-      ${[0,15,20,30,45,60,90].map(m=>`<button type="button" class="sleepchip" data-sleep="${m}" aria-pressed="false">${m===0?d.sleepOff:m}</button>`).join("")}
-      <span class="sleepcount hidden" data-sleep-count role="timer"></span>
+      <label class="timewrap" title="${d.sleepTimer}">
+        <select data-listen="sleep" aria-label="${d.sleepTimer}">
+          <option value="__count" data-count-opt>Time</option>
+          <option value="0">${d.sleepOff}</option>
+          ${[15,20,30,45,60,90].map(m=>`<option value="${m}">${m}m</option>`).join("")}
+        </select>
+      </label>
     </div>
     <div class="verses">${verses}</div>
     <div class="chapnav">
@@ -749,20 +775,17 @@ function renderReader(){
         }
       }
     });
+    const sleepSel = listenBar.querySelector('[data-listen="sleep"]');
+    if(sleepSel) sleepSel.addEventListener("change", e=>{
+      const v = e.target.value;
+      if(v==="__count") { paintSleepRow(); return; }   // the countdown face itself: keep the running timer
+      setSleepTimer(+v||0);
+    });
     paintListenBar();
+    paintSleepRow();
     /* A re-render of the same chapter (favorite tap) keeps the highlight
        on the verse being read. */
     if(tts && tts.book===curBook && tts.ch===curChapter) markSpeaking(tts.idx,false);
-  }
-  const sleepRow=area.querySelector(".sleeprow");
-  if(sleepRow){
-    sleepRow.querySelectorAll("[data-sleep]").forEach(chip=>chip.addEventListener("click",()=>{
-      const m=+chip.dataset.sleep;
-      /* Tapping the active option again cancels the timer. */
-      if(m>0 && sleepT && sleepT.mins===m) setSleepTimer(0);
-      else setSleepTimer(m);
-    }));
-    paintSleepRow();
   }
   const versesBox=area.querySelector(".verses");
   if(versesBox){
@@ -821,8 +844,13 @@ function verseAction(act,v){
    read with a Vietnamese voice, English with an English one (in "both"
    mode the main text is Vietnamese, so it reads Vietnamese). The verse
    being read is highlighted and scrolled into view, and playback stops
-   by itself at the end of the chapter. A sleep timer (15–90 minutes)
-   can stop playback automatically, with a live countdown. */
+   by itself at the end of the chapter. Where the engine reports word
+   positions (the native plugin's onRangeStart event, or the Web Speech
+   boundary event), the word being read is highlighted karaoke-style;
+   engines that report none keep the verse-level highlight only. A
+   sleep timer (15–90 minutes), chosen from the Time dropdown in the
+   same row, can stop playback automatically; while it runs, the
+   dropdown's closed face shows the live countdown. */
 const synth = ("speechSynthesis" in window) ? window.speechSynthesis : null;
 const capTTS = (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.TextToSpeech) || null;
 const plainTTS = (!capTTS && window.NativeTTS && typeof window.NativeTTS.speak === "function") ? window.NativeTTS : null;
@@ -849,8 +877,46 @@ function haltSpeech(){
   if(synth){ try{ synth.cancel(); }catch(e){} }
 }
 function clearSpeakMark(){ $$("#readerArea .verse.speaking").forEach(el=>el.classList.remove("speaking")); }
+/* ---------- karaoke word highlighting ----------
+   The native plugin reports the character range of the word currently
+   being spoken through its onRangeStart event; the Web Speech fallback
+   reports the same through the utterance boundary event. When an engine
+   reports no word positions at all, nothing here ever fires and the
+   verse-level highlight above stays as the only marker. */
+function clearKara(){ $$("#readerArea .w.kara").forEach(el=>el.classList.remove("kara")); }
+function highlightWord(start, end){
+  if(!tts) return;
+  const verseEl = document.querySelector('#readerArea .verse[data-v="'+(tts.idx+1)+'"]');
+  if(!verseEl) return;
+  const words = verseEl.querySelectorAll(".vt.mainvt .w");
+  let hit = null;
+  for(const w of words){
+    const s=+w.dataset.s, e=+w.dataset.e;
+    if(start>=s && start<e){ hit=w; break; }
+    if(end!=null && end>s && start<e){ hit=w; break; }
+  }
+  if(!hit){
+    for(const w of words){ if(+w.dataset.s>=start){ hit=w; break; } }
+  }
+  if(!hit) return;
+  words.forEach(w=>w.classList.toggle("kara", w===hit));
+}
+if(capTTS && typeof capTTS.addListener==="function"){
+  try{
+    capTTS.addListener("onRangeStart", info=>{
+      if(!tts || tts.paused || !info) return;
+      const s = (info.start!=null) ? +info.start : (info.charIndex!=null ? +info.charIndex : null);
+      if(s==null || isNaN(s)) return;
+      let e = null;
+      if(info.end!=null) e = +info.end;
+      else if(info.charLength!=null) e = s + (+info.charLength);
+      else if(info.spokenWord) e = s + String(info.spokenWord).length;
+      highlightWord(s, e);
+    });
+  }catch(e){}
+}
 function markSpeaking(idx, scroll){
-  clearSpeakMark();
+  clearSpeakMark(); clearKara();
   const el = document.querySelector('#readerArea .verse[data-v="'+(idx+1)+'"]');
   if(el){ el.classList.add("speaking"); if(scroll!==false) el.scrollIntoView({block:"center", behavior:"smooth"}); }
 }
@@ -876,6 +942,11 @@ function speakVerse(){
   u.lang = tts.lk==="vi" ? "vi-VN" : "en-US";
   const v = pickVoice(tts.lk); if(v) u.voice = v;
   u.rate = tts.rate;
+  u.onboundary = ev=>{
+    if(!tts || tts.token!==token || tts.utter!==utter || tts.paused) return;
+    if(!ev || ev.charIndex==null) return;
+    highlightWord(+ev.charIndex, ev.charLength!=null ? +ev.charIndex + (+ev.charLength) : null);
+  };
   u.onend = advance;
   u.onerror = e => { if(e && (e.error==="canceled" || e.error==="interrupted")) return; advance(); };
   try{ synth.speak(u); }catch(e){ stopListen(); }
@@ -911,7 +982,7 @@ function stopListen(){
   if(tts) tts.token = ++ttsSeq;
   tts = null;
   haltSpeech();
-  clearSpeakMark();
+  clearSpeakMark(); clearKara();
   paintListenBar();
 }
 /* ================= SLEEP TIMER (hẹn giờ tắt) =================
@@ -942,15 +1013,16 @@ function tickSleepTimer(){
   paintSleepRow();
 }
 function paintSleepRow(){
-  const row = $("#readerArea .sleeprow"); if(!row) return;
-  row.querySelectorAll("[data-sleep]").forEach(chip=>{
-    chip.setAttribute("aria-pressed", String(sleepT ? (+chip.dataset.sleep===sleepT.mins) : (+chip.dataset.sleep===0)));
-  });
-  const count = row.querySelector("[data-sleep-count]");
-  if(count){
-    if(sleepT){ count.textContent = fmtCountdown(sleepT.end - Date.now()); count.classList.remove("hidden"); }
-    else count.classList.add("hidden");
+  const sel = $("#readerArea .listenbar select[data-listen=\"sleep\"]"); if(!sel) return;
+  const face = sel.querySelector("[data-count-opt]"); if(!face) return;
+  if(sleepT){
+    face.textContent = "⏱ " + fmtCountdown(sleepT.end - Date.now());
+    sel.classList.add("counting");
+  } else {
+    face.textContent = "Time";
+    sel.classList.remove("counting");
   }
+  sel.value = "__count";   // the closed select always shows the Time / countdown face
 }
 function paintListenBar(){
   const bar = $("#readerArea .listenbar"); if(!bar) return;
