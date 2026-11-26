@@ -52,11 +52,11 @@
       :focus-visible{ outline:3px solid var(--gold); outline-offset:2px; border-radius:6px; }
 
       /* ---------- top strip ---------- */
-      .topbar{ display:flex; flex:none; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between;
+      .topbar{ display:flex; flex:none; flex-wrap:nowrap; gap:8px; align-items:center; justify-content:space-between;
         padding:6px 0 5px; }
       .iconbtn{ flex:none; width:2.15rem; height:2.15rem; min-height:2.15rem; padding:0; display:grid; place-items:center;
         border:1px solid var(--line); background:var(--surface); color:var(--ink2); border-radius:50%; }
-      .brand{ font-family:"Noto Serif",serif; font-weight:900; font-size:1.1rem; letter-spacing:.01em; line-height:1.15; }
+      .brand{ flex:1 1 auto; min-width:0; font-family:"Noto Serif",serif; font-weight:900; font-size:1.1rem; letter-spacing:.01em; line-height:1.15; }
       .brand small{ display:block; font-family:"Be Vietnam Pro",sans-serif; font-weight:600; font-size:.64rem;
         color:var(--ink2); letter-spacing:.08em; text-transform:uppercase; }
       .seg{ display:inline-flex; background:var(--surface2); border:1px solid var(--line); border-radius:999px; padding:2px; }
@@ -111,17 +111,25 @@
       .verse.open .vtools{ display:flex; }
       .verse .vtools button{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
         border-radius:999px; font-size:.78rem; font-weight:700; padding:3px 10px; min-height:1.8rem; }
-      .verse.faved{ background:var(--gold-soft); }
+      /* favorite chapters: heart beside the book name in the reader bar,
+         and tappable chapter rows in the Favorites list outside */
+      .heartbtn{ font-size:1.12rem; line-height:1; }
+      .heartbtn.on{ color:var(--accent); border-color:var(--accent); }
+      .favlist{ display:flex; flex-direction:column; gap:5px; }
+      .favchap{ display:flex; align-items:center; gap:9px; width:100%; text-align:left; border:1px solid var(--line);
+        background:var(--surface); border-radius:9px; padding:8px 12px; color:var(--ink); min-height:2.4rem; box-shadow:var(--shadow); }
+      .favchap .fh{ color:var(--accent); font-size:1rem; flex:none; }
+      .favchap .fr{ flex:1; font-family:"Noto Serif",serif; font-weight:700; font-size:.98rem; }
+      .favchap .fgo{ color:var(--ink2); font-size:1.15rem; flex:none; }
       /* karaoke: the word currently being read aloud */
       .verse .vt .w{ border-radius:3px; padding:0 1px; margin:0 -1px; }
       .verse .vt .w.kara{ background:var(--kara-bg); color:var(--kara-ink); font-weight:700; }
       /* ---------- listen (text-to-speech) bar ---------- */
-      /* One compact row: Listen · Speed · Time (Stop shrinks to a square
-         icon button while playing so the row still fits on one line). */
+      /* One compact row: Listen/Stop (one button that flips label) ·
+         Speed · Time. */
       .listenbar{ display:flex; flex:none; flex-wrap:nowrap; gap:5px; align-items:center; margin:0 0 8px; }
       .listenbtn{ border:0; border-radius:9px; background:var(--accent); color:var(--accent-ink);
         font-weight:800; font-size:.88rem; padding:5px 12px; min-height:2.15rem; white-space:nowrap; }
-      .listenbar .stopbtn{ flex:none; padding:5px 9px; min-height:2.15rem; font-size:.85rem; line-height:1; }
       .speedwrap{ display:inline-flex; align-items:center; gap:4px; margin-left:auto; flex:none;
         color:var(--ink2); font-size:.78rem; font-weight:700; white-space:nowrap; }
       .speedwrap select, .timewrap select{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
@@ -399,8 +407,8 @@ const I = {
     speedLabel:"Tốc độ", noVoice:"Thiết bị này không có giọng đọc.",
     sleepTimer:"Hẹn giờ tắt", sleepOff:"Tắt hẹn giờ", sleepSet:"Đã hẹn tắt sau ", sleepMin:" phút",
     sleepDone:"Đã hết giờ hẹn — dừng đọc.",
-    copy:"Sao chép", copied:"Đã sao chép câu ", favAdd:"Lưu yêu thích", favDel:"Bỏ yêu thích",
-    favTitle:"Câu yêu thích của bạn", favEmpty:"Chưa có câu nào. Mở một chương, chạm vào câu để lưu lại.",
+    copy:"Sao chép", copied:"Đã sao chép câu ", favAdd:"Lưu chương yêu thích", favDel:"Bỏ yêu thích chương",
+    favTitle:"Chương yêu thích của bạn", favEmpty:"Chưa có chương nào. Mở một chương để đọc, chạm vào trái tim ♡ cạnh tên sách ở đầu trang đọc để lưu chương vào đây.",
     searchRes:"Kết quả tìm", noRes:"Không tìm thấy trong bản dịch đang chọn. Thử từ khóa khác, hoặc gõ địa chỉ như “Giăng 3:16”.",
     notInSample:"Câu này không có trong bản dịch đang chọn.", foundIn:"Tìm thấy",
     stage:"Chặng", questions:"câu", start:"Vào thi", review:"Ôn ngay",
@@ -436,8 +444,8 @@ const I = {
     speedLabel:"Speed", noVoice:"This device has no text-to-speech voice.",
     sleepTimer:"Sleep timer", sleepOff:"Timer off", sleepSet:"Sleep timer set: ", sleepMin:" min",
     sleepDone:"Sleep timer ended — reading stopped.",
-    copy:"Copy", copied:"Copied verse ", favAdd:"Save favorite", favDel:"Remove favorite",
-    favTitle:"Your favorite verses", favEmpty:"None yet. Open a chapter and tap a verse to save it.",
+    copy:"Copy", copied:"Copied verse ", favAdd:"Save chapter as favorite", favDel:"Remove chapter favorite",
+    favTitle:"Your favorite chapters", favEmpty:"None yet. Open a chapter to read and tap the ♡ heart beside the book name at the top of the reading page to save the chapter here.",
     searchRes:"Search results", noRes:"Nothing found in the selected translation. Try another keyword, or a reference like “John 3:16”.",
     notInSample:"That verse is not in the selected translation.", foundIn:"Found",
     stage:"Stage", questions:"questions", start:"Start", review:"Review now",
@@ -515,7 +523,7 @@ function pickTextLang(code){
   applyLang(); ensureTexts();
 }
 let curBook = 0, curChapter = 1, curTest = "ot";
-const favs = new Set();        // "bookIdx:ch:v"
+const favs = new Set();        // "bookIdx:ch" — favorite chapters
 const best = {};               // setId -> score
 let wrongPool = [];            // question objects missed this session
 const $ = s => document.querySelector(s);
@@ -641,17 +649,40 @@ function saveReadPos(){
 }
 const GLOBE_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>';
 function readerBarHTML(b){
+  const d=ui(), faved=favs.has(curBook+":"+curChapter);
   return `<div class="readerbar">
     <button type="button" class="iconbtn" data-back="1" aria-label="Back" title="Back">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
     </button>
     <h2 class="rtitle">${bookName(b, curBook)}</h2>
+    <button type="button" class="iconbtn heartbtn${faved?" on":""}" data-favheart="1" aria-pressed="${faved}"
+      aria-label="${faved?d.favDel:d.favAdd}" title="${faved?d.favDel:d.favAdd}">${faved?"♥":"♡"}</button>
     <button type="button" class="iconbtn" data-settings="1" aria-label="Language" title="Language">${GLOBE_SVG}</button>
   </div>`;
 }
 function bindReaderBar(area){
   const back=area.querySelector("[data-back]"); if(back) back.addEventListener("click", closeReader);
   const set=area.querySelector("[data-settings]"); if(set) set.addEventListener("click", openSettings);
+  const heart=area.querySelector("[data-favheart]"); if(heart) heart.addEventListener("click", toggleChapterFav);
+}
+/* Favorites are whole chapters: the heart beside the book name in the
+   reader marks the chapter being read; favorited chapters then show up
+   in the Favorites list on the Contents page. The heart is repainted in
+   place so toggling never disturbs the reading spot or the playback. */
+function toggleChapterFav(){
+  const key=curBook+":"+curChapter, d=ui();
+  const on = !favs.has(key);
+  if(on) favs.add(key); else favs.delete(key);
+  $("#favCount").textContent=favs.size;
+  const heart=$("#readerArea [data-favheart]");
+  if(heart){
+    heart.textContent = on ? "♥" : "♡";
+    heart.classList.toggle("on", on);
+    heart.setAttribute("aria-pressed", String(on));
+    heart.setAttribute("aria-label", on ? d.favDel : d.favAdd);
+    heart.title = on ? d.favDel : d.favAdd;
+  }
+  renderFavs();
 }
 function openBook(i){
   curBook=i; const b=BOOKS[i];
@@ -698,14 +729,13 @@ function renderReader(){
   const chaps = Array.from({length:b.ch},(_,i)=>i+1);
   if(curChapter<1 || curChapter>b.ch) curChapter = 1;
   const verses = mainArr.map((_,idx)=>{
-    const v=idx+1, key=curBook+":"+curChapter+":"+v, faved=favs.has(key);
+    const v=idx+1;
     const main = verseText(curBook,curChapter,v,textLang);
-    return `<div class="verse ${faved?"faved":""}" data-v="${v}" tabindex="0" role="button"
+    return `<div class="verse" data-v="${v}" tabindex="0" role="button"
         aria-label="${refLabel(curBook,curChapter,v)}">
       <span class="n">${v}</span><span class="vt mainvt">${verseWordsHTML(main)}</span>
       <span class="vtools">
         <button type="button" data-act="copy">${d.copy}</button>
-        <button type="button" data-act="fav">${faved?"♥ "+d.favDel:"♡ "+d.favAdd}</button>
       </span></div>`;
   }).join("");
   const pos = chaps.indexOf(curChapter);
@@ -722,7 +752,6 @@ function renderReader(){
     ${readerBarHTML(b)}
     <div class="listenbar">
       <button type="button" class="listenbtn" data-listen="toggle">▶ ${d.listen}</button>
-      <button type="button" class="ghostbtn stopbtn hidden" data-listen="stop" title="${d.stopListen}" aria-label="${d.stopListen}">■</button>
       <label class="speedwrap">${d.speedLabel}
         <select data-listen="rate" aria-label="${d.speedLabel}">
           <option value="0.75">0.75×</option>
@@ -749,9 +778,8 @@ function renderReader(){
   const listenBar=area.querySelector(".listenbar");
   if(listenBar){
     listenBar.querySelector('[data-listen="toggle"]').addEventListener("click",()=>{
-      if(!tts) startListen(); else if(tts.paused) resumeListen(); else pauseListen();
+      if(!tts) startListen(); else stopListen();
     });
-    listenBar.querySelector('[data-listen="stop"]').addEventListener("click",()=>stopListen());
     listenBar.querySelector('[data-listen="rate"]').addEventListener("change",e=>{
       ttsRate=parseFloat(e.target.value)||1;
       if(tts){
@@ -807,13 +835,10 @@ function renderReader(){
   });
 }
 function verseAction(act,v){
-  const key=curBook+":"+curChapter+":"+v, d=ui(), b=BOOKS[curBook];
+  const d=ui();
   if(act==="copy"){
     const txt = refLabel(curBook,curChapter,v)+" — "+verseText(curBook,curChapter,v,textLang);
     if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>toast(d.copied+refLabel(curBook,curChapter,v)));
-  } else {
-    favs.has(key) ? favs.delete(key) : favs.add(key);
-    $("#favCount").textContent=favs.size; renderReader(); renderFavs();
   }
 }
 /* ================= LISTEN (đọc thành tiếng) =================
@@ -954,20 +979,6 @@ function startListen(){
      swallowed by some engines. */
   setTimeout(()=>{ if(tts && tts.token===token) speakVerse(); }, 80);
 }
-function pauseListen(){
-  if(!tts || tts.paused) return;
-  tts.paused = true;
-  if(nativeTTS) haltSpeech();            // native engines stop; Resume re-reads the current verse
-  else if(synth){ try{ synth.pause(); }catch(e){} }
-  paintListenBar();
-}
-function resumeListen(){
-  if(!tts || !tts.paused) return;
-  tts.paused = false;
-  if(nativeTTS) speakVerse();
-  else if(synth){ try{ synth.resume(); }catch(e){} }
-  paintListenBar();
-}
 function stopListen(){
   if(tts) tts.token = ++ttsSeq;
   tts = null;
@@ -1014,16 +1025,16 @@ function paintSleepRow(){
   }
   sel.value = "__count";   // the closed select always shows the Time / countdown face
 }
+/* One button does both jobs: idle it reads "▶ Listen"; while the
+   chapter is being read it flips to "■ Stop", and tapping it stops
+   playback and flips the label straight back to "▶ Listen". */
 function paintListenBar(){
   const bar = $("#readerArea .listenbar"); if(!bar) return;
   const d = ui();
   const toggle = bar.querySelector('[data-listen="toggle"]');
-  const stop = bar.querySelector('[data-listen="stop"]');
   const sel = bar.querySelector('[data-listen="rate"]');
-  if(!toggle || !stop) return;
-  if(!tts){ toggle.textContent = "▶ " + d.listen; stop.classList.add("hidden"); }
-  else if(tts.paused){ toggle.textContent = "▶ " + d.resumeListen; stop.classList.remove("hidden"); }
-  else { toggle.textContent = "❚❚ " + d.pauseListen; stop.classList.remove("hidden"); }
+  if(!toggle) return;
+  toggle.textContent = !tts ? "▶ " + d.listen : "■ " + d.stopListen;
   if(sel) sel.value = String(tts ? tts.rate : ttsRate);
 }
 
@@ -1032,12 +1043,18 @@ function renderFavs(){
   if(curTest!=="fav"){ area.innerHTML=""; return; }
   if(!favs.size){ area.innerHTML=`<h3 style="margin:8px 0 6px">${d.favTitle}</h3><div class="empty">${d.favEmpty}</div>`; return; }
   const items=[...favs].map(key=>{
-    const [bi,ch,v]=key.split(":").map(Number), b=BOOKS[bi];
-    const main = verseText(bi,ch,v,textLang);
-    return `<div class="verse faved"><span class="rref" style="font-weight:800;color:var(--accent)">${refLabel(bi,ch,v)}</span><br>
-      <span class="n">${v}</span><span class="vt">${main}</span></div>`;
+    const [bi,ch]=key.split(":").map(Number);
+    return `<button type="button" class="favchap" data-favchap="${bi}:${ch}">
+      <span class="fh" aria-hidden="true">♥</span><span class="fr">${refLabel(bi,ch)}</span>
+      <span class="fgo" aria-hidden="true">›</span></button>`;
   }).join("");
-  area.innerHTML = `<div class="results"><h3 style="margin:8px 0 2px">${d.favTitle} (${favs.size})</h3>${items}</div>`;
+  area.innerHTML = `<h3 style="margin:8px 0 6px">${d.favTitle} (${favs.size})</h3><div class="favlist">${items}</div>`;
+  area.querySelectorAll("[data-favchap]").forEach(btn=>btn.addEventListener("click",()=>{
+    const [bi,ch]=btn.dataset.favchap.split(":").map(Number), b=BOOKS[bi];
+    curTest=b.ot?"ot":"nt";
+    $$("[data-test]").forEach(x=>x.setAttribute("aria-pressed", String(x.dataset.test===curTest)));
+    curBook=bi; curChapter=ch; readerOpen=true; syncLookup(); renderBooks(); renderReader(); renderFavs();
+  }));
 }
 
 /* ---- search ---- */
