@@ -57,7 +57,7 @@
       .iconbtn{ flex:none; width:2.15rem; height:2.15rem; min-height:2.15rem; padding:0; display:grid; place-items:center;
         border:1px solid var(--line); background:var(--surface); color:var(--ink2); border-radius:50%; }
       .brand{ flex:1 1 auto; min-width:0; font-family:"Noto Serif",serif; font-weight:900; font-size:1.1rem; letter-spacing:.01em; line-height:1.15;
-        white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        overflow-wrap:anywhere; }
       /* The language name sits right beside the globe button, on the
          same single row as the title — it never wraps and never drops
          onto a line of its own. */
@@ -1044,13 +1044,13 @@ function paintListenBar(){
 function renderFavs(){
   const area=$("#favArea"), d=ui();
   if(curTest!=="fav"){ area.innerHTML=""; return; }
-  if(!favs.size){ area.innerHTML=`<h3 style="margin:8px 0 6px">${d.favTitle}</h3><div class="empty">${d.favEmpty}</div>`; return; }
+  if(!favs.size){ area.innerHTML=`<div class="empty" style="margin-top:8px">${d.favEmpty}</div>`; return; }
   const items=[...favs].map(key=>{
     const [bi,ch]=key.split(":").map(Number);
     return `<button type="button" class="book has" data-favchap="${bi}:${ch}" title="${refLabel(bi,ch)}">
       <b>${refLabel(bi,ch)}</b></button>`;
   }).join("");
-  area.innerHTML = `<h3 style="margin:8px 0 6px">${d.favTitle} (${favs.size})</h3><div class="bookgrid">${items}</div>`;
+  area.innerHTML = `<div class="bookgrid" style="margin-top:8px">${items}</div>`;
   area.querySelectorAll("[data-favchap]").forEach(btn=>btn.addEventListener("click",()=>{
     const [bi,ch]=btn.dataset.favchap.split(":").map(Number), b=BOOKS[bi];
     curTest=b.ot?"ot":"nt";
