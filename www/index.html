@@ -56,9 +56,14 @@
         padding:6px 0 5px; }
       .iconbtn{ flex:none; width:2.15rem; height:2.15rem; min-height:2.15rem; padding:0; display:grid; place-items:center;
         border:1px solid var(--line); background:var(--surface); color:var(--ink2); border-radius:50%; }
-      .brand{ flex:1 1 auto; min-width:0; font-family:"Noto Serif",serif; font-weight:900; font-size:1.1rem; letter-spacing:.01em; line-height:1.15; }
-      .brand small{ display:block; font-family:"Be Vietnam Pro",sans-serif; font-weight:600; font-size:.64rem;
-        color:var(--ink2); letter-spacing:.08em; text-transform:uppercase; }
+      .brand{ flex:1 1 auto; min-width:0; font-family:"Noto Serif",serif; font-weight:900; font-size:1.1rem; letter-spacing:.01em; line-height:1.15;
+        white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      /* The language name sits right beside the globe button, on the
+         same single row as the title — it never wraps and never drops
+         onto a line of its own. */
+      .langcluster{ display:inline-flex; flex:none; align-items:center; gap:6px; white-space:nowrap; }
+      .langname{ white-space:nowrap; font-family:"Be Vietnam Pro",sans-serif; font-weight:600; font-size:.66rem;
+        color:var(--ink2); letter-spacing:.07em; text-transform:uppercase; line-height:1; }
       .seg{ display:inline-flex; background:var(--surface2); border:1px solid var(--line); border-radius:999px; padding:2px; }
       .seg button{ border:0; background:transparent; color:var(--ink2); font-weight:700; font-size:.82rem;
         padding:4px 12px; border-radius:999px; min-height:1.9rem; }
@@ -111,16 +116,11 @@
       .verse.open .vtools{ display:flex; }
       .verse .vtools button{ border:1px solid var(--line); background:var(--surface); color:var(--ink);
         border-radius:999px; font-size:.78rem; font-weight:700; padding:3px 10px; min-height:1.8rem; }
-      /* favorite chapters: heart beside the book name in the reader bar,
-         and tappable chapter rows in the Favorites list outside */
+      /* favorite chapters: heart beside the book name in the reader bar;
+         outside, the Favorites list reuses the Contents book-button grid
+         (.bookgrid / .book) — one button per chapter, tap opens it */
       .heartbtn{ font-size:1.12rem; line-height:1; }
       .heartbtn.on{ color:var(--accent); border-color:var(--accent); }
-      .favlist{ display:flex; flex-direction:column; gap:5px; }
-      .favchap{ display:flex; align-items:center; gap:9px; width:100%; text-align:left; border:1px solid var(--line);
-        background:var(--surface); border-radius:9px; padding:8px 12px; color:var(--ink); min-height:2.4rem; box-shadow:var(--shadow); }
-      .favchap .fh{ color:var(--accent); font-size:1rem; flex:none; }
-      .favchap .fr{ flex:1; font-family:"Noto Serif",serif; font-weight:700; font-size:.98rem; }
-      .favchap .fgo{ color:var(--ink2); font-size:1.15rem; flex:none; }
       /* karaoke: the word currently being read aloud */
       .verse .vt .w{ border-radius:3px; padding:0 1px; margin:0 -1px; }
       .verse .vt .w.kara{ background:var(--kara-bg); color:var(--kara-ink); font-weight:700; }
@@ -252,6 +252,7 @@
         .bookgrid{ grid-template-columns:repeat(3,1fr); }
         .qcard{ padding:11px 12px; }
         .brand{ font-size:1.02rem; }
+        .langname{ font-size:.6rem; letter-spacing:.04em; }
       }
       @media (min-width:561px){
         .bookgrid{ grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); }
@@ -266,11 +267,13 @@
   <body>
     <div class="wrap">
       <div class="topbar">
-        <div class="brand"><span data-i="brand">Bible: Listen, Read &amp; Quiz</span>
-          <small id="brandSub">King James Version</small></div>
-        <button type="button" class="iconbtn" id="settingsBtn" data-settings="1" aria-label="Language" title="Language">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-        </button>
+        <div class="brand"><span data-i="brand">Bible: Listen, Read &amp; Quiz</span></div>
+        <div class="langcluster">
+          <span class="langname" id="brandSub">King James Version</span>
+          <button type="button" class="iconbtn" id="settingsBtn" data-settings="1" aria-label="Language" title="Language">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          </button>
+        </div>
       </div>
 
       <nav class="tabs" role="tablist">
@@ -403,7 +406,7 @@ const I = {
     noSample:"Bản mẫu hiện có văn bản đầy đủ cho Sáng Thế Ký, Thi Thiên, Ma-thi-ơ và Phúc Âm Giăng. Sách này sẽ có trong bản đầy đủ.",
     readChapter:"Đọc chương", chapter:"Chương",
     prev:"← Chương trước", next:"Chương sau →",
-    listen:"Nghe", pauseListen:"Tạm dừng", resumeListen:"Đọc tiếp", stopListen:"Dừng hẳn",
+    listen:"Nghe", stopListen:"Dừng",
     speedLabel:"Tốc độ", noVoice:"Thiết bị này không có giọng đọc.",
     sleepTimer:"Hẹn giờ tắt", sleepOff:"Tắt hẹn giờ", sleepSet:"Đã hẹn tắt sau ", sleepMin:" phút",
     sleepDone:"Đã hết giờ hẹn — dừng đọc.",
@@ -440,7 +443,7 @@ const I = {
     noSample:"This sample includes full text for Genesis, Psalms, Matthew and John. This book arrives in the full version.",
     readChapter:"Read chapter", chapter:"Chapter",
     prev:"← Previous", next:"Next →",
-    listen:"Listen", pauseListen:"Pause", resumeListen:"Resume", stopListen:"Stop",
+    listen:"Listen", stopListen:"Stop",
     speedLabel:"Speed", noVoice:"This device has no text-to-speech voice.",
     sleepTimer:"Sleep timer", sleepOff:"Timer off", sleepSet:"Sleep timer set: ", sleepMin:" min",
     sleepDone:"Sleep timer ended — reading stopped.",
@@ -1044,11 +1047,10 @@ function renderFavs(){
   if(!favs.size){ area.innerHTML=`<h3 style="margin:8px 0 6px">${d.favTitle}</h3><div class="empty">${d.favEmpty}</div>`; return; }
   const items=[...favs].map(key=>{
     const [bi,ch]=key.split(":").map(Number);
-    return `<button type="button" class="favchap" data-favchap="${bi}:${ch}">
-      <span class="fh" aria-hidden="true">♥</span><span class="fr">${refLabel(bi,ch)}</span>
-      <span class="fgo" aria-hidden="true">›</span></button>`;
+    return `<button type="button" class="book has" data-favchap="${bi}:${ch}" title="${refLabel(bi,ch)}">
+      <b>${refLabel(bi,ch)}</b></button>`;
   }).join("");
-  area.innerHTML = `<h3 style="margin:8px 0 6px">${d.favTitle} (${favs.size})</h3><div class="favlist">${items}</div>`;
+  area.innerHTML = `<h3 style="margin:8px 0 6px">${d.favTitle} (${favs.size})</h3><div class="bookgrid">${items}</div>`;
   area.querySelectorAll("[data-favchap]").forEach(btn=>btn.addEventListener("click",()=>{
     const [bi,ch]=btn.dataset.favchap.split(":").map(Number), b=BOOKS[bi];
     curTest=b.ot?"ot":"nt";
